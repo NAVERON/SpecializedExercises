@@ -1,14 +1,15 @@
 package com.eron.mutithread;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 虽然使用的是一个threadlocal，但是各自的值互相不影响 
  * @author ERON_AMD
  */
 public class ThreadLocalTest {
 
-    private static final Logger log = Logger.getLogger(ThreadLocalTest.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ThreadLocalTest.class);
 
     public static void main(String[] args) {
         SequenceNumber seq = new SequenceNumber();
@@ -23,7 +24,7 @@ public class ThreadLocalTest {
 
     public static class CustomeThread extends Thread {
 
-        private static final Logger log = Logger.getLogger(CustomeThread.class.getName());
+        private static final Logger log = LoggerFactory.getLogger(CustomeThread.class);
         SequenceNumber seqNum;
 
         public CustomeThread(SequenceNumber seqNum) {

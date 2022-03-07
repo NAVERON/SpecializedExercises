@@ -36,8 +36,12 @@ dependencies {
     implementation 'com.google.guava:guava:30.1.1-jre' 
     implementation 'org.slf4j:slf4j-api:1.7.30' 
     implementation 'org.slf4j:slf4j-simple:1.7.30' 
+    
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation 'org.apache.commons:commons-lang3:3.12.0' 
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.14.3' 
+    
     
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.4.30' 
     compile 'com.github.almasb:fxgl:17' 
@@ -58,10 +62,10 @@ testing {
     }
 }
 
-application {
+//application {
     // Define the main class for the application.
-    mainClass = 'com.eron.App'
-}
+//    mainClass = 'com.eron.App'
+//}
 
 
 

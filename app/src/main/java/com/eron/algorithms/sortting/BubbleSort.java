@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 冒泡排序算法
+ * 冒泡排序算法 
  *
  * @author ERON_AMD
  */
@@ -17,12 +17,12 @@ public class BubbleSort {
         // 冒泡排序
         int[] arr = {10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 1, 11, 1, 0, -4};
         //bubbleProcess(arr);
-
+        String a = "";
         int[] arr_two = {10, 9, 8, 0, 5, 6, 8, 90, 6, 5, 4, 3, 2, 2, 1, 11, 1, 0, -4};
         // customeBubbleProcess(arr_two);
 //        sort2(arr);
 //        sort2(arr_two);
-
+        
         // 打印排序结果
         log.info("第一個排序結果 : {}", arrToString(arr));
 
@@ -45,7 +45,8 @@ public class BubbleSort {
         }
     }
 
-    public static void customeBubbleProcess(int[] arr) {  // 这种比较好理解 
+    public static void customeBubbleProcess(int[] arr) {  // 这种比较好理解  
+    	// 依次抽出一个，与其他的比较，发现小的就方上面  这样每个数都与其他数作了比较 
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = i + 1; j < arr.length; j++) {
                 if (arr[i] > arr[j]) {  // 从大到小排序
@@ -59,7 +60,7 @@ public class BubbleSort {
 
     public static void sort2(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length - i - 1; j++) {
+            for (int j = 0; j < arr.length - i - 1; j++) { // xxoxxxx  o和o之后的x比较 
                 if (arr[j] < arr[j + 1]) {
                     swap(arr, j, j + 1);
                 }
@@ -84,11 +85,12 @@ public class BubbleSort {
     }
     
     public static void insertSort(int[] arr){
-        // 插入排序
+        // 插入排序 与冒泡排序的思路类似 一次选择一张，与已经排序过的比较, 指导最后所有的都走过一遍
         for(int i = 0; i < arr.length; i++){
             int temp = arr[i];
-            for(int j = i - 1; j >= 0; j--){
-                if(temp > arr[j]){
+            for(int j = i - 1; j >= 0; j--){  // 从前往后拿一张  后，与已经拍过序的比较，找到位置
+            	// 从最后的位置开始(先跟最大的)比较 
+                if(temp > arr[j]){ // 比最大的还大，放在最后就行，接着往后
                     break;
                 }
                 if(temp <= arr[j]){
