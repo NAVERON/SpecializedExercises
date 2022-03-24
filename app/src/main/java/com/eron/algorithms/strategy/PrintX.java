@@ -22,6 +22,8 @@ public class PrintX {
         log.info("之前 : {}", arrToString(arr));
         moveZero(arr);
         log.info("之后 : {}", arrToString(arr));
+        
+        printer(7);
     }
     
     // 打印星花矩阵

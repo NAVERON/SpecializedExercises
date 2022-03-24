@@ -35,16 +35,17 @@ public class MergeSortion {  // 归并排序
         int count = 0;
         int p1 = l;
         int p2 = mid + 1;
-        while (p1 <= mid && p2 <= r) {
-            help[count++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
+        while (p1 <= mid && p2 <= r) {  // 如果两个头指针都没有越界  则继续合并
+            help[count++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];  // 找出2部分中较小的
         }
-        while (p1 <= mid) {
+        while (p1 <= mid) {  // 如果左边的没有空， 则直接复制到后面
             help[count++] = arr[p1++];
         }
-        while (p2 <= r) {
+        while (p2 <= r) {  // 如果右边没有空  则复制到后面 不需要比较了，因为另一半已经合并完成了 
             help[count++] = arr[p2++];
         }
-        for (int i = 0; i < help.length; i++) {
+        
+        for (int i = 0; i < help.length; i++) {  // 把所有排序好的  复制到原始array中 
             arr[l + i] = help[i];
         }
     }

@@ -34,20 +34,20 @@ public class ShellSort {
     
     public static void sort(int[] arr){
         int gap = 1;
-        while(gap < arr.length){
+        while(gap < arr.length){  // 分组公式一般   3x + 1 // 样本量比较少的时候 使用2x
             gap = gap*3+1;
         }
         while(gap > 0){
-            for(int i = gap; i < arr.length; i++){
+            for(int i = gap; i < arr.length; i++){ // 同gap的每个分组 
                 int tmp = arr[i];
                 int j = i - gap;
-                while(j >= 0 && arr[j] > tmp){
-                    arr[j+gap] = arr[j];
+                while(j >= 0 && arr[j] > tmp){  // 没有越界  且前面的大, 交换   找到i应该放在哪里 ==>  插入排序
+                    arr[j+gap] = arr[j];  // 同组的  i之前的全部排序 
                     j -= gap;
                 }
                 arr[j+gap] = tmp;
             }
-            gap = gap/3;
+            gap = gap/3;  // 缩小组间距 
         }
     }
     

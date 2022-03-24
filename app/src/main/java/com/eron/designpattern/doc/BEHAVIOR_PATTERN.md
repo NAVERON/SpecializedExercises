@@ -13,9 +13,11 @@
 - [数据库访问模式](#Data Access Object Pattern数据访问模式)
 
 ## 任务链模式
+
 任务链可以生成一系列的任务序列，直接调用相同方法，可以实现一个流水线作业
-注意在`Logger`类中，`logMessage`方法里面存在`nextLogger`判断
-```Java
+注意在`Logger`类中，`logMessage`方法里面存在`nextLogger`判断  
+
+```java
 abstract class Logger {
    protected Logger nextLogger;
 //from  www.java2s.com
@@ -72,10 +74,13 @@ public class Main {
    }
 }
 ```
-## 命令模式
-这里体现了接口的一个特性，传入接口类型，可以调用时传入实现接口的任意类
-首先将实现接口命令的类压入  命令  列表，然后可以一次性执行
-```Java
+
+## 命令模式 
+
+这里体现了接口的一个特性，传入接口类型，可以调用时传入实现接口的任意类  
+首先将实现接口命令的类压入  命令  列表，然后可以一次性执行  
+
+```java
 import java.util.ArrayList;
 import java.util.List;
 /*from  w w w.  j  ava  2s.c o  m*/
