@@ -1,14 +1,15 @@
 # 创建设计模式
 
-- [Java工厂模式](#工厂模式)
-- [虚拟工厂模式](#虚拟工厂模式)
-- [单例模式](#单例模式)
-- [Java创建模式](#建造者模式)
-- [Java原型模式](#原型模式)
+- [Java工厂模式](#FactoryPattern)
+- [虚拟工厂模式](#AbstractFactory)
+- [单例模式](#SingletonPattern)
+- [Java创建模式](#BuilderPattern)
+- [Java原型模式](#PrototypePattern)
 
-## 工厂模式
 
-通过类型判断来创建不同的对象，工厂依据传进来的参数识别应该制造那种产品
+## FactoryPattern 
+
+通过类型判断来创建不同的对象，工厂依据传进来的参数识别应该制造那种产品  
 
 ```java
 public class ShapeFactory {
@@ -29,11 +30,11 @@ public class ShapeFactory {
 }
 ```
 
-## 虚拟工厂模式
+## AbstractFactory 
 
 > 创建工厂的工厂模式
 
-同工厂模式，首先创建一个接口
+同工厂模式，首先创建一个接口  
 
 ```java
 interface Shape {
@@ -93,7 +94,7 @@ class ScreenPrinter implements Printer{
 }
 ```
 
-之后我们可以创建一个虚拟类来得到打印和图形对象
+之后我们可以创建一个虚拟类来得到打印和图形对象  
 
 ```java
 abstract class AbstractFactory {
@@ -147,7 +148,7 @@ class PrinterFactory extends AbstractFactory {
 }
 ```
 
-之后我们可以创建一个工厂生成类
+之后我们可以创建一个工厂生成类  
 
 ```java
 class FactoryProducer {
@@ -162,7 +163,7 @@ class FactoryProducer {
 }
 ```
 
-**那么现在如何使用呢？下面是如何使用虚拟工厂模式的例子**
+**那么现在如何使用呢？下面是如何使用虚拟工厂模式的例子**  
 
 ```java
 public class Main {
@@ -202,17 +203,17 @@ public class Main {
 }
 ```
 
-## 单例模式
+## SingletonPattern 
 
-特点：
-a 一个类只能通过自己创建自己
-b 保证只有一个实例可以被创建
-c 提供访问对象的方法
+特点：  
+a 一个类只能通过自己创建自己  
+b 保证只有一个实例可以被创建  
+c 提供访问对象的方法  
 
-例如，我们设计一个用户界面，我们只允许有一个界面，这个时候我们就需要使用单例模式了
+例如，我们设计一个用户界面，我们只允许有一个界面，这个时候我们就需要使用单例模式了  
 
-**案例**
-下面创建一个`MainWindow.class`的文件，构造函数是私有的，并且有一个自己的静态实例，提供一个静态方法去得到它的静态方法
+**案例**  
+下面创建一个`MainWindow.class`的文件，构造函数是私有的，并且有一个自己的静态实例，提供一个静态方法去得到它的静态方法  
 
 ```java
 class MainWindow {
@@ -244,9 +245,9 @@ public class Main {
 }
 ```
 
-## 建造者模式
+## BuilderPattern  
 
-用来创建一些比较复杂的对象，比如说我们创建一个窗口，里面需要创建工具栏、菜单、小窗口等，我们可以使用创建者模式来隐藏创建的具体细节
+用来创建一些比较复杂的对象，比如说我们创建一个窗口，里面需要创建工具栏、菜单、小窗口等，我们可以使用创建者模式来隐藏创建的具体细节  
 
 ```java
 class Menu {/*from  w ww .  ja v a 2s . c om*/
@@ -287,11 +288,11 @@ public class Main {
 }
 ```
 
-## 原型模式
+## PrototypePattern 
 
-下面演示如何创建原型模式
-首先创建一个虚拟图形类，继承`Clonable`类，可以实现完全复制，原型模式中只是复制存在的对象，并不进行创建新的对象
-在创建一个对象挥消耗很大或者是资源密集型的，我们可以使用原型模式
+下面演示如何创建原型模式  
+首先创建一个虚拟图形类，继承`Clonable`类，可以实现完全复制，原型模式中只是复制存在的对象，并不进行创建新的对象  
+在创建一个对象挥消耗很大或者是资源密集型的，我们可以使用原型模式  
 
 ```java
 abstract class Shape implements Cloneable {
@@ -325,7 +326,7 @@ abstract class Shape implements Cloneable {
 }
 ```
 
-然后创建3个继承Shape类
+然后创建3个继承Shape类  
 
 ```java
 class Rectangle extends Shape {
@@ -363,7 +364,7 @@ class Circle extends Shape {
 }
 ```
 
-之后去创建`ShapeProtoType.class`去返回图形Shape的原型
+之后去创建`ShapeProtoType.class`去返回图形Shape的原型  
 
 ```java
 class ShapeProtoType{

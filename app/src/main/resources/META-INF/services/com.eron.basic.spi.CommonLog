@@ -1,0 +1,4 @@
+
+com.eron.basic.spi.Log4JLogger
+
+com.eron.basic.spi.SimpleJDKLogger

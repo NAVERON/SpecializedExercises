@@ -1,15 +1,15 @@
 # 结构设计模式
 
-- [适配器模式](#适配器模式)
-- [桥接模式](#桥接模式)
-- [过滤器模式](#过滤器模式)
-- [外观模式](#外观模式)
-- [代理模式](#代理模式)
+- [适配器模式](#AdapterPattern)  
+- [桥接模式](#BridgePattern)  
+- [过滤器模式](#FilterChainPattern)  
+- [外观模式](#FacatePattern)  
+- [代理模式](#ProxyPattern)  
 
-## 适配器模式
+## AdapterPattern 
 
-例如一个电脑只支持一种内存卡，现在需要让电脑支持另一种内存卡，需要一个中间件，可以认为是驱动
-使用播放器作为例子
+例如一个电脑只支持一种内存卡，现在需要让电脑支持另一种内存卡，需要一个中间件，可以认为是驱动  
+使用播放器作为例子  
 
 ```java
 interface Player {
@@ -60,9 +60,10 @@ public class Main{
 }
 ```
 
-## 桥接模式
+## BridgePattern 
 
-使用虚类对接实现同一接口的类，这样就可以间接调用了
+使用虚类对接实现同一接口的类，这样就可以间接调用了  
+
 ```java
 interface Printer {
    public void print(int radius, int x, int y);
@@ -111,7 +112,7 @@ public class Main {
 }
 ```
 
-## 过滤器模式
+## FilterChainPattern 
 
 在同一接口中放置数据，实现接口可以对接口进行操作，在实现接口的类中对数据进行不同标准的筛选
 
@@ -274,9 +275,9 @@ public class Main {
 }
 ```
 
-# 外观模式
+# FacatePattern 
 
-提供一个供外界调用的接口，里面有具体的实现
+提供一个供外界调用的接口，里面有具体的实现  
 
 ```java
 class ShapeFacade {
@@ -328,7 +329,7 @@ public class Main {
 ```
 
 
-# 代理模式
+# ProxyPattern 
 
 顾名思义
 

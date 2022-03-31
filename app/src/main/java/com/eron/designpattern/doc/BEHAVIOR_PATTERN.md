@@ -1,20 +1,20 @@
 # 行为设计模式
 
-- [任务链模式](#任务链模式)
-- [命令模式](#命令模式)
-- [迭代模式](#迭代模式)
-- [观察者模式](#观察者模式)
-- [中介模式](#中介模式)
-- [调解模式](#调解模式 Interpreter Pattern)
-- [状态模式](#状态模式)
-- [策略模式](#策略模式)
-- [访问者模式](#访问者模式)
-- [MVC模式](#MVC模式)
-- [数据库访问模式](#Data Access Object Pattern数据访问模式)
+- [责任链模式](#TaskChain)
+- [命令模式](#CommandPattern)
+- [迭代模式](#Iterators)
+- [观察者模式](#ObserverPattern)
+- [中介模式](#MediatorPattern)
+- [调解模式](#InterpreterPattern)
+- [状态模式](#StatsPattern)
+- [策略模式](#StrategyPattern)
+- [访问者模式](#VisitorPattern)
+- [MVC模式](#MVCPattern)
+- [数据库访问模式](#DataAccessObjectPattern)
 
-## 任务链模式
+## TaskChain 
 
-任务链可以生成一系列的任务序列，直接调用相同方法，可以实现一个流水线作业
+任务链可以生成一系列的任务序列，直接调用相同方法，可以实现一个流水线作业  
 注意在`Logger`类中，`logMessage`方法里面存在`nextLogger`判断  
 
 ```java
@@ -75,7 +75,7 @@ public class Main {
 }
 ```
 
-## 命令模式 
+## CommandPattern 
 
 这里体现了接口的一个特性，传入接口类型，可以调用时传入实现接口的任意类  
 首先将实现接口命令的类压入  命令  列表，然后可以一次性执行  
@@ -161,10 +161,10 @@ public class Main {
 }
 ```
 
-## 迭代模式
+## Iterators 
 
-迭代模式可以内部进行查询迭代
-这种实现在链表里面存在，Iterator好像可以作为接口供其它类实现`Implement`，通过在内部写一个迭代器，实现内部类调用变量列表，依次实现`index`叠加
+迭代模式可以内部进行查询迭代  
+这种实现在链表里面存在，Iterator好像可以作为接口供其它类实现`Implement`，通过在内部写一个迭代器，实现内部类调用变量列表，依次实现`index`叠加  
 
 ```Java
 interface Iterator {
@@ -205,10 +205,12 @@ public class Main {
 }
 ```
 
-## 观察者模式
-`Java`里面有一套体系，只要分别实现即可，不需要自己实现结构
-观察者模式
-从我的理解，是将观察者放在了需要观察的对象里面，被观察对象在改变时，主动通知观察者（观察者在前期被加入到观察者对象列表里了）
+## ObserverPattern 
+
+`Java`里面有一套体系，只要分别实现即可，不需要自己实现结构  
+观察者模式  
+从我的理解，是将观察者放在了需要观察的对象里面，被观察对象在改变时，主动通知观察者（观察者在前期被加入到观察者对象列表里了）  
+
 ```Java
 import java.util.ArrayList;
 import java.util.List;
@@ -292,10 +294,11 @@ public class Main {
 }
 ```
 
-## 中介模式
-在两个类之间传递
-不明白
-使用一个类，在两个类之间实现数据传递
+## MediatorPattern  
+
+在两个类之间传递, 降低对象之间的复杂度  
+不明白  
+使用一个类，在两个类之间实现数据传递  
 
 ```Java
 class Printer {/*  w  w  w.  j  a  v a 2 s .co m*/
@@ -331,9 +334,11 @@ class Main {
 }
 ```
 
-## 调解模式 Interpreter Pattern
-解释器模式
-```Java
+## InterpreterPattern 
+
+解释器模式  
+
+```Java 
 interface Expression {
   public boolean evaluate(String context);
 }//  w w w.  ja  v a  2 s . c om
@@ -406,8 +411,10 @@ public class Main {
 }
 ```
 
-## 状态模式
-通过接口实现将一个内容设置成不同的状态，在多个状态之间切换，并且给便`State`的状态
+## StatsPattern 
+
+通过接口实现将一个内容设置成不同的状态，在多个状态之间切换，并且给便`State`的状态  
+
 ```Java
 interface State {
   public void doAction(Context context);
@@ -482,12 +489,12 @@ public class Main {
 }
 ```
 
-## 策略模式
+## StrategyPattern 
 
-在策略模式中，算法可以在运行时改变
-传进去的虽然是两个值，但是实现的是不同的类，所以实现的功能不同
-传进不同的接口实现，后面实现不同的功能(调用的是同一个变量
-)
+在策略模式中，算法可以在运行时改变  
+传进去的虽然是两个值，但是实现的是不同的类，所以实现的功能不同  
+传进不同的接口实现，后面实现不同的功能(调用的是同一个变量)  
+
 ```Java
 interface MathAlgorithm {
    public int calculate(int num1, int num2);
@@ -535,8 +542,10 @@ public class Main {
 }
 ```
 
-## 访问者模式
-一个节点允许另一个类访问自己的数据
+## VisitorPattern 
+
+一个节点允许另一个类访问自己的数据  
+
 ```Java
 class TreeNode {/*from   ww  w  .  j a  va  2s .c o m*/
   private String name;
@@ -577,13 +586,13 @@ public class Main {
 }
 ```
 
-## MVC模式
+## MVCPattern 
 
-> MVC Pattern stands for Model-View-Controller Pattern.
-> From the name we can see that the MVC pattern involves three parts:
->    **Model** - Model represents an object carrying data. It can also have logic to update controller if its data changes.
->    **View** - View represents the visualization of the data that model contains. Usually it has the UI logic.
->    **Controller** - Controller references both Model and view. It controls the data flow into model object and updates the view whenever data changes. It keeps View and Model separate.
+> MVC Pattern stands for Model-View-Controller Pattern.  
+> From the name we can see that the MVC pattern involves three parts:  
+>    **Model** - Model represents an object carrying data. It can also have logic to update controller if its data changes.  
+>    **View** - View represents the visualization of the data that model contains. Usually it has the UI logic.  
+>    **Controller** - Controller references both Model and view. It controls the data flow into model object and updates the view whenever data changes. It keeps View and Model separate.  
 
 ```Java
 class Employee {//from  w  w w. j  av  a  2 s. co m
@@ -660,15 +669,14 @@ public class Main {
 }
 ```
 
-## Data Access Object Pattern数据访问模式
+## DataAccessObjectPattern 
 
-Data Access Object Pattern or DAO pattern separates data accessing API from high level business services.
+Data Access Object Pattern or DAO pattern separates data accessing API from high level business services.  
+A DAO pattern usually has the following interface and classes.  
 
-A DAO pattern usually has the following interface and classes.
-
-    Data Access Object Interface defines the standard operations on a model object(s).
-    Data Access Object class implements above interface. There could be more than one implementations, for example, one for database, one for file.
-    Model Object Simple POJO containing get/set methods to store data.
+Data Access Object Interface defines the standard operations on a model object(s).  
+Data Access Object class implements above interface. There could be more than one implementations, for example, one for database, one for file.  
+Model Object Simple POJO containing get/set methods to store data.  
 
 ```Java
 import java.util.ArrayList;

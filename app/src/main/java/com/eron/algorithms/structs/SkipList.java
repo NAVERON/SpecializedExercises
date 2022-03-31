@@ -22,16 +22,16 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
     private static final Logger log = LoggerFactory.getLogger(SkipList.class);
 
     /**
-        * | 4 | --------------> |___| --------------------------------------> | | |
-        * 3 | --------------> |___| --------------------------------------> | | | 2
-        * | --------------> |___| --------------> |____|----------------> | | | 1 |
-        * --------------> |___| --------------> |____|----------------> | | | 0 |
-        * ---> | 3 | ---> | 5 | ---> | 7 | ---> | 12 | ---> | 13 | ---> | |
-        *
-        * 跳表中一个头链接指向第一个节点，层级表示
-        */
+    * | 4 | --------------> |___| --------------------------------------> | | |
+    * 3 | --------------> |___| --------------------------------------> | | | 2
+    * | --------------> |___| --------------> |____|----------------> | | | 1 |
+    * --------------> |___| --------------> |____|----------------> | | | 0 |
+    * ---> | 3 | ---> | 5 | ---> | 7 | ---> | 12 | ---> | 13 | ---> | |
+    *
+    * 跳表中一个头链接指向第一个节点，层级表示
+    */
     protected static final Random randomGenerator = new Random();
-    protected static final double DEFAULT_PROBABILITY = 0.5;
+    protected static final double DEFAULT_PROBABILITY = 0.5;  // 分层系数 
     private Node<K, V> head;
     private double probability;
     private int size;
@@ -46,10 +46,15 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
         this.size = 0;
     }
     
+    /**
+     * 主要4个方法, 获取特定的节点 | 添加节点  | 查找最近的节点[完全相同或直接邻接] | 移除某个节点 
+     * @param key
+     * @return
+     */
     public V get(K key){
         checkKeyValidity(key);
         Node<K, V> node = findNode(key);  // 找到的node是邻接目标值的最大值
-        if(node.getKey().compareTo(key) == 0){
+        if(node.getKey().compareTo(key) == 0){  // 两个key相同  表示找到了准确值, 因为findNode找的是偏大的那个值(临近真实值的那个) 
             return node.getValue();
         }else{
             return null;
@@ -66,17 +71,17 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
         
         // 不存在key相同节点，需要新增节点
         Node<K, V> newNode = new Node<K, V>(key, value, node.getLevel());
-        this.horizontalInsert(node, newNode);  // 将新的节点插入到找到的临近节点后面 ==  后面还需要插入上一层节点
+        this.horizontalFrontInsert(node, newNode);  // 将新的节点插入到找到的临近节点后面 ==  后面还需要插入上一层节点
         // Decide level according to the probability function
         int currentLevel = node.getLevel();
-        int headLevvel = this.head.getLevel();
-        while(isBuildLevel()){
+        int headLevel = this.head.getLevel();
+        while(isBuildLevel()){  // 随机确定是否需要扩容增加一层 索引
             // building a new level 
-            if(currentLevel >= headLevvel){  // 如果新层的层数大于头节点， 头节点需要升高一级
-                Node<K, V> newHead = new Node<K, V>(null, null, headLevvel + 1);
+            if(currentLevel >= headLevel){  // 如果新层的层数大于头节点， 头节点需要升高一级
+                Node<K, V> newHead = new Node<K, V>(null, null, headLevel + 1);
                 this.verticalLink(newHead, this.head);
                 this.head = newHead;
-                headLevvel = this.head.getLevel();
+                headLevel = this.head.getLevel();
             }
             // copy node and newNode to the upper level
             while(node.getUp() == null){
@@ -85,7 +90,7 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
             node = node.getUp();  // 往上升一层级
             
             Node<K, V> tmp = new Node<K, V>(key, value, node.getLevel());  // 将刚才获取到的node值插入上一层
-            this.horizontalInsert(node, tmp);
+            this.horizontalBehindInsert(node, newNode);
             this.verticalLink(tmp, newNode);
             newNode = tmp;  // 根据概率决定是否再上一层创建索引
             currentLevel++;
@@ -187,15 +192,30 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
         return randomGenerator.nextDouble() < this.probability;
     }
     
-    protected void horizontalInsert(Node<K, V> x, Node<K, V> y){
+    /**
+     * 将y节点插入x节点的前面 
+     * @param x
+     * @param y
+     */
+    protected void horizontalFrontInsert(Node<K, V> x, Node<K, V> y){
+    	y.setNext(x);
+    	y.setPrevious(x.getPrevious());
+    	if(x.getPrevious() != null) {
+    		x.getPrevious().setNext(y);
+    	}
+    	x.setPrevious(y);
+    }
+    // y插入x的后面 
+    protected void horizontalBehindInsert(Node<K, V> x, Node<K, V> y) {
         y.setPrevious(x);
         y.setNext(x.getNext());
         if(x.getNext() != null){
             x.getNext().setPrevious(y);
         }
         x.setNext(y);
-    }
+	}
     
+    // 插入新的高层x节点, y节点为其直接下临节点 
     protected void verticalLink(Node<K, V> x, Node<K, V> y){  // x 上层节点
         x.setDown(y);
         y.setUp(x);
@@ -291,7 +311,7 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
 
     protected static class Node<K extends Comparable<K>, V> {
 
-        private K key;
+        private K key;  // 需要实现Comparable   comparaTo() 大于返回+, 小于返回-, 等于返回0
         private V value;
         private int level;
         private Node<K, V> up, down, next, previous;
@@ -388,7 +408,7 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
             skipList.add(i, String.valueOf(i));
         }
         
-        assert skipList.size == 10;
+        assert skipList.size != 10;
         assert skipList.empty();
         assert skipList.contains(5);
         assert skipList.get(6).equals("6");
