@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author ERON_AMD
  *  这里作为部分算法的集合, 快速写出思路
+ *  三个数 之和为0，  求三个数的索引， 关键是如何去除重复解 
  */
 public class ThreeSum {
     

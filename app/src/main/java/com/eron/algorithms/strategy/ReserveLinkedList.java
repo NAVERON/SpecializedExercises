@@ -38,3 +38,9 @@ public class ReserveLinkedList {
         public Node next = null;
     }
 }
+
+
+
+
+
+

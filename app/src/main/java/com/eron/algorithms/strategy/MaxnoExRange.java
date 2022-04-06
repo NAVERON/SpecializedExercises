@@ -11,7 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  线段树系列问题 
+ *  max no exchange range 
+ *  线段树系列问题   最长没有交集的时间段 
  * @author ERON_AMD
  */
 public class MaxnoExRange {  // 求时间区间最大交集
