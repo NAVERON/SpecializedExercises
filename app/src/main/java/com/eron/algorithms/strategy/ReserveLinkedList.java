@@ -33,10 +33,35 @@ public class ReserveLinkedList {
         return leader;
     }
     
-    public class Node{
+    public class Node {
         public int val;
         public Node next = null;
     }
+    
+    // 也可以使用3指针 
+    public Node reverseWithPointer(Node head) {
+    	
+    	// 输入头节点, 返回反转后的头节点 
+    	Node a = null, b = null, c = null;
+    	
+    	a = head == null ? null : head;
+    	b = a == null ? null : a.next;
+    	
+    	// 2个节点以上才能循环批量处理 
+    	if(a == null || b == null) { // 传参数错误, 不能null 
+    		return head;
+    	}
+    	
+    	while(b != null) {
+    		c = b.next;
+    		// b != null c == null ? != null ? 
+    		b.next = a;
+    		a = b;
+    		b = c;
+    	}
+    	return a;
+    }
+    
 }
 
 

@@ -4,7 +4,7 @@
 
 # Java设计模式
 
-## [创建设计模式](./CREATOR_PATTERN.md)
+## [创建设计模式](doc/CREATOR_PATTERN.md)
 
 - Java工厂模式
 - 虚拟工厂模式
@@ -12,7 +12,7 @@
 - Java创建模式
 - Java原型模式  因为是使用缓存保存创建好的对象,根据key获取对象引用并clone获取, 实际意义不大, 删除对应的代码,有印象就行
 
-## [结构设计模式](./STRUCTURE_PATTERN.md)
+## [结构设计模式](doc/STRUCTURE_PATTERN.md)
 
 - Java适配器
 - 桥接模式
@@ -22,7 +22,7 @@
 - 外观模式
 - 代理模式
 
-## [行为设计模式](./BEHAVIOR_PATTERN.md)
+## [行为设计模式](doc/BEHAVIOR_PATTERN.md)
 
 - 责任链模式
 - 命令模式
@@ -39,11 +39,11 @@
 
 ## JEE设计模式
 
-- [数据访问对象模式( DAO )](./BEHAVIOR_PATTERN.md)
+- [数据访问对象模式( DAO )](doc/BEHAVIOR_PATTERN.md)  
 
----
+---  
 
-所有的内容来自Java学习网站[http://www.java2s.com/](http://www.java2s.com/)
+所有的内容来自Java学习网站[http://www.java2s.com/](http://www.java2s.com/)  
 
 
 

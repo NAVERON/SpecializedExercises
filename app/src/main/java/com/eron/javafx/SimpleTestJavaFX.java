@@ -61,7 +61,7 @@ public class SimpleTestJavaFX extends Application {
 	}
 	
 	static Region createDefault() {
-	    final Pane pane = new Pane(createShape());
+	    final Pane pane = new Pane(createShape());	    
 	    pane.setPrefSize(100, 100);
 	    return pane;
 	}
