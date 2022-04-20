@@ -1,4 +1,4 @@
-package com.eron.algorithms.structs;
+package com.eron.structures;
 
 import java.util.Iterator;
 import java.util.Queue;

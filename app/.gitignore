@@ -35,4 +35,7 @@ build
 *.tar.gz
 *.rar
 
+**/*.csv
+
+
 

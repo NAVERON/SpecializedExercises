@@ -220,6 +220,8 @@ public class GrahamConvexScanner {
                 }
             }
         });
+        
+        // set = new TreeSet<>(new Point2DComparator(lowest));
 
         set.addAll(points);
 
@@ -273,7 +275,7 @@ public class GrahamConvexScanner {
      */
     protected static Turn getTurn(Point2D a, Point2D b, Point2D c) { 
 
-        // use longs to guard against int-over/underflow
+        // use longs to guard against int-over/underflow  point2D 有实现的向量乘 
         long crossProduct = (long) ( ( (b.getX() - a.getY()) * (c.getY() - a.getY()) ) -
                             ((b.getY() - a.getY()) * (c.getX() - a.getX())) );
 
@@ -291,11 +293,46 @@ public class GrahamConvexScanner {
     
     // 或者单独把比较器实现独立出来实现   getSortedPointSet 方法中的比较器实现 
     public static class Point2DComparator implements Comparator<Point2D> {
+    	private Point2D lowest;
+    	
+    	public Point2DComparator(Point2D lowest) {  // 点云最左下角 或者传入所有点云points 
+    		this.lowest = lowest;
+    	}
 
 		@Override 
-		public int compare(Point2D o1, Point2D o2) {
-			// TODO Auto-generated method stub
-			return 0;
+		public int compare(Point2D a, Point2D b) {
+			if(a == b || a.equals(b)) {
+                return 0;
+            }
+
+            // use longs to guard against int-underflow  这里point2D 由先后从呢个的方法计算2点的tan值 
+            double thetaA = Math.atan2((long)a.getY() - lowest.getY(), (long)a.getX() - lowest.getX());
+            double thetaB = Math.atan2((long)b.getY() - lowest.getY(), (long)b.getX() - lowest.getX());
+
+            if(thetaA < thetaB) {  // A 点与基准形成的角度小 
+                return -1;
+            } else if (thetaA > thetaB) {
+                return 1;
+            } else {  // 在一条线上 
+                // collinear with the 'lowest' point, let the point closest to it come first
+
+                // use longs to guard against int-over/underflow
+                double distanceA = Math.sqrt((((long)lowest.getX() - a.getX()) * ((long)lowest.getX() - a.getX())) +
+                                            (((long)lowest.getY() - a.getY()) * ((long)lowest.getY() - a.getY())));
+                // distanceA = lowest.distance(a);
+                
+                double distanceB = Math.sqrt(
+                		(((long)lowest.getX() - b.getX()) * ((long)lowest.getX() - b.getX())) +
+                        (((long)lowest.getY() - b.getY()) * ((long)lowest.getY() - b.getY()))
+                        );
+                // distanceB = lowest.distance(b);
+
+                if (distanceA < distanceB) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
 		}
     	
     }

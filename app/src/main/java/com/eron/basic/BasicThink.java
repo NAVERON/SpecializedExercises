@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 public class BasicThink {
 
     private static final Logger log = LoggerFactory.getLogger(BasicThink.class);
+    
+    private final ThreadLocal<Integer> threadLocalVariable = ThreadLocal.withInitial( () -> 10 );
 
     public static void main(String[] args) {
         log.info("基础类");

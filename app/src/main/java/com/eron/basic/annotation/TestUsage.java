@@ -15,10 +15,10 @@ import java.lang.annotation.Target;
  * @author ERON_AMD
  */
 
-//@Target(ElementType.METHOD)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TestUsage {
     
     String name();
-    int age();    
+    int age();
 }
