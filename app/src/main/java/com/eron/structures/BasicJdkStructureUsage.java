@@ -50,20 +50,32 @@ public class BasicJdkStructureUsage {
 		
 	}
 	
-	public static class DelayedItem implements Delayed {
-		
+	public static class DelayedItem implements Delayed {  // 延迟队列容器中对象需要实现Delayed接口 
+		private String name;
+		private Long availableTime;
+		public DelayedItem(String name, Long delayTime) {
+			this.name = name;
+			this.availableTime = System.currentTimeMillis() + delayTime;
+		}
 		@Override
 		public int compareTo(Delayed o) {
-			// TODO Auto-generated method stub
-			return 0;
+			if(!DelayedItem.class.isInstance(o)) {
+				throw new IllegalArgumentException();
+			}
+			DelayedItem canComparedObj = (DelayedItem) o;
+			int result = this.availableTime > canComparedObj.availableTime ? 1 
+					: this.availableTime < canComparedObj.availableTime ? -1 : 0;
+			return result;
 		}
-
 		@Override
 		public long getDelay(TimeUnit unit) {
-			// TODO Auto-generated method stub
-			return 0;
+			Long timeOff = this.availableTime - System.currentTimeMillis();
+			return unit.convert(timeOff, TimeUnit.MILLISECONDS);
 		}
-		
+		@Override
+		public String toString() {
+			return "DelayedItem [name=" + name + ", availableTime=" + availableTime + "]";
+		}
 	}
 	
 	public void listUsage() {
@@ -89,8 +101,7 @@ public class BasicJdkStructureUsage {
 		List.of(simpleArr);  // 数组转变成List Java 9+ 
 		
 		CopyOnWriteArrayList<String> concurrentArrayList = new CopyOnWriteArrayList<>();  // 写时复制 List 
-		
-		
+		List.of(1, 2, 3);
 	}
 	
 	public void mapUsage() {

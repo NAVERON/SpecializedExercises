@@ -5,14 +5,17 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ public class BasicJdkThreadUsage {
 		
 		basic.threadCustomUsage();  // 自定义线程执行 
 		basic.lockUsage(); // 并发锁的使用 
+		
 	}
 	
 	public static class CustomThread extends Thread {
@@ -61,7 +65,6 @@ public class BasicJdkThreadUsage {
 		
 	}
 	
-	
 	public void threadInfoUsage() {
 
 		log.warn("more about threadInfo ~");
@@ -91,8 +94,19 @@ public class BasicJdkThreadUsage {
 		ExecutorService cachedExecutor = Executors.newCachedThreadPool(); // 
 		// 推荐使用自己定义实现 
 		ThreadPoolExecutor customThreadPoolExecutor = new ThreadPoolExecutor(0, 0, 0, null, null);  // 建议使用手动的方式创建线程池 
+		ScheduledThreadPoolExecutor sheduledExecutor = new ScheduledThreadPoolExecutor(3);
 		
 		singleExecutor.execute(customRunnable);  // submit 返回future
+		
+		CompletableFuture<Void> testCompletableFuture = CompletableFuture.runAsync(() -> {
+			System.out.println("hello world, run CompletableFuture ...");
+		});
+		testCompletableFuture.whenComplete(new BiConsumer<Void, Throwable>() {
+			@Override
+			public void accept(Void t, Throwable u) {
+				System.out.println("hello world, whenComplete run BiConsumer-> accept() ...");
+			}
+		});
 		
 	}
 	
