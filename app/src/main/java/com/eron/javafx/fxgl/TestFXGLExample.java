@@ -12,7 +12,12 @@ public class TestFXGLExample extends GameApplication {
 
 	@Override
 	protected void initSettings(GameSettings settings) {
-		
+		settings.setWidth(800);
+		settings.setHeight(600);
+	}
+	
+	public static void main(String[] args) {
+		GameApplication.launch(args);
 	}
 
 }

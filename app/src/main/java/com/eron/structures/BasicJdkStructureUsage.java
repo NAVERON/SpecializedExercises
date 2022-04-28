@@ -1,5 +1,6 @@
 package com.eron.structures;
 
+import java.math.BigDecimal;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +49,7 @@ public class BasicJdkStructureUsage {
 		
 		usages.treeUsage(); // 容器 树结构 
 		
+		usages.numberUsage();
 	}
 	
 	public static class DelayedItem implements Delayed {  // 延迟队列容器中对象需要实现Delayed接口 
@@ -132,6 +134,12 @@ public class BasicJdkStructureUsage {
 		ReentrantLock reentrantLock = new ReentrantLock();
 		reentrantLock.tryLock();  // 尝试获取锁 
 		ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+		
+	}
+	
+	public void numberUsage() {
+		BigDecimal number = new BigDecimal("984930921");
+		log.info("bigdecimal number : {}", number);
 		
 	}
 

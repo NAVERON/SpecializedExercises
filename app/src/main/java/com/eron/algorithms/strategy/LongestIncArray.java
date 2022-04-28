@@ -29,10 +29,10 @@ public class LongestIncArray {
     }
 
     /**
-        * 求取最长递增子序列
-        * @param arr
-        * @return
-        */
+    * 求取最长递增子序列
+    * @param arr
+    * @return
+    */
     public static int getLIS(int[] arr) {
         int[] dp = new int[arr.length];  // 自动全部初始化为0，每一个索引位作为最后一个 前面可有的最长递增子序列
         dp[0] = 1;

@@ -4,6 +4,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,11 +34,12 @@ public class BasicJdkThreadUsage {
 		basic.threadCustomUsage();  // 自定义线程执行 
 		basic.lockUsage(); // 并发锁的使用 
 		
+		System.exit(0);
 	}
 	
 	public static class CustomThread extends Thread {
 
-		@Override
+		@Override 
 		public void run() {
 			super.run();
 			log.info("继承Thread重写run方法实现. CustomThread->run()");
@@ -66,6 +69,10 @@ public class BasicJdkThreadUsage {
 	}
 	
 	public void threadInfoUsage() {
+		
+		ThreadLocal<Integer> holder = ThreadLocal.withInitial(() -> {
+			return 2;  // 初始化 等同于实现 initialValue 重写方法 
+		});
 
 		log.warn("more about threadInfo ~");
 		ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
@@ -93,18 +100,21 @@ public class BasicJdkThreadUsage {
 		ExecutorService singleExecutor = Executors.newSingleThreadExecutor();  // 单线程线程池 
 		ExecutorService cachedExecutor = Executors.newCachedThreadPool(); // 
 		// 推荐使用自己定义实现 
-		ThreadPoolExecutor customThreadPoolExecutor = new ThreadPoolExecutor(0, 0, 0, null, null);  // 建议使用手动的方式创建线程池 
+		ThreadPoolExecutor customThreadPoolExecutor = new ThreadPoolExecutor(
+					1, 2, 5, TimeUnit.SECONDS, 
+					new ArrayBlockingQueue<Runnable>(10)
+				);  // 建议使用手动的方式创建线程池 
 		ScheduledThreadPoolExecutor sheduledExecutor = new ScheduledThreadPoolExecutor(3);
 		
 		singleExecutor.execute(customRunnable);  // submit 返回future
 		
 		CompletableFuture<Void> testCompletableFuture = CompletableFuture.runAsync(() -> {
-			System.out.println("hello world, run CompletableFuture ...");
+			log.info("hello world, run CompletableFuture ...");
 		});
 		testCompletableFuture.whenComplete(new BiConsumer<Void, Throwable>() {
 			@Override
 			public void accept(Void t, Throwable u) {
-				System.out.println("hello world, whenComplete run BiConsumer-> accept() ...");
+				log.info("hello world, whenComplete run BiConsumer-> accept() ...");
 			}
 		});
 		

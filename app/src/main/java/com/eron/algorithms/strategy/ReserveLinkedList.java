@@ -17,8 +17,18 @@ public class ReserveLinkedList {
     private static Logger log = LoggerFactory.getLogger(ReserveLinkedList.class);
     
     public static void main(String[] args) {
-        Node head = null;
-        reverseFullList(head);
+    	// 创建一个链表 
+        Node head = LinkBuilder.createBuilder().append(new Node(12)).append(new Node(22)).build();
+        
+        // Node result = reverseFullList(head);
+        Node result = reverseWithPointer(head);
+        
+        // 关于头节点 可以根据需要去除,这里不做过多的处理
+        while(result != null) {
+        	log.info("转换后 : {}", result.val);
+        	
+        	result = result.next;
+        }
     }
     
     public static Node reverseFullList(Node head){
@@ -28,18 +38,51 @@ public class ReserveLinkedList {
         
         Node leader = reverseFullList(head.next);
         head.next.next = head;
-        head.next = null;
+        head.next = null;  // 第一个节点指针设置 
         
         return leader;
     }
     
-    public class Node {
+    public static class Node {
         public int val;
         public Node next = null;
+        
+        public Node(int value) {
+        	this.val = value;
+        }
+    }
+    
+    private static class LinkBuilder {
+    	
+    	public Node head = new Node(-1);
+    	public Node curPoint = this.head;
+    	
+    	public static LinkBuilder createBuilder() {
+    		return new LinkBuilder();
+    	}
+    	
+    	public LinkBuilder append(Node newNode) {
+    		this.curPoint.next = newNode;
+    		this.curPoint = this.curPoint.next;
+    		
+    		return this;
+    	}
+    	
+    	public Node build() {
+    		// 遍历list输出节点 
+    		this.curPoint = head;
+    		
+    		while (this.curPoint != null) {
+				log.info("输出节点 : {}", this.curPoint.val);
+				this.curPoint = this.curPoint.next;
+			}
+    		
+    		return this.head;
+    	}
     }
     
     // 也可以使用3指针 
-    public Node reverseWithPointer(Node head) {
+    public static Node reverseWithPointer(Node head) {
     	
     	// 输入头节点, 返回反转后的头节点 
     	Node a = null, b = null, c = null;
@@ -52,13 +95,16 @@ public class ReserveLinkedList {
     		return head;
     	}
     	
+    	// 到这里表示至少有2个节点 
     	while(b != null) {
     		c = b.next;
-    		// b != null c == null ? != null ? 
     		b.next = a;
+    		
     		a = b;
     		b = c;
     	}
+    	head.next = null;  // 第一个节点反转   ** 很重要,否则会出现末端死循环 
+    	
     	return a;
     }
     

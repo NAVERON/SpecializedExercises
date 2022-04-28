@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 以一个位置为中线 前后交换
  * @author ERON_AMD
  */
 public class ReverseString {
@@ -18,7 +18,7 @@ public class ReverseString {
     
     public static void main(String[] args) {
         char[] test = "abcdefg".toCharArray();
-        rotateString(test, 3);
+        rotateString(test, 4);
         log.info("result : {}", charToString(test));
     }
     
@@ -33,7 +33,8 @@ public class ReverseString {
     
     public static void rotateString(char[] arr, int k){
         // 反转字符串
-        k = k % arr.length;
+    	k = k % arr.length;
+        // k = arr.length - (k % arr.length);  // 是否以0为开始下标
         
         reverse(arr, 0, arr.length - 1 - k);
         reverse(arr, arr.length - 1 - k + 1, arr.length - 1);
