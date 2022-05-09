@@ -6,13 +6,15 @@
 package com.eron.structures;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * LRU 算法的实现 hashmap + linkedlist 
+ * 实现的功能同jdk中  linkedhashmap {@link LinkedHashMap}
  * @author ERON_AMD
  */
 public class LRUCache {
@@ -220,6 +222,18 @@ public class LRUCache {
 		log.info(lru.toString());
 
 		log.info("lru get 0 : {}", lru.get(0));
+		
+		// 直接使用LinkedHashMap  有序hashmap 
+		LinkedHashMap<Integer, Integer> jdkLRU = new LinkedHashMap<Integer, Integer>(3, 0.7F, true);
+		
+		jdkLRU.put(1, 3);
+		jdkLRU.put(3, 4);
+		log.info("当前lru情况 : {}, first -> {}", jdkLRU.toString(), jdkLRU.entrySet().iterator().next());
+		jdkLRU.put(6, 8);
+		log.info("cur => {}", jdkLRU.toString());
+		jdkLRU.put(12, 33);
+		log.info("cur => {}", jdkLRU.toString());
+		
 	}
 
 }

@@ -4,6 +4,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -34,6 +36,14 @@ public class BasicJdkThreadUsage {
 		basic.threadCustomUsage();  // 自定义线程执行 
 		basic.lockUsage(); // 并发锁的使用 
 		
+		basic.scheduledTaskUsage(); // 定时任务
+		
+		
+		try {
+			Thread.sleep(5 * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		System.exit(0);
 	}
 	
@@ -133,11 +143,40 @@ public class BasicJdkThreadUsage {
 			lock.unlock();
 		}
 		
-		
 		ReadWriteLock readWriteLock = new ReentrantReadWriteLock();  // 读写锁 
 		Semaphore semaphore = new Semaphore(0);  // 信号量 
 		
 	}
+	
+	public void scheduledTaskUsage() {
+		log.info("定时任务");
+		
+		// jdk自带的timer   ScheduledThreadPoolService 定时线程池服务  DelayQueue 延迟队列
+		// spring taskThreadPoolService spring实现的定时服务 配合EnableScheduled + Async 实现多线程异步
+		// Quartz 第三方框架定时任务 
+		
+		log.info("使用timer");
+		Timer scheduledTimer = new Timer();
+		scheduledTimer.schedule(new TimerTask() {  // TimerTask继承了Runable  是一个abstract类 
+			@Override
+			public void run() {
+				log.info("Timer 执行timerTask定时任务");
+				
+			}
+		}, 1000L);
+		
+		log.info("使用scheduledThreadPoolExecutor 运行定时任务");
+		ScheduledThreadPoolExecutor scheduledExecutor = new ScheduledThreadPoolExecutor(10);
+		scheduledExecutor.scheduleWithFixedDelay(new Runnable() {
+			@Override
+			public void run() {
+				log.info("使用scheduledExecutorService 执行定时任务");
+			}
+		}, 0, 0, TimeUnit.SECONDS);
+		
+		
+	}
+	
 	
 	
 }
