@@ -29,7 +29,7 @@ public class BloomFilterBuilder {
 	public void guavaBloomFilterUsgae() {
 		BloomFilter<Integer> filter = BloomFilter.create(Funnels.integerFunnel(), 100000, 0.01);
 		
-		filter.put(3);
+		filter.put(3);  // 喂数据 
 		log.info("guava bloom filter -> test : {}, mightContain : {}", filter.test(7), filter.mightContain(3));
 	}
 	
@@ -50,7 +50,7 @@ public class BloomFilterBuilder {
 	 * @param <E> Object type that is to be inserted into the Bloom filter, e.g. String or Integer.
 	 * @author Magnus Skjegstad <magnus@skjegstad.com>
 	 */
-	// 暂时不写实现 冗余, 访问链接直接查看源代码 : https://github.com/magnuss/java-bloomfilter  
+	// 暂时不写实现 冗余, 访问链接直接查看源代码 : https://github.com/magnuss/java-bloomfilter 
 	
 	
 }

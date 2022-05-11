@@ -50,7 +50,7 @@ dependencies {
     // https://mvnrepository.com/artifact/gov.nist.math/jama
     implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
     // https://mvnrepository.com/artifact/guru.nidi/graphviz-java
-    implementation group: 'guru.nidi', name: 'graphviz-java', version: '0.18.1'
+    implementation group: 'guru.nidi', name: 'graphviz-java', version: '0.18.1'  // https://github.com/nidi3/graphviz-java 
     
     
 }

@@ -1,4 +1,4 @@
-package com.eron.automatic.path;
+package com.eron.algorithms.path;
 
 /**
  * Created by xukaifang on 16/9/9.

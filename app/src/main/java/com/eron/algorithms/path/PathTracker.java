@@ -1,4 +1,4 @@
-package com.eron.automatic.path;
+package com.eron.algorithms.path;
 
 import java.util.logging.Logger;
 

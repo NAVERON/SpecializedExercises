@@ -1,4 +1,4 @@
-package com.eron.automatic.pid;
+package com.eron.algorithms.pid;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

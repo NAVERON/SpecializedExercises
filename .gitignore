@@ -23,6 +23,7 @@ build
 .gradle
 
 # Log file #
+logs
 *.log
 *.db
 
