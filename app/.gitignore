@@ -6,6 +6,8 @@
 # Compiled files #
 target
 bin
+logs
+system
 # Ignore Gradle build output directory
 build
 *.iws
