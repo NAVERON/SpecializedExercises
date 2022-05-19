@@ -40,7 +40,7 @@ public class RecurisionHanoTowerAndOther {
 	public void hanoiTowerMove(Integer n, String from, String buffer, String to) {
 		
 		if(n == 1) {
-			log.info("执行 {} -> {}", from, to, from, to);
+			log.info("执行 {} -> {}", from, to);
 			return;
 		}
 		

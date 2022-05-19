@@ -3,7 +3,10 @@ package com.eron.mutithread;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -20,7 +23,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.BiConsumer;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.checkerframework.common.reflection.qual.NewInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +44,7 @@ public class BasicJdkThreadUsage {
 		basic.lockUsage(); // 并发锁的使用 
 		
 		basic.scheduledTaskUsage(); // 定时任务
-		
+		basic.streamUsage();
 		
 		try {
 			Thread.sleep(5 * 1000);
@@ -172,12 +179,26 @@ public class BasicJdkThreadUsage {
 			public void run() {
 				log.info("使用scheduledExecutorService 执行定时任务");
 			}
-		}, 0, 0, TimeUnit.SECONDS);
+		}, 0, 10, TimeUnit.SECONDS);
 		
 		
 	}
 	
-	
+	public void streamUsage() {
+	    // stream 的使用 
+	    List<String> begin = new ArrayList<String>();
+	    begin.add("hello");
+	    begin.add("who");
+	    begin.add("purge");
+	    begin.add("checker");
+	    begin.add("what");
+	    
+	    // StreamSupport stream化 
+	    Long count = begin.stream().filter(x -> x.length() > 4).map(x -> x.toCharArray()).count();
+	    log.info("计算结果 : {}", count);
+	    
+	    Stream<Integer> stream = Stream.of(1, 3, 5, 7, 9);
+	}
 	
 }
 

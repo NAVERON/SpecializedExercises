@@ -21,7 +21,8 @@ public class CyclizedStatusEnum {
 		CONDITION(2, "condition"), 
 		WAIT(3, "wait"), 
 		SIGNAL(4, "signal"), 
-		PROCESS(5, "process") 
+		PROCESS(5, "process"), 
+		MINI(6, "miniller") 
 		;
 		
 		private Integer order;
@@ -71,6 +72,9 @@ public class CyclizedStatusEnum {
 		public String toString() {
 			return "order : " + this.order + "; name : " + this.name;
 		}
+		
+		// nextStatus 和 isTail 组合起来可以实现正向循环, 到达末尾自动结束 
+		
 	}
 	
 	public static void main(String[] args) {
