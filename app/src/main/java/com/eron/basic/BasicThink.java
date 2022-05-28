@@ -4,6 +4,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.LinkedList;
+import java.util.StringJoiner;
 import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,7 @@ public class BasicThink {
         log.info("基础类");
 
         Vector<String> vector = new Vector<>();
-
         vector.add("hello");
-
         log.info("hello : {}", vector.toString());
 
         CustomStack<String> testStack = new CustomStack<String>();
@@ -31,23 +30,30 @@ public class BasicThink {
         for (; !testStack.isEmpty();) {
             log.info("输出stack数据 : {}", testStack.pop());
         }
+        
+        // 使用stringjoiner 
+        StringJoiner joiner = new StringJoiner("/", "/", "");
+        joiner.add("zookeepe");
+        log.info("result ==> {}", joiner.toString());
+        joiner.add("config");
+        joiner.add("quartor");
+        log.info("resulll -------? {}", joiner.toString());
 
         ThreadMXBean threadMX = ManagementFactory.getThreadMXBean();
-
         ThreadInfo[] threadinfos = threadMX.dumpAllThreads(false, false);
-
         for (ThreadInfo info : threadinfos) {
             log.info("threadid : {}, thread name : {}", info.getThreadId(), info.getThreadName());
         }
 
         long[] ids = threadMX.findMonitorDeadlockedThreads();
         if (ids == null) {
-            log.info("inds is null");
+            log.info("ids is null");
             return;
         }
         for (long id : ids) {
             log.info("id : {}", id);
         }
+        
     }
 
     // 自己实现栈结构

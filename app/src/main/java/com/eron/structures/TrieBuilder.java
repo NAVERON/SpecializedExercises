@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
 /**
  * 字典树的实现 主要应用在输入提示和前缀匹配的场景中
  * 
- * @author eron 实现前缀匹配输出的功能, 词频统计等
+ * @author eron 
+ * {@summary 实现前缀匹配输出的功能, 词频统计等}
  */
 public class TrieBuilder {
 
