@@ -7,6 +7,8 @@ import java.util.StringJoiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.almasb.fxgl.cutscene.dialogue.SerializableChoiceEdge;
+
 /**
  * 实际使用中，定义一个公共接口module 
  * 定义不同的实现工程，工程中引入公共接口
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SPIApp {
+    
 	private static final Logger log = LoggerFactory.getLogger(SPIApp.class);
 
 	// 之前不能正常运行  需要在resource目录下创建  META-INF/services 文件夹, 创建接口全路径文件 并添加实现类 
@@ -38,3 +41,11 @@ public class SPIApp {
 	}
 	
 }
+
+
+
+
+
+
+
+

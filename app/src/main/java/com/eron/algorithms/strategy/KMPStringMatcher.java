@@ -22,6 +22,9 @@ public class KMPStringMatcher {
 		int res = matcher.match(text);
 		log.info("匹配结果 --> {}", res);
 		
+		KMPStringMatcher matcher2 = new KMPStringMatcher();
+		int x = matcher2.search(text, pattern);
+		log.info("一维数组 KMP算法实现 --> {}", x);
 		
 	}
 	
@@ -32,8 +35,8 @@ public class KMPStringMatcher {
 	 */
 	private static class KMP {
 	    
-	    int[][] matcher;
-	    String pattern;
+	    private final int[][] matcher;
+	    private final String pattern;
         
 	    public KMP(String pattern) {
 	        this.matcher = this.buildPattern(pattern);
@@ -61,7 +64,7 @@ public class KMPStringMatcher {
 	        return -1;
 	    }
 	    
-	    private int[][] buildPattern(String pattern) {
+	    private int[][] buildPattern(String pattern) { 
 	        int L = pattern.length();
 	        int[][] x = new int[L][256];
             
@@ -125,37 +128,41 @@ public class KMPStringMatcher {
 
 		int[] lps = lps(pattern); // get the array that stores the longest subarray whose prefix is also its suffix
 		while(i < L) {
+		    // 如果两个char相等 前进1位
 			if(strs[i] == patterns[j]) { // same value found, move both str and pattern pointers to their right
 			    ++i; 
 			    ++j;
 			    if(j == N) return i-N; // whole match found
 			}
+			// 判断回溯位置 
 			else if(j > 0) j = lps[j-1]; // move pattern pointer to a previous safe location
+			// 如果j在起始位置 表示第一个字符就不匹配 
 			else ++i; // restart searching at next str pointer
 		}
 		return -1;
 	}
 
+	// next指针数组生成 关键**
 	private int[] lps(String pattern) {
-		int j=0, i=1, L=pattern.length();
+		int j=0, i=1, L=pattern.length();  // 两个指针
 
 		int[] res = new int[L];
 
 		char[] chars = pattern.toCharArray();
 
-		while(i<L) {  // i 没有超出pattern范围 
+		while(i<L) {
 			if(chars[i]==chars[j]){
-                res[i++] = ++j;
+                res[i++] = ++j;  // j++; res[i] = j; i++;
             } else {
-				int temp = i-1;
+				int temp = i-1;  // 上一个可以判断公共前后缀的信息 
 				while(temp>0) {
 					int prevLPS = res[temp];
-					if(chars[i]==chars[prevLPS]) {
+					if(chars[i]==chars[prevLPS]) {  // 表示前后缀匹配+1 i的位置就是新增相同char的索引 
 						res[i++] = prevLPS+1;
 						j = prevLPS;
 						break;
 					}
-					else temp = prevLPS-1;
+					else temp = prevLPS-1;  // 如果不匹配 找前部分前缀的对称位置 res[temp - 1] 获取前面的位置, 因为对称性 
 				}
 				if(temp<=0) {
 					res[i++] = 0;

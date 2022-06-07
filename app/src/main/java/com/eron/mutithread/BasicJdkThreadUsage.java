@@ -1,5 +1,6 @@
 package com.eron.mutithread;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -48,7 +49,10 @@ public class BasicJdkThreadUsage {
 		
 		try {
 			Thread.sleep(5 * 1000);
-		} catch (InterruptedException e) {
+			
+			basic.processUsage();  // 进程创建测试 
+			
+		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
 		}
 		System.exit(0);
@@ -198,6 +202,13 @@ public class BasicJdkThreadUsage {
 	    log.info("计算结果 : {}", count);
 	    
 	    Stream<Integer> stream = Stream.of(1, 3, 5, 7, 9);
+	}
+	
+	public void processUsage() throws IOException {
+	    // 创建进程执行 
+	    ProcessBuilder pb = new ProcessBuilder("la -la");
+	    pb.start();
+	    pb.command();
 	}
 	
 }

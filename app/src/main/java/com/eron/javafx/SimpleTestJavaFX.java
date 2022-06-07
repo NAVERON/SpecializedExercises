@@ -23,7 +23,7 @@ public class SimpleTestJavaFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		log.info("application start launch primary stage !");
-		primaryStage.setScene(new Scene(createDefault()));
+		primaryStage.setScene(new Scene(createDefault(), 300, 400));
 		
 		primaryStage.show();
 	}
