@@ -32,7 +32,7 @@ import guru.nidi.graphviz.model.MutableGraph;
  * @author eron  
  * @see com.eron.structures.TrieBuilder  
  */
-// 其余比较好的实现方法 https://github.com/hankcs/HanLP
+// 其余比较好的实现方法 https://github.com/hankcs/HanLP 
 public class ACautomaton {
     
     private static final Logger log = LoggerFactory.getLogger(ACautomaton.class);
