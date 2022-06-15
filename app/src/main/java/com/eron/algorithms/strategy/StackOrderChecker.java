@@ -36,12 +36,9 @@ public class StackOrderChecker {
 			
 			while( !assistantStack.isEmpty() && assistantStack.peek().equals(popStack[indexOfPop]) ) {
 				assistantStack.pop();
-				
 				indexOfPop++;
 			}
-			
 		}
-		
 		return assistantStack.isEmpty();  // 查看辅助stack是否全部match  如果全部match表示是正常的入栈出栈 
 		
 	}

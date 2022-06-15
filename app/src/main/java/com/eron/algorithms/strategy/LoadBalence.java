@@ -4,20 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.almasb.fxgl.inventory.ItemConfig;
 
 /**
  * 负载均衡算法 
@@ -40,14 +36,14 @@ public class LoadBalence {
         }};
         
         // 实验一致性hash算法 
-        ConstentHashing constentHashing = new ConstentHashing(Collections.unmodifiableList(servers));
+        ConstentHashing constentHashing = new ConstentHashing(servers);
         log.info("hash 一致性算法 --> {}, {}, {}", 
                 constentHashing.select("name"), constentHashing.select("xxxx"), constentHashing.select("test"));
         // 加权随机/随机算法 
-        RandomRound randomRound = new RandomRound(Collections.unmodifiableList(servers));
+        RandomRound randomRound = new RandomRound(servers);
         log.info("测试循环随机 负载均衡 --> {}, {}, {}", 
                 randomRound.select(), randomRound.select(), randomRound.select());
-        WeightedRound oneByOneWithWeight = new WeightedRound(Collections.unmodifiableList(servers));
+        WeightedRound oneByOneWithWeight = new WeightedRound(servers);
         log.info("加权重的轮询 负载均衡 --> {}, {}, {}", 
                 oneByOneWithWeight.select(), oneByOneWithWeight.select(), oneByOneWithWeight.select());
     }
@@ -78,7 +74,7 @@ public class LoadBalence {
         }
     }
     // 一致性hash算法  可以保证同一个请求落在同一个服务器上 hash计算是一样的 = 一致性 
-    // dubbo 的实现 
+    // dubbo 的实现 参考, 从guide-rpc-framework 摘录的
     private static class ConstentHashing {
         private List<ServerResource> servers = Collections.emptyList();  // 可供选择的server列表 
         private TreeMap<Long, ServerResource> cache = new TreeMap<>();  // 保存服务资源hash对应值
@@ -91,6 +87,7 @@ public class LoadBalence {
                     for(int j = 0; j < 4; j++) {
                         long x = this.hash(digest, j);
                         cache.put(x, server);
+                        log.info("设定节点位置 --> {}, {}", x, server.toString());
                     }
                 }
             });
@@ -105,13 +102,6 @@ public class LoadBalence {
             ServerResource selected = entry.getValue();
             return selected.toString();
         }
-        private long hash(byte[] digest, int number) {
-            return (((long) (digest[3 + number * 4] & 0xFF) << 24)
-                    | ((long) (digest[2 + number * 4] & 0xFF) << 16)
-                    | ((long) (digest[1 + number * 4] & 0xFF) << 8)
-                    | (digest[number * 4] & 0xFF))
-                    & 0xFFFFFFFFL;
-        }
         private byte[] md5(String key) {
             MessageDigest md = null;
             try {
@@ -123,6 +113,13 @@ public class LoadBalence {
             }
             return md.digest();
         }
+        private long hash(byte[] digest, int number) {
+            return (((long) (digest[3 + number * 4] & 0xFF) << 24)
+                    | ((long) (digest[2 + number * 4] & 0xFF) << 16)
+                    | ((long) (digest[1 + number * 4] & 0xFF) << 8)
+                    | (digest[number * 4] & 0xFF))
+                    & 0xFFFFFFFFL;
+        }
     }
     // 随机/轮询算法 思路类似 
     private static class RandomRound {
@@ -130,6 +127,7 @@ public class LoadBalence {
         private AtomicInteger counter = new AtomicInteger(0);  // 或者使用reentrantLock 前后加锁 线程竞争小的情况下CAS方便 
         public RandomRound(List<ServerResource> servers) {
             this.servers = servers;
+            Collections.shuffle(this.servers);  // 打乱顺序 
         }
         public String select() {  // 按照顺序依次选择  或者计算随机数 
             ServerResource resource = servers.get(this.counter.getAndIncrement());

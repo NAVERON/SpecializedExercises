@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 求解一个数组序列中最长递增子序列
- *
+ * 求 最长公共子序列 
  * @author ERON_AMD 动态规划 LIS问题
  */
 public class LongestIncArray {
