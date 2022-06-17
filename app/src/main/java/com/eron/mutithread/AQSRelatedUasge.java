@@ -26,7 +26,6 @@ public class AQSRelatedUasge {
         Semaphore semaphore = new Semaphore(5);
         Integer threadNum = 50;
         
-        
         for(int i = 0; i < threadNum; i++) {
             final int num = 1;
             service.submit(() -> {

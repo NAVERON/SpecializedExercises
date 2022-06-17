@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,36 @@ import org.slf4j.LoggerFactory;
 public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{ 
 	
 	private static Logger log = LoggerFactory.getLogger(BinaryTree.class);
+	
+	public static void main(String[] args) {
+        // 整体性的测试使用 
+	    BinaryTree<Integer> bt = new BinaryTree<>() {{  // 这里面的 T 代表了bst的id 复合结构中需要实现 
+	        add(14);
+	        add(23);
+	        add(1);
+	        add(56);
+	        add(5);
+	        add(10);
+	        add(44);
+	        add(90);
+	        add(3);
+	    }};
+	    log.info("获取大小 --> {}", bt.getSize());  // 获取当前树存储key的数量
+	    log.info("进行先序遍历 -------->");
+	    bt.traversePreOrder(bt.root);
+	    log.info("进行中序遍历 ------->");
+	    bt.traverseInOrder(bt.root);
+	    log.info("后序遍历=========");
+	    bt.traversePostOrder(bt.root);
+	    log.info("判断是否包含--> {}", bt.containsNode(10));  // 使用key包含函数 
+	    log.info("层次遍历 ----->");
+	    bt.travelLevelSeperation(bt.root);
+	    
+	    bt.delete(10);
+	    log.info("判断是否删除 10 --> {}", bt.containsNode(10));
+	    log.info("遍历一遍输出检查");
+	    bt.traverseInOrder(bt.root);
+    }
 	
 	public static class Node<T extends Comparable<T>> {
 		public T value;
@@ -118,7 +149,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 	public Integer getSize() {
 		return getSizeRecursive(this.root);
 	}
-	public Integer getSizeRecursive(Node<T> current) {
+	private Integer getSizeRecursive(Node<T> current) {
 		return current == null ? 0 : getSizeRecursive(current.left) + 1 + getSizeRecursive(current.right);
 	}
 	
@@ -158,8 +189,9 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 		if(root == null) {
 			return;
 		}
-		
 		Queue<Node<T>> queue = new LinkedBlockingDeque<>();
+		queue.add(root);
+		
 		while (!queue.isEmpty()) {  // 如果需要指导每层的详细呢？ 提供每层的索引 
 			Node<T> current = queue.poll();  // remove 也可以
 			log.info("traversesLevelOrder -> {}", current.value);
@@ -172,6 +204,39 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 			}
 			
 		}
+	}
+	// 层次分别遍历 每一层单独list 每层都输出一个list 
+	public void travelLevelSeperation(Node<T> root) {
+	    if(root == null) {
+	        return;
+	    }
+	    Queue<Node<T>> queue = new LinkedBlockingQueue<>();
+	    queue.add(root);
+	    // List<List<Node<T>>> travels = new LinkedList<>();
+	    int curLevel = 0; // 当前处于第几层 
+	    int levelCount = 1; // 当前遍历层的数量 
+	    
+	    while(!queue.isEmpty()) {
+	        int curCount = levelCount; 
+	        levelCount = 0;
+	        log.info("当前遍历树 {} 层, {} 个节点 ", curLevel, curCount);
+	        
+	        while(curCount > 0) {  // 遍历当前层 
+	            Node<T> x = queue.poll();
+	            log.info("取出当前层 {} = {}", curCount, x.value);
+	            if(x.left != null) {
+	                queue.add(x.left);
+	                levelCount++;
+	            }
+	            if(x.right != null) {
+	                queue.add(x.right);
+	                levelCount++;
+	            }
+	            
+	            curCount--;
+	        }
+	        curLevel++;
+	    }
 	}
 	
 	/**

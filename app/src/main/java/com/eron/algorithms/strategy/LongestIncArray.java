@@ -69,12 +69,12 @@ public class LongestIncArray {
     }
     
     /**
-        * 最长公共子序列
-        * @param arr1 
-        * @param arr2 
-        */
+    * 最长公共子序列
+    * @param arr1 
+    * @param arr2 
+    */
     public static void longestCommonSeq(char[] arr1, char[] arr2){
-        // 最长公共子序列
+        // 最长公共子序列 
         int n1 = arr1.length, n2 = arr2.length;
         int[][] dp = new int[n1+1][n2+1];
         
