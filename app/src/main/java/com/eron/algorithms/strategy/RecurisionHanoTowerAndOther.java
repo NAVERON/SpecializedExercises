@@ -3,6 +3,8 @@ package com.eron.algorithms.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.eron.algorithms.strategy.CommonParent.TreeNode;
+
 /**
  * 递归类算法 
  * 汉诺塔计算 斐波那契数列问题  等递归问题解决 
@@ -24,7 +26,8 @@ public class RecurisionHanoTowerAndOther {
 		log.info("斐波那契额最终结果 ===> {}", result);
 		
 		log.info("跳台阶问题........................");
-		result = base.jumpFloor(3);
+		int[] jumpdp = new int[11];
+		result = base.jumpFloor(10, jumpdp);
 		log.info("跳台阶最终结果 ---> {}", result);
 		
 		
@@ -59,7 +62,6 @@ public class RecurisionHanoTowerAndOther {
 		if(n < 0) {
 			throw new IllegalArgumentException();
 		}
-		
 		if(n == 0) return 0;
 		if(n == 1) return 1;
 		
@@ -70,21 +72,20 @@ public class RecurisionHanoTowerAndOther {
 	}
 	
 	// 跳台阶问题  类似的还有加减操作的情况递归
-	public Integer jumpFloor(Integer n) {
-		
+	public Integer jumpFloor(Integer n, int[] dpJumpFloor) {  // n比较大会超过时间 需要dp辅助 
+		if(dpJumpFloor[n] > 0) {
+		    return dpJumpFloor[n];
+		}
 		if(n <= 0) {
-			return 0;
+			dpJumpFloor[n] = 0;
+		}else if(n == 1) {
+		    dpJumpFloor[n] = 1;
+		}else if(n == 2) {
+		    dpJumpFloor[n] = 2;
+		}else {
+		    dpJumpFloor[n] = jumpFloor(n-1, dpJumpFloor) + jumpFloor(n-2, dpJumpFloor);
 		}
-		
-		if(n == 1) {
-			return 1;
-		}
-		
-		if(n == 2) {
-			return 2;
-		}
-		
-		return jumpFloor(n-1) + jumpFloor(n-2);
+		return dpJumpFloor[n];
 	}
 	
 	// 计算double树的整数次幂 
@@ -142,8 +143,6 @@ public class RecurisionHanoTowerAndOther {
 		
 		return result;
 	}
-	
-	
 	
 }
 

@@ -26,6 +26,10 @@ public class CommonParent {
         TreeNode p = null;
         TreeNode q = null;
         getCommonParent(root, root, root);
+        
+        // 镜像树的判断 
+        boolean result = mirrorTreeCheck(root.leftNode, root.rightNode);
+        log.info("检查结果 -> {}", result);
     }
     
     //  将两个节点从下到上寻找父节点, 最近的公共父节点就是两者最近祖先
@@ -72,4 +76,23 @@ public class CommonParent {
         public TreeNode rightNode;
         
     }
+    
+    public static boolean mirrorTreeCheck(TreeNode p, TreeNode q) {
+        if( p == null && q == null) return true;
+        if(p != null && q == null) return false;
+        if(p == null && q != null) return false;
+
+        return p.val == q.val && mirrorTreeCheck(p.leftNode, q.rightNode) && mirrorTreeCheck(p.rightNode, q.leftNode);
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+

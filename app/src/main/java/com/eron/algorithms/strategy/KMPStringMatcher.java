@@ -79,10 +79,8 @@ public class KMPStringMatcher {
 	                    x[i][j] = x[s][j];
 	                }
 	            }
-	            
 	            s = x[s][pattern.charAt(i)];
 	        }
-	        
 	        return x;
 	    }
 	    
@@ -146,13 +144,13 @@ public class KMPStringMatcher {
 	private int[] lps(String pattern) {
 		int j=0, i=1, L=pattern.length();  // 两个指针
 
-		int[] res = new int[L];
+		int[] res = new int[L];  // 全部初始化为 0
 
 		char[] chars = pattern.toCharArray();
 
 		while(i<L) {
 			if(chars[i]==chars[j]){
-                res[i++] = ++j;  // j++; res[i] = j; i++;
+                res[i++] = ++j;  // j++; res[i] = j; i++;  // 直接跳到下一个匹配位 
             } else {
 				int temp = i-1;  // 上一个可以判断公共前后缀的信息 
 				while(temp>0) {
