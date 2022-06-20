@@ -1,14 +1,12 @@
 package com.eron.algorithms.smartquestion;
 
-import java.security.DigestInputStream;
 import java.util.Arrays;
-
-import org.slf4j.LoggerFactory;
+import java.util.LinkedHashMap;
 
 /**
  * 随机生成一组和为给定数字的数组 
- * @author eron
- *
+ * @author eron 
+ * 
  */
 public class GenerateTargetSum {
 
@@ -23,7 +21,7 @@ public class GenerateTargetSum {
         int[] arr = new int[] {1, 1, 2};
         generateTargetSum.deleteDupNums(arr);
         // 最大子数组和
-        int[] arr2 = new int[] {};
+        int[] arr2 = new int[] {-2,1,-3,4,-1,2,1,-5,4};
         generateTargetSum.maxSubArray(arr2);
         
         generateTargetSum.getLastWord("hello hiudheh denini  ");
@@ -110,10 +108,14 @@ public class GenerateTargetSum {
     }
     
     // 最大子数组和 
-    public void maxSubArray(int[] nums) {
+    public void maxSubArray(int[] nums) {  // 最长递增序列
         int n = nums.length;
-        int i = 0, j = n - 1, max = 0;
-        
+        int pre = 0, max = 0;
+        for(int x : nums) {
+            pre = Math.max(pre + x, x);
+            max = Math.max(max, pre);
+        }
+        System.out.println("最大 - > " + max);
     }
     // 获取一个由空格分割的字符串的最后一个单词
     public void getLastWord(String s) {

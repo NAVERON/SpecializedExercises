@@ -1,6 +1,7 @@
 package com.eron.structures;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -57,7 +58,10 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 		}
 	}
 	
-	private Node<T> root;  // 根节点 
+	public Node<T> root;  // 根节点 
+	public void buildTree(List<T> nodes){
+	    nodes.forEach(node -> this.add(node));
+	}
 	
 	// 小的在左边, 大的在右边子树
 	// 往树中添加节点 
