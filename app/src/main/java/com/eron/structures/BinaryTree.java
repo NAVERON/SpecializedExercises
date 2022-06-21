@@ -1,6 +1,7 @@
 package com.eron.structures;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
@@ -45,6 +46,8 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 	    log.info("判断是否删除 10 --> {}", bt.containsNode(10));
 	    log.info("遍历一遍输出检查");
 	    bt.traverseInOrder(bt.root);
+	    
+	    bt.travelByLevel(bt.root);
     }
 	
 	public static class Node<T extends Comparable<T>> {
@@ -240,6 +243,27 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{
 	            curCount--;
 	        }
 	        curLevel++;
+	    }
+	}
+	public void travelByLevel(Node<T> root) {
+	    if(root == null) return;
+	    Queue<Node<T>> q = new LinkedList<Node<T>>();
+	    q.add(root);
+	    int depth = 0;
+	    while(!q.isEmpty()) {
+	        int sz = q.size();  // 当前蹭的数量 
+	        for(int i = 0; i < sz; i++) {
+	            Node<T> node = q.poll();
+	            log.info("层序遍历, 当前遍历 -> {}", node.value);
+	            if(node.left != null) {
+	                q.add(node.left);
+	            }
+	            if(node.right != null) {
+	                q.add(node.right);
+	            }
+	        }
+	        depth++;  // 当前层遍历完成 深度+1 
+	        log.info("当前遍历完成到第 = {} = 层", depth);
 	    }
 	}
 	

@@ -18,14 +18,17 @@ public class StockBuyAndSell {
     private static final Logger log = LoggerFactory.getLogger(StockBuyAndSell.class);
     public static void main(String[] args) {
         int[] arr = new int[] {
-            1, 2, 4, 6, 8, 12, 4, 7, 2, 9, 18, 0, 13
+            1, 2, 4, 6, 8, 12, 4, 7, 4, 9, 18, 0, 13
         };
         
         StockBuyAndSell stockBuyAndSell = new StockBuyAndSell();
         stockBuyAndSell.stockProblems(arr);
         
+        // *** 标准实现 单个股票买卖
+        stockBuyAndSell.standardStockSellSolve(arr);  // 标准全局股票问题 
+        
     }
-    // 自己尝试实现 
+    // 自己尝试实现  这个收益只是表示一段内的,真正的实现需要所有全局的最大值最小值 
     public void stockProblems(int[] arr) {  // 传入股票一段时间的记录  arr 长度大于等于2 
         int i = 0; 
         int j = i + 1;
@@ -64,7 +67,21 @@ public class StockBuyAndSell {
     }
     
     public void standardStockSellSolve(int[] arr) {
-        
+        // arr = new int[] {7,1,5,3,6,4}; 这种情况下可以 但是特殊情况下 
+        // 找到全局的最大值和最小值即可 
+        int min = Integer.MAX_VALUE, max = 0;  // min 最小值 max-> 最大收益 
+        int lastMin = 0, minIndex = 0, maxIndex = 0;
+        for(int i = 0; i < arr.length; i++) {
+            if(min > arr[i]) {
+                min = arr[i];
+                lastMin = i;
+            }else if(max < arr[i] - min){
+                max = arr[i] - min;
+                minIndex = lastMin;
+                maxIndex = i;
+            }
+        }
+        log.info("股票最大 => {}, 以及对应的索引 -> {}, {}", max, minIndex, maxIndex);
     }
     
 }

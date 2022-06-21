@@ -1,7 +1,5 @@
 package com.eron.structures;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -9,14 +7,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.checkerframework.common.reflection.qual.NewInstance;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.eron.algorithms.strategy.CommonParent;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
 

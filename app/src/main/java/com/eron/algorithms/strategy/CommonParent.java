@@ -42,12 +42,22 @@ public class CommonParent {
         Node<Integer> root = tree.root;
         Node<Integer> p = new Node<Integer>(44);
         Node<Integer> q = new Node<Integer>(3);
-        getCommonParent(root, root, root);  
-        // 找到最近的公共祖先 遍历一边保存父节点信息 根据父节点 依次找上级,有相同的表示最早的公共祖先
+        getCommonParent(root, root, root); 
+        // 找到最近的公共祖先 遍历一边保存父节点信息 根据父节点 依次找上级,有相同的表示最早的公共祖先 
         
         // 镜像树的判断 
         boolean result = mirrorTreeCheck(root.left, root.right);
         log.info("检查结果 -> {}", result);
+        
+        // 获取树的最宽长度 就是树全部展开后可以达到的最大长度 
+        maxLengthOfLeaf(root);
+        log.info("最大宽度->{}", maxWidth);
+        
+        // 普通方法执行 
+        maxWidth = 0;
+        CommonParent commonSolution = new CommonParent();
+        commonSolution.maxWidthOfTree(root);
+        log.info("最后计算结果,最大宽度 -> {}", maxWidth);
     }
     
     //  将两个节点从下到上寻找父节点, 最近的公共父节点就是两者最近祖先
@@ -100,6 +110,34 @@ public class CommonParent {
         return p.value == q.value && mirrorTreeCheck(p.left, q.right) && mirrorTreeCheck(p.right, q.left);
     }
     
+    // 最长直径 
+    private static int maxWidth = 0;  // 全局最长直径 
+    public static int maxLengthOfLeaf(Node<Integer> root) {
+        if(root == null) return 0;
+        int maxLeft = maxDepth(root.left);
+        int maxRight = maxDepth(root.right);
+        int res = maxLeft + maxRight + 1;
+        
+        maxWidth = Math.max(maxWidth, res);
+        return res;
+    }
+    public static int maxDepth(Node<Integer> root) {
+        if(root == null) return 0;
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+        int res = Math.max(left, right) + 1;
+        return res;
+    }
+    // 最长直径的改进版本  后序遍历 相当于自底向上 
+    public int maxWidthOfTree(Node<Integer> root) {
+        if(root == null) return 0;
+        int left = maxWidthOfTree(root.left);
+        int right = maxWidthOfTree(root.right);
+        int max = Math.max(left, right) + 1;
+        
+        maxWidth = Math.max(maxWidth, left + right + 1);
+        return max;
+    }
 }
 
 

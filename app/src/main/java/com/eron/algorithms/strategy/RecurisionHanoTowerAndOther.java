@@ -1,5 +1,7 @@
 package com.eron.algorithms.strategy;
 
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,12 @@ public class RecurisionHanoTowerAndOther {
 		Double finalResult2 = base.customePower2(3.0D, 4);
 		log.info("次方的结果 : {}, {}", finalResult, finalResult2);
 		
+		// 背包问题 
+		log.info("背包问题---");
+		int N = 5, W = 10;
+		int[] weight = new int[] {2,2,6,5,4};
+		int[] val = new int[] {6,3,5,4,6};
+		base.knapsack(N, W, weight, val);
 		
 	}
 	
@@ -142,6 +150,42 @@ public class RecurisionHanoTowerAndOther {
 		
 		return result;
 	}
+	
+	// 背包问题 N个物体 M总重量 weight每个物体的重量 val每个物体的价值 
+	public void knapsack(int N, int W, int[] weight, int[] val) {
+	    int[][] dp = new int[N+1][W+1];
+	    for(int i = 0; i < N; i++) {
+	        dp[i][0] = 0;
+	    }
+	    for(int i = 0; i < W; i++) {
+	        dp[0][i] = 0;
+	    }
+	    
+	    for(int i = 1; i < N + 1; i++){
+	        for(int j = 1; j < W + 1; j++) {
+	            if(weight[i-1] > j) {
+	                // 包容量不够 
+	                dp[i][j] = dp[i-1][j];
+	            }else {
+	                dp[i][j] = Math.max(
+	                        // 装入
+                            val[i-1] + dp[i-1][j-weight[i-1]],
+                            // 不装入
+                            dp[i-1][j]
+                        );
+	            }
+	        }
+	    }
+	    
+	    for(int i = 0; i < N + 1; i++) {
+	        for(int j = 0; j < W + 1; j++) {
+	            System.out.print("  " + dp[i][j]);
+	        }
+	        System.out.println();
+	    }
+	    log.info("背包 N W = {}", dp[N][W]);
+	}
+	
 	
 }
 
