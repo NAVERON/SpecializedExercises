@@ -55,6 +55,9 @@ dependencies {
     implementation group: 'guru.nidi', name: 'graphviz-java', version: '0.18.1'  // https://github.com/nidi3/graphviz-java 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
+    implementation group: 'org.apache.lucene', name: 'lucene-core', version: '9.2.0'
+    
     
     // 测试框架 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
