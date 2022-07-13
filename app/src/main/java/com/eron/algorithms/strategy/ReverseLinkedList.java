@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
  *  反转链表 反转链表一部分    反转整个链表    每k个反转一次
  * @author ERON_AMD
  */
-public class ReserveLinkedList {
+public class ReverseLinkedList {
     
-    private static Logger log = LoggerFactory.getLogger(ReserveLinkedList.class);
+    private static Logger log = LoggerFactory.getLogger(ReverseLinkedList.class);
     
     public static void main(String[] args) {
     	// 创建一个链表 
@@ -43,7 +43,7 @@ public class ReserveLinkedList {
         return leader;
     }
     
-    public static class Node {
+    private static class Node {
         public int val;
         public Node next = null;
         

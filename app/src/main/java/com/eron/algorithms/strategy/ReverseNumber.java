@@ -10,10 +10,10 @@ import java.util.Map;
  * @author eron
  *
  */
-public class ReserveNumber {
+public class ReverseNumber {
 
 	public static void main(String[] args) {
-		ReserveNumber reverseNumber = new ReserveNumber();
+		ReverseNumber reverseNumber = new ReverseNumber();
 		
 		Boolean status = reverseNumber.isPalamonNumber(1221);
 		System.out.println("结果 : " + status);

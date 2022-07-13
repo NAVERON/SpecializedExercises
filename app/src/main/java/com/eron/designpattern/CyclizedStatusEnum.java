@@ -3,6 +3,8 @@ package com.eron.designpattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.almasb.fxgl.multiplayer.ActionBeginReplicationEvent;
+
 /**
  * 实现枚举类型的轮询实现 比如一些情况下需要方便转换运行状态, 且只会从一种状态转变为另一种状态, 需要这种模式
  * 不容易出错, 方便修改 
@@ -40,7 +42,7 @@ public class CyclizedStatusEnum {
 		}
 		
 		public BusinessStatus nextStatus() {
-			Integer currentOrder = this.order;
+			Integer currentOrder = this.order;  // 可以使用 ordinal 标识当前索引位置 
 			Integer nextOrder = ( currentOrder + 1 ) % this.getCount();
 			
 			return getByOrder(nextOrder);
@@ -74,6 +76,27 @@ public class CyclizedStatusEnum {
 		}
 		
 		// nextStatus 和 isTail 组合起来可以实现正向循环, 到达末尾自动结束 
+		
+		/**
+		 * 暂时不对default做特殊处理 根据具体的业务场景变换 
+		 * @return BusinessStatus index and Object 
+		 */
+		public BusinessStatus pre() {
+		    int preIndex = this.ordinal() - 1;
+		    if(preIndex < 0) {
+		        preIndex = BusinessStatus.values().length - 1;
+		    }
+		    
+		    return BusinessStatus.values()[preIndex];
+		}
+		public BusinessStatus next() {
+		    int nextIndex = this.ordinal() + 1;
+		    if(nextIndex >= BusinessStatus.values().length) {
+		        nextIndex = 0;
+		    }
+		    
+		    return BusinessStatus.values()[nextIndex];
+		}
 		
 	}
 	
