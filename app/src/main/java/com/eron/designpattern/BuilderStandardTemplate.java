@@ -1,4 +1,4 @@
-package com.eron.structures;
+package com.eron.designpattern;
 
 import java.util.UUID;
 
@@ -26,8 +26,8 @@ public class BuilderStandardTemplate {
         this.id = UUID.randomUUID().hashCode();
     }
     
-    public static InnerClass createBuilder() {
-        return buildOuter.new InnerClass();
+    public static InnerClassBuilder createBuilder() {
+        return buildOuter.new InnerClassBuilder();
     }
     
     @Override
@@ -42,24 +42,25 @@ public class BuilderStandardTemplate {
      * @author eron 
      * 
      */
-    private class InnerClass {
+    private class InnerClassBuilder {
         // 内部类中创建外部类实例 设置属性并最终返回 这样不用重写一遍属性 
         BuilderStandardTemplate generateObj = new BuilderStandardTemplate();
+        private InnerClassBuilder() {} // External instantiation is prevented 
         
-        private InnerClass name(String name) {
-            generateObj.name = name;
+        private InnerClassBuilder name(String name) {
+            this.generateObj.name = name;
             return this;
         }
-        private InnerClass aliveTime(Long time) {
-            generateObj.aliveTimes = time;
+        private InnerClassBuilder aliveTime(Long time) {
+            this.generateObj.aliveTimes = time;
             return this;
         }
-        private InnerClass price(Float price) {
-            generateObj.price = price;
+        private InnerClassBuilder price(Float price) {
+            this.generateObj.price = price;
             return this;
         }
         private BuilderStandardTemplate build() {
-            return generateObj;
+            return this.generateObj;
         }
     }
     
