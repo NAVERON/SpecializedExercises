@@ -9,6 +9,6 @@
  */
 
 rootProject.name = 'SpecializedExercises'
-include('app')
+include('exercise')
 
 

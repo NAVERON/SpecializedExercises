@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 虽然使用的是一个threadlocal，但是各自的值互相不影响 
- * @author ERON_AMD
+ * @author ERON_AMD 
+ * 举个例子 : 比如http请求中header带有token , 把token保存在threadlocal中, 可以方便后续的处理获取token 
+ * 详情见 Ledger项目中 拦截器的处理 
  */
 public class ThreadLocalTest {
 
