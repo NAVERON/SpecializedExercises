@@ -102,7 +102,7 @@ public class Dijkstra {
 		}
 
 		@Override
-		public int compareTo(Vertex o) {
+		public int compareTo(Vertex o) {  // 升序 排序
 			if (this.distance < o.distance)
 				return -1;
 			else if (this.distance > o.distance)

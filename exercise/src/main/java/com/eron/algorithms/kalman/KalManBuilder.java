@@ -6,7 +6,7 @@ import java.util.Random;
 import Jama.Matrix;
 
 // https://math.nist.gov/javanumerics/jama/   jama 
-public class KalManBuilder {
+public class KalManBuilder {  // 一维 数据预测 
 
     public static void main(String[] args) {
         //model parameters

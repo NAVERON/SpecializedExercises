@@ -112,7 +112,7 @@ public class GenerateTargetSum {
         int n = nums.length;
         int pre = 0, max = 0;
         for(int x : nums) {
-            pre = Math.max(pre + x, x);
+            pre = Math.max(pre + x, x);  // 连续子数组 
             max = Math.max(max, pre);
         }
         System.out.println("最大 - > " + max);

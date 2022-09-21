@@ -4,12 +4,13 @@ import static java.lang.Math.*;
 import Jama.Matrix;
 
 /**
-*
+* 
 * CODE ADAPTED FROM:
 * http://the-lost-beauty.blogspot.com/2009/12/java-implementation-of-kalman-filter.html
 * AND:
 * http://the-lost-beauty.blogspot.com/2009/12/simulation-and-kalman-filter-for-3rd.html
-*
+* 参考资料 : 
+* https://www.kalmanfilter.net/alphabeta.html
 */
 
 public class KalmanFilter {

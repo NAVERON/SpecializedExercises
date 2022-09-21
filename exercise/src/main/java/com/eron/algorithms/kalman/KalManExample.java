@@ -76,8 +76,8 @@ public class KalManExample extends JPanel {
             @Override
             public void run() {
                 //filter update
-                KF.predict();
-                KF.correct(new Matrix(new double[][]{{mouseX}, {mouseY}}));
+                KF.predict();  // 根据上一次位置 预测值
+                KF.correct(new Matrix(new double[][]{{mouseX}, {mouseY}}));  // 仪器测量值 
 //                System.out.println("Estimate: ");
 //                KF.getX().print(3, 1);
                 repaint();
