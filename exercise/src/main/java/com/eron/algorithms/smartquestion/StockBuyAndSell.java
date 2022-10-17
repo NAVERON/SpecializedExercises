@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StockBuyAndSell {
     private static final Logger log = LoggerFactory.getLogger(StockBuyAndSell.class);
+    
     public static void main(String[] args) {
         int[] arr = new int[] {
             1, 2, 4, 6, 8, 12, 4, 7, 4, 9, 18, 0, 13
@@ -83,6 +84,21 @@ public class StockBuyAndSell {
         }
         log.info("股票最大 => {}, 以及对应的索引 -> {}, {}", max, minIndex, maxIndex);
     }
+    
+    
+    // 多次买卖股票问题 
+    // 贪心算法 每次交易都能够正向收益即可 
+    private static void MultiSellStock(int[] prices) {
+        int ans = 0; 
+        for(int i = 1; i < prices.length; i++) {
+            int diff = prices[i] - prices[i-1];
+            if(diff > 0) {
+                ans += diff;
+            }
+        }
+    }
+    
+    
     
 }
 
