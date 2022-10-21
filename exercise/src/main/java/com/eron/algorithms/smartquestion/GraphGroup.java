@@ -1,8 +1,10 @@
 package com.eron.algorithms.smartquestion;
 
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -32,6 +34,15 @@ public class GraphGroup {
         GraphGroup graphGroup = new GraphGroup();
         int result = graphGroup.countGroup2(graph);
         log.info("分组--> {}", result);
+        
+        //拓扑排序 相关 
+        int[][] course = new int[][] {
+            {1, 0},
+            {2, 0}, 
+            {3, 1}, 
+            {3, 2}
+        };
+        GraphGroup.courseOrder(course, 4);
         
     }
     
@@ -134,7 +145,76 @@ public class GraphGroup {
         
         return graphArray;
     }
+    
+    
+
+    // 课程表 
+    // 给出一个二维数组 表示每门课之前需要上哪门课  
+    // DFS  深度优先遍历  结束的标志是 没有出度或者出度已经在结果集中 
+    private static void courseOrder(int[][] prerequired, int courseNum) {
+        
+        HashMap<Integer, LinkedList<Integer>> info = new HashMap<>();
+        Set<Integer> visited = new HashSet<Integer>();  // 访问过的节点 
+        Deque<Integer> res = new ArrayDeque<>();  // 最终的顺序 stack 
+        
+        // 数组全部转化为方便使用的map结构 
+        for(int[] order : prerequired) {
+            int from = order[0]; 
+            int to = order[1];
+            info.putIfAbsent(from, new LinkedList<>());
+            info.get(from).add(to);  // 添加路径 
+            
+            // log.info("打印当前路径 --> {} ==> {}", from, info.get(from).toString());
+        }
+        
+        Deque<Integer> stack = new ArrayDeque<>();
+        // info.entrySet().forEach(x->{}); // 取出每个entry  遍历 
+        info.forEach((key, value) -> {
+            log.info("当前遍历 --> {} --> {}", key, value.toString());
+            
+            if(visited.contains(key)) return;
+            stack.push(key);
+            visited.add(key);
+            
+            while(!stack.isEmpty()) {
+                int top = stack.peek();
+                LinkedList<Integer> edges = info.getOrDefault(top, new LinkedList<>());
+                if(edges.isEmpty() || res.containsAll(edges)) {  // 符合条件 
+                    // 如果当前节点 出度为 0 , 表示它没有向下的指向节点 | 或者指向都已经入结果队列 
+                    int x = stack.pop();
+                    log.info("出现复合条件的 --> {}, {}, {}", top, x, edges);
+                    res.push(x);
+                    continue;
+                }
+                
+                edges.stream().forEach(nearby -> {
+                    if(visited.contains(nearby)) return;  // 如果
+                    
+                    log.info("新加入的节点 --> {}", nearby);
+                    stack.push(nearby);
+                    visited.add(nearby);
+                });
+            }
+            
+        });
+        
+        log.info("最终res  结果 --> {}", res.toString());
+    }
+    
+    
+    
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -8,6 +8,8 @@ package com.eron.algorithms.strategy;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,11 +173,26 @@ public class ReverseString {
     // 输入：s = "101023"
     // 输出：["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
     
-    // 使用回溯法 
+    // 使用回溯法   具体的实现省略, 只做思路练习 
+    private static List<List<String>> ans = new LinkedList<>();
     private static void restoreIpAddress(String nums) {
         // 第一层选择可能的情况  进入递归 下一层, 出来后移除进行下一个情况 
+        // dfs  deep first search 
+        
     }
-    
+    private static void dfs(String subNums, List<String> curIp) {
+        
+        if(curIp.size() >= 4) {
+            ans.add(curIp);  // 找到满足条件的 
+            return;
+        }
+        
+        for(int i = 0; i < subNums.length(); i++) {
+            // 切分一种情况 
+            // 进入下一层 
+            // 还原 
+        }
+    }
     
 }
 
