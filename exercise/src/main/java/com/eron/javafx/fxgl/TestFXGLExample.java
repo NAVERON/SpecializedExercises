@@ -15,7 +15,7 @@ public class TestFXGLExample extends GameApplication {
         settings.setWidth(800);
         settings.setHeight(600);
         
-        settings.isIntroEnabled();
+        settings.setIntroEnabled(true);
     }
 
     public static void main(String[] args) {
