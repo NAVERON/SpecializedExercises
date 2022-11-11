@@ -12,6 +12,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.eron.structures.LRUCache.Node;
+
 /**
  * LRU 算法的实现 hashmap + linkedlist 
  * 实现的功能同jdk中  linkedhashmap {@link LinkedHashMap}
@@ -27,7 +29,7 @@ public class LRUCache {
 		public Node nextNode, preNode;
 
 		public Node() {
-		};
+		}
 
 		public Node(int key, int value) {
 			this.key = key;
@@ -130,7 +132,7 @@ public class LRUCache {
 		this.maxCapacity = initialMaxCapcity;
 
 		cache = new DoublyLink(maxCapacity);
-		quickSearch = new HashMap();
+		quickSearch = new HashMap<Integer, Node>();
 	}
 
 	// 使特定的key Node为最新 这个key一定存在, 在最外层判断所有的异常情况

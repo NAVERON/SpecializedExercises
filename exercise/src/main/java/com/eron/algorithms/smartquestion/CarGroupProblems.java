@@ -77,7 +77,7 @@ public class CarGroupProblems {
             this.time = time;
         }
         @Override 
-        public int compareTo(Car o) {
+        public int compareTo(Car o) {  // 按照位置 降序 
             return (int) (o.pos - this.pos);
         }
         @Override
@@ -101,7 +101,7 @@ public class CarGroupProblems {
                 // 当前车追上 栈顶车辆 所需要的时间 > 栈顶车辆追上它右面的车的时间 , 表示看栈顶右边的车即可 
                 // 前面的车速快 追不上 
                 Double t = carsArray[i][1] - topSpeed > 0.001 ? (topPos - carsArray[i][0]) / (double)(carsArray[i][1] - topSpeed) : Integer.MAX_VALUE; 
-                Boolean checkSpeed = carsArray[i][1] <= carsArray[stack.peek()][1];  // 当前车速度 <= 栈顶 
+                Boolean checkSpeed = carsArray[i][1] <= topSpeed;  // 当前车速度 <= 栈顶 
                 Boolean checkAns = ans[stack.peek()] > 1e-9 && t > ans[stack.peek()];  // 栈顶追不上更右边的 且 当前追上的时间比栈顶的时间大  
                 if(checkSpeed || checkAns) {  // 两种情况 追不上 + 能追上但是前面的已经合并到它的右车队了 
                     stack.pop();
