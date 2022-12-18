@@ -10,23 +10,22 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application' 
-    id 'eclipse' 
+    id 'eclipse'
+    id 'idea'
     id 'java' 
     
-    id 'org.openjfx.javafxplugin' version '0.0.10' 
+    // id 'org.openjfx.javafxplugin' version '0.0.10'
     id 'org.jetbrains.kotlin.jvm' version '1.4.30' 
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenLocal()
-    maven {
-        url 'https://maven.aliyun.com/nexus/content/groups/public/' 
-        url "https://nexus.gluonhq.com/nexus/content/repositories/releases/" 
-    }
+    maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url "https://nexus.gluonhq.com/nexus/content/repositories/releases/" }
     mavenCentral()
     
-    jcenter() 
+    // jcenter()
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
 }
@@ -44,13 +43,13 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.4.30' 
-    compile 'com.github.almasb:fxgl:17' 
+    // compile 'org.jetbrains.kotlin:kotlin-stdlib:1.4.30'
+    // compile 'com.github.almasb:fxgl:17'
     // https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
-    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.3'
+    // implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.3'
     
     // https://mvnrepository.com/artifact/org.kordamp.ikonli/ikonli-core
-    implementation group: 'org.kordamp.ikonli', name: 'ikonli-core', version: '12.3.1' 
+    // implementation group: 'org.kordamp.ikonli', name: 'ikonli-core', version: '12.3.1'
     // https://mvnrepository.com/artifact/gov.nist.math/jama
     implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
     // https://mvnrepository.com/artifact/guru.nidi/graphviz-java
@@ -59,8 +58,7 @@ dependencies {
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
     implementation group: 'org.apache.lucene', name: 'lucene-core', version: '9.2.0'
-    
-    
+
     // 测试框架 
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
@@ -72,12 +70,14 @@ dependencies {
     
 }
 
-javafx {
-    version = "17.0.1" 
-    modules = [
-        'javafx.base', 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.media', 'javafx.web' 
-    ]
-}
+//javafx {
+//    version = "17.0.1"
+//    modules = [
+//        'javafx.base', 'javafx.controls',
+//        'javafx.graphics', 'javafx.fxml',
+//        'javafx.media', 'javafx.web'
+//    ]
+//}
 
 testing {
     suites {
