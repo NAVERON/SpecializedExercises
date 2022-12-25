@@ -1,18 +1,17 @@
 
 
 
-
-
 # Compiled files #
 target
 bin
+**/logs/
+**/system/
 # Ignore Gradle build output directory
 build
 *.iws
 *.iml
 *.ipr
 *.class
-*.csv
 
 # Setting configs #
 .mvn
@@ -37,4 +36,5 @@ logs
 *.tar.gz
 *.rar
 
+**/*.csv
 
