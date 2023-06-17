@@ -5,14 +5,12 @@
  */
 package com.eron.structures;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.eron.structures.LRUCache.Node;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * LRU 算法的实现 hashmap + linkedlist 
@@ -23,7 +21,7 @@ public class LRUCache {
 
 	private static Logger log = LoggerFactory.getLogger(LRUCache.class);
 
-	public class Node {
+	public static class Node {
 
 		public int key, value;
 		public Node nextNode, preNode;
@@ -40,7 +38,7 @@ public class LRUCache {
 	/**
 	 * 带头节点的双链表 JDK自己实现的是 LinkedHashMap
 	 */
-	public class DoublyLink {
+	public static class DoublyLink {
 		private int linkSize = 0;
 		private Node head = null;
 		private Node tail = null;

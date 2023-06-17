@@ -1,10 +1,9 @@
 package com.eron.structures;
 
-import com.eron.algorithms.convexscan.GrahamConvexScanner;
-
 public class SimplePoint {
 
-    private double x, y;
+    private final double x;
+    private final double y;
     public SimplePoint(double x, double y){
         this.x = x;
         this.y = y;

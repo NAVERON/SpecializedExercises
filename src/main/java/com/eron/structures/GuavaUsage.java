@@ -45,7 +45,7 @@ public class GuavaUsage {
         Map<String, Object> info = new LinkedHashMap<String, Object>(){{
             put("name", "nike");
             put("paper", null);
-            put("foo", Integer.valueOf(10));
+            put("foo", 10);
         }};
         StringWriter out = new StringWriter();
         JSONValue.writeJSONString(info, out);

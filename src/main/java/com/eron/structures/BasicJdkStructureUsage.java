@@ -61,12 +61,10 @@ public class BasicJdkStructureUsage {
 		}
 		@Override
 		public int compareTo(Delayed o) {
-			if(!DelayedItem.class.isInstance(o)) {
+			if(!(o instanceof DelayedItem canComparedObj)) {
 				throw new IllegalArgumentException();
 			}
-			DelayedItem canComparedObj = (DelayedItem) o;
-			int result = this.availableTime > canComparedObj.availableTime ? 1 
-					: this.availableTime < canComparedObj.availableTime ? -1 : 0;
+			int result = this.availableTime.compareTo(canComparedObj.availableTime);
 			return result;
 		}
 		@Override

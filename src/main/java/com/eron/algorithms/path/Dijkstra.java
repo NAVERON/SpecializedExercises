@@ -113,7 +113,7 @@ public class Dijkstra {
 
 	}
 	
-	public static enum Eage {  // 表示顶点集合 
+	public enum Eage {  // 表示顶点集合
 		A, B, C, D, E, F, G, H;
 		
 	}

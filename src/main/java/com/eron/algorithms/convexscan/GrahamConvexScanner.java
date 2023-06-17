@@ -57,26 +57,6 @@ public class GrahamConvexScanner {
 	}
 	
 	// 使用自定义point结构 替代 javafx -> Point2D   // update  使用外部统一定义结构
-//	public static class SimplePoint {
-//	    private Integer x;
-//	    private Integer y;
-//
-//	    public SimplePoint(Integer x, Integer y) {
-//	        this.x = x;
-//	        this.y = y;
-//	    }
-//
-//	    public Integer getX() {
-//	        return this.x;
-//	    }
-//	    public Integer getY() {
-//	        return this.y;
-//	    }
-//	    @Override
-//	    public String toString() {
-//	        return "SimplePoint --> [ " + this.x + ", " + this.y + "]";
-//	    }
-//	}
 	
     /**
      * Returns true iff all points in <code>points</code> are collinear.
@@ -170,23 +150,26 @@ public class GrahamConvexScanner {
             Turn turn = getTurnOfSimplePoint(tail, middle, head);
 
             switch(turn) {
-                case COUNTER_CLOCKWISE:
+                case COUNTER_CLOCKWISE: {
                     stack.push(middle);
                     stack.push(head);
                     break;
-                case CLOCKWISE:
+                }
+                case CLOCKWISE: {
                     i--;
                     break;
-                case COLLINEAR:
+                }
+                case COLLINEAR: {
                     stack.push(head);
                     break;
+                }
             }
         }
 
         // close the hull
         stack.push(sorted.get(0));
 
-        return new ArrayList<SimplePoint>(stack);
+        return new ArrayList<>(stack);
     }
 
     /**
@@ -204,20 +187,20 @@ public class GrahamConvexScanner {
 
         final SimplePoint lowest = getLowestPointOfSimplePoint(points);  // 获取基准点 
 
-        TreeSet<SimplePoint> set = new TreeSet<SimplePoint>(new Comparator<SimplePoint>() {  // 与基准点的角度比较 
-            
-            @Override 
-            public int compare(SimplePoint a, SimplePoint b) { 
+        TreeSet<SimplePoint> set = new TreeSet<>(new Comparator<SimplePoint>() {  // 与基准点的角度比较
 
-                if(a == b || a.equals(b)) {
+            @Override
+            public int compare(SimplePoint a, SimplePoint b) {
+
+                if (a == b || a.equals(b)) {
                     return 0;
                 }
 
                 // use longs to guard against int-underflow  这里point2D 由先后从呢个的方法计算2点的tan值 
-                double thetaA = Math.atan2((long)a.getY() - lowest.getY(), (long)a.getX() - lowest.getX());
-                double thetaB = Math.atan2((long)b.getY() - lowest.getY(), (long)b.getX() - lowest.getX());
+                double thetaA = Math.atan2((long) a.getY() - lowest.getY(), (long) a.getX() - lowest.getX());
+                double thetaB = Math.atan2((long) b.getY() - lowest.getY(), (long) b.getX() - lowest.getX());
 
-                if(thetaA < thetaB) {  // A 点与基准形成的角度小 
+                if (thetaA < thetaB) {  // A 点与基准形成的角度小
                     return -1;
                 } else if (thetaA > thetaB) {
                     return 1;
@@ -225,12 +208,12 @@ public class GrahamConvexScanner {
                     // collinear with the 'lowest' point, let the point closest to it come first
 
                     // use longs to guard against int-over/underflow
-                    double distanceA = Math.sqrt((((long)lowest.getX() - a.getX()) * ((long)lowest.getX() - a.getX())) +
-                                                (((long)lowest.getY() - a.getY()) * ((long)lowest.getY() - a.getY())));
+                    double distanceA = Math.sqrt((((long) lowest.getX() - a.getX()) * ((long) lowest.getX() - a.getX())) +
+                        (((long) lowest.getY() - a.getY()) * ((long) lowest.getY() - a.getY())));
                     double distanceB = Math.sqrt(
-                            (((long)lowest.getX() - b.getX()) * ((long)lowest.getX() - b.getX())) +
-                            (((long)lowest.getY() - b.getY()) * ((long)lowest.getY() - b.getY()))
-                            );
+                        (((long) lowest.getX() - b.getX()) * ((long) lowest.getX() - b.getX())) +
+                            (((long) lowest.getY() - b.getY()) * ((long) lowest.getY() - b.getY()))
+                    );
 
                     if (distanceA < distanceB) {
                         return -1;

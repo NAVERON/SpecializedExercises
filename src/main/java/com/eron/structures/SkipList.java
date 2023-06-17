@@ -402,7 +402,7 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
     }
 
     public static void main(String[] args) {
-        SkipList<Integer, String> skipList = new SkipList();
+        SkipList<Integer, String> skipList = new SkipList<>();
         
         for(int i = 0; i < 10; i++){
             skipList.add(i, String.valueOf(i));
