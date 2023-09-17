@@ -13,25 +13,26 @@ import java.util.TreeMap;
 
 /**
  * 一致性hash
+ *
  * @author xuxueli 2015-10-26 22:50:29
- * 
+ * <p>
  * 《普通hash方法》
  * NODE节点 : 有序数组或list列表, 如缓存redis服务器ip列表;
  * 数据节点 : 支持获取hashCode, 如redis key;
  * 映射方法 : key.hashCode % NODE.size
  * 优点 : 简单,高效;
  * 缺点 : NODE增减, 所有映射都会失效, 如redis服务某一个节点宕机, 所有持久化文件要做数据迁移, 其他缓存全部失效;
- * 
+ * <p>
  * 《一致性hash算法》
- * hash环 : 抽象概念, 一张巨大的hash环装链表; 
+ * hash环 : 抽象概念, 一张巨大的hash环装链表;
  * NODE节点 : 对NODE进行hash计算, 散列对应到hash环上某一个位置;
  * NODE节点-虚拟节点 : 对每个NODE节点生成一定量虚拟节点, 每个NODE虚拟节点都对关联到一个真实NODE节点, 对虚拟节点进行hash计算, 散列对应到hash换上某一个位置;
  * 数据节点 : 对数据进行hash计算, 对应到hash环上某一个位置, 然后顺时针找到最近的NODE节点, 命中然后存储;
- * 
+ * <p>
  * 优点 : NODE增减, 改节点原NODE节点的命中会漂移到相邻的后一个NODE节点, 不会造成整体失效, 只会影响其中一个节点;
  * 缺点 : 理解和维护起来, 需要一定学习成本;
  * 缺点(已解决) : NODE其中一个节点失效, 该节点数据瞬间映射到下一个节点, 会造成例如 “缓存雪崩”现象, 在此引入NODE虚拟节点, 可以将该节点数据, 平衡的散列到其他存活的NODE节点中;
- * 
+ * <p>
  * --- 0 --------- node1_1 ----------- node2_2 --------- node1_2 ------ node2_1 ------ 2^64|0 ---
  * -------- key1 --------- key02 ---------
  */
@@ -114,7 +115,7 @@ public class ConsistencyHash {
 
     /**
      * get hash code on 2^32 ring (md5散列的方式计算hash值)
-     * 
+     *
      * @param digest
      * @param nTime
      * @return
@@ -155,7 +156,7 @@ public class ConsistencyHash {
         for (int i = 0; i < 10000; i++) {
             String key = "consumer" + i;
             System.out.println(hash(key) + ":" + sh.getShardInfo(key));
-            
+
             // 统计落在第一节点/第二节点的缓存 数量  
             if ("consumer-uuid-1".equals(sh.getShardInfo(key))) {
                 consumer1++;
@@ -173,8 +174,7 @@ public class ConsistencyHash {
          * System.out.println(end - start);
          */
     }
-    
-    
+
 
 }
 

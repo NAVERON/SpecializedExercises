@@ -1,13 +1,13 @@
 package com.eron.algorithms.sortting;
 
 import java.util.StringJoiner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author ERON_AMD 堆排序 Java实现
- *
+ * <p>
  * 如果使用一个数组表示 一个树, index = i, 父节点为 (i-1)/2, 左子节点为 2*i +1, 右子节点为 2*i + 2
  */
 public class HeapSort {
@@ -21,12 +21,12 @@ public class HeapSort {
         // buildHeap(arr, arr.length);
         // heapSort(arr, arr.length);  // 排序之前  需要创建一个heap
         PriorityQueue pq = new PriorityQueue(20);
-        for(int x : arr){
+        for (int x : arr) {
             pq.insert(x);
         }
         log.info("输出大堆 : {}", pq.toString());
         int realSize = pq.size;
-        for(int i = 1; i <= realSize; i++){
+        for (int i = 1; i <= realSize; i++) {
             int data = pq.delMax();
             log.info("堆一次输出最大值 : {}", data);
         }
@@ -49,7 +49,7 @@ public class HeapSort {
      * 倒着将一个数组按照树结构排序
      *
      * @param tree 待排序的数组
-     * @param n 数组长度，需要重排序的堆长度，因为后面会依次减少最后一个排序
+     * @param n    数组长度，需要重排序的堆长度，因为后面会依次减少最后一个排序
      */
     public static void buildHeap(int[] tree, int n) {  // 根据输入的乱序数组重新排列 
         int lastNode = n - 1;
@@ -70,8 +70,8 @@ public class HeapSort {
      * 树结构用数组表达  功能：i节点为根的子树  堆化
      *
      * @param tree 树 数组
-     * @param n 树的最大长度，数组长度
-     * @param i 根节点index
+     * @param n    树的最大长度，数组长度
+     * @param i    根节点index
      */
     public static void heapify(int[] tree, int n, int i) {  // 顺序化 i节点为根的子数序列 
         if (i >= n) {
@@ -97,13 +97,13 @@ public class HeapSort {
             heapify(tree, n, max);  // 对于之前已经排过序的重新计算排序  max根节点heapify 
         }
     }
-    
-    public static String arrToString(int[] arr){
+
+    public static String arrToString(int[] arr) {
         StringJoiner sj = new StringJoiner(",");
-        for(int x : arr){
+        for (int x : arr) {
             sj.add(Integer.toString(x));
         }
-        
+
         return sj.toString();
     }
 
@@ -117,8 +117,8 @@ public class HeapSort {
             arr = new int[initCapcity];
             size = 0;
         }
-        
-        public void insert(int data){ // 往最后插入  需要上浮 
+
+        public void insert(int data) { // 往最后插入  需要上浮
             size++;
             arr[size] = data;
             swim(size);
@@ -149,8 +149,8 @@ public class HeapSort {
         }
 
         public void sink(int k) {  // 去除了根节点  需要从根节点向下heapify 
-        	// 两个子节点  2i and 2i+1 
-            while (2*k <= size) {
+            // 两个子节点  2i and 2i+1
+            while (2 * k <= size) {
                 int maxIndex = 2 * k;
                 if (2 * k + 1 <= size && arr[2 * k] < arr[2 * k + 1]) {  // 两个子节点比较 
                     maxIndex = 2 * k + 1;
@@ -168,10 +168,10 @@ public class HeapSort {
             arr[i] = arr[j];
             arr[j] = temp;
         }
-        
-        public String toString(){
+
+        public String toString() {
             StringJoiner sj = new StringJoiner(",");
-            for(int x : arr){
+            for (int x : arr) {
                 sj.add(Integer.toString(x));
             }
 

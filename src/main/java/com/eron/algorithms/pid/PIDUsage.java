@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 
 /**
  * 使用pid控制算法使用在航向转向上
- * @author eron
  *
+ * @author eron
  */
 public class PIDUsage extends JPanel {
 
@@ -98,8 +98,8 @@ public class PIDUsage extends JPanel {
             float div = (float) (K * theta * (2 - T + T * Math.pow(Math.E, -2 / T)));
 
             curValue += div;  //计算当前航向角
-            x = (float) (x + speed*Math.sin(Math.toRadians(curValue)));
-            y = (float) (y + speed*Math.cos(Math.toRadians(curValue)));
+            x = (float) (x + speed * Math.sin(Math.toRadians(curValue)));
+            y = (float) (y + speed * Math.cos(Math.toRadians(curValue)));
             xs.add(x);
             ys.add(y);
 

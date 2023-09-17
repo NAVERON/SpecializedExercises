@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author ERON_AMD 快速排序 选中一个基准值，比较厚前后交换
  */
 public class QuickSort {
@@ -24,19 +23,19 @@ public class QuickSort {
         for (int num : originArr) {
             log.info("sortting after : {}", num);
         }
-        
+
         method2Sort();
 
     }
-    
-    public static String arrayToString(int[] arr){
+
+    public static String arrayToString(int[] arr) {
         // 公共方法, 输出数组为字符串数值
         StringBuilder sb = new StringBuilder();
-        
-        for(int a : arr){
+
+        for (int a : arr) {
             sb.append(a).append(",");
         }
-        
+
         return sb.toString();
     }
 
@@ -74,45 +73,45 @@ public class QuickSort {
         sortProcess(arr, left, j - 1);
         sortProcess(arr, j + 1, right);
     }
-    
-    public static void method2Sort(){
+
+    public static void method2Sort() {
         int[] aa = {1, 23, 45, 6, 7, 8, 10, 1, -1, -2};
         log.info("之前 : {}", arrayToString(aa));
-        
+
         rightQuickSort(aa, 0, aa.length - 1);
-        
+
         log.info("排序之后 : {}", arrayToString(aa));
     }
-    
-    public static void rightQuickSort(int[] arr, int start, int end){
+
+    public static void rightQuickSort(int[] arr, int start, int end) {
         int partitionIndex = partition(arr, start, end);
-        
-        if(partitionIndex - 1 > start){
+
+        if (partitionIndex - 1 > start) {
             rightQuickSort(arr, start, partitionIndex - 1);
         }
-        if(partitionIndex + 1 < end){
+        if (partitionIndex + 1 < end) {
             rightQuickSort(arr, partitionIndex + 1, end);
         }
     }
-    
-    public static int partition(int[] arr, int start, int end){
-        
+
+    public static int partition(int[] arr, int start, int end) {
+
         int pivot = arr[end]; // 使用最后一个数做标准 
-        
-        for(int i = start; i < end; i++){  // 没有到最后的标准end位置, 所以后面需要调换两个, 将标准换到中间
-            if(arr[i] < pivot){
+
+        for (int i = start; i < end; i++) {  // 没有到最后的标准end位置, 所以后面需要调换两个, 将标准换到中间
+            if (arr[i] < pivot) {
                 int temp = arr[i];
                 arr[i] = arr[start];
                 arr[start] = temp;
-                
+
                 start++;
             }
         }
-        
+
         int temp = arr[start];
         arr[start] = arr[end];
         arr[end] = temp;
-        
+
         return start;
     }
 

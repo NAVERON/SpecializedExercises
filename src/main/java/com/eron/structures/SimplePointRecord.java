@@ -17,8 +17,8 @@ public record SimplePointRecord(double x, double y) {
     @Override
     public String toString() {
         return "SimplePointRecord{" +
-            "x=" + x +
-            ", y=" + y +
-            '}';
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

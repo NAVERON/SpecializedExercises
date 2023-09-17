@@ -6,11 +6,12 @@
 package com.eron.algorithms.sortting;
 
 import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MergeSortion {  // 归并排序
-    
+
     private static final Logger log = LoggerFactory.getLogger(MergeSortion.class);
 
     public static void mergeSort(int[] arr) {
@@ -44,7 +45,7 @@ public class MergeSortion {  // 归并排序
         while (p2 <= r) {  // 如果右边没有空  则复制到后面 不需要比较了，因为另一半已经合并完成了 
             help[count++] = arr[p2++];
         }
-        
+
         for (int i = 0; i < help.length; i++) {  // 把所有排序好的  复制到原始array中 
             arr[l + i] = help[i];
         }

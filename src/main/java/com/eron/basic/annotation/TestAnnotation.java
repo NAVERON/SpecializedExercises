@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * 设计自定义注解
+ *
  * @author ERON_AMD
  */
 @Target(ElementType.FIELD)
@@ -19,9 +20,14 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface TestAnnotation {
     String name() default "test";
+
     String address() default "default";
+
     int age() default 0;
-    enum COLOR {GREEN, BLUE, RED, BLACK, WHITE};
+
+    enum COLOR {GREEN, BLUE, RED, BLACK, WHITE}
+
+    ;
 }
 
 

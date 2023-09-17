@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
  * @author ERON_AMD
  */
 public class SplitCoin {
@@ -18,7 +17,7 @@ public class SplitCoin {
         //  找零钱问题   递归
         int[] conis = {1, 3, 5, 10};
         int amount = 100;
-        
+
     }
 
     public static int getWay(int[] arr, int aim) {
@@ -45,16 +44,16 @@ public class SplitCoin {
     }
 
     /**
-        * 输入可用零钱和总额，求解可搭配方案
-        *
-        * @param coins 可找零钱
-        * @param amount 总额
-        */
+     * 输入可用零钱和总额，求解可搭配方案
+     *
+     * @param coins  可找零钱
+     * @param amount 总额
+     */
     public static void coinChange(int[] coins, int amount) {
         //
     }
 
-    
+
     //  ========================================================
     // 非暴力解法
     public static int countWays(int[] arr, int aim) {
@@ -62,10 +61,10 @@ public class SplitCoin {
             return 0;
         }
         /**
-                * 创建一个全局的数组dp[][]用来存放计算的中间结果
-                * 之所以长度为arr.length+1是因为当index=arr.length时，后续还会执行dp[index]的赋值
-                * 如果不定义长度为length+1会出现下标越界
-                */
+         * 创建一个全局的数组dp[][]用来存放计算的中间结果
+         * 之所以长度为arr.length+1是因为当index=arr.length时，后续还会执行dp[index]的赋值
+         * 如果不定义长度为length+1会出现下标越界
+         */
         int[][] dp = new int[arr.length + 1][aim + 1];
         return process(arr, 0, aim, dp);
     }
@@ -91,7 +90,7 @@ public class SplitCoin {
         dp[index][aim] = res == 0 ? -1 : res;  // dp问题都需要保存中间状态值，加速效果，key为   钱index和剩余钱index
         return res;
     }
-    
+
 }
 
 

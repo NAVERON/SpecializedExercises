@@ -6,14 +6,15 @@ import java.lang.management.ThreadMXBean;
 import java.util.LinkedList;
 import java.util.StringJoiner;
 import java.util.Vector;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BasicThink {
 
     private static final Logger log = LoggerFactory.getLogger(BasicThink.class);
-    
-    private final ThreadLocal<Integer> threadLocalVariable = ThreadLocal.withInitial( () -> 10 );
+
+    private final ThreadLocal<Integer> threadLocalVariable = ThreadLocal.withInitial(() -> 10);
 
     public static void main(String[] args) {
         log.info("基础类");
@@ -27,10 +28,10 @@ public class BasicThink {
         testStack.push("hello world");
         testStack.push("miss mingduo");
         log.info("teststack status : {}", testStack.isEmpty());
-        for (; !testStack.isEmpty();) {
+        for (; !testStack.isEmpty(); ) {
             log.info("输出stack数据 : {}", testStack.pop());
         }
-        
+
         // 使用stringjoiner 
         StringJoiner joiner = new StringJoiner("/", "/", "");
         joiner.add("zookeepe");
@@ -53,7 +54,7 @@ public class BasicThink {
         for (long id : ids) {
             log.info("id : {}", id);
         }
-        
+
     }
 
     // 自己实现栈结构

@@ -2,7 +2,9 @@ package com.eron.algorithms.kalman;
 
 
 import static java.lang.Math.pow;
+
 import java.util.Random;
+
 import Jama.Matrix;
 
 // https://math.nist.gov/javanumerics/jama/   jama 
@@ -62,9 +64,9 @@ public class KalManBuilder {  // 一维 数据预测
 
         //transition matrix
         KF.setF(new Matrix(new double[][]{
-            {1, dt, pow(dt, 2) / 2},
-            {0, 1, dt},
-            {0, 0, 1}}));
+                {1, dt, pow(dt, 2) / 2},
+                {0, 1, dt},
+                {0, 0, 1}}));
 
         //input gain matrix
         KF.setB(new Matrix(new double[][]{{0, 0, 0}}).transpose());
@@ -74,9 +76,9 @@ public class KalManBuilder {  // 一维 数据预测
 
         //process noise covariance matrix
         KF.setQ(new Matrix(new double[][]{
-            {pow(dt, 5) / 4, pow(dt, 4) / 2, pow(dt, 3) / 2},
-            {pow(dt, 4) / 2, pow(dt, 3) / 1, pow(dt, 2) / 1},
-            {pow(dt, 3) / 1, pow(dt, 2) / 1, pow(dt, 1) / 1}}
+                {pow(dt, 5) / 4, pow(dt, 4) / 2, pow(dt, 3) / 2},
+                {pow(dt, 4) / 2, pow(dt, 3) / 1, pow(dt, 2) / 1},
+                {pow(dt, 3) / 1, pow(dt, 2) / 1, pow(dt, 1) / 1}}
         ).times(processNoisePSD));
 
         //measurement matrix
@@ -87,7 +89,7 @@ public class KalManBuilder {  // 一维 数据预测
 
         return KF;
     }
-    
+
 }
 
 

@@ -6,15 +6,15 @@
 package com.eron.structures;
 
 /**
- * 图转树算法相关 
- *  
+ * 图转树算法相关
+ *
  * @author ERON_AMD
  */
 public class GraphToTree {
     // Function to find root of the vertex
 
     static int find(int x, int a[],
-            int vis[], int root[]) {
+                    int vis[], int root[]) {
         if (vis[x] == 1) {
             return root[x];
         }
@@ -25,7 +25,7 @@ public class GraphToTree {
         return root[x];
     }
 
-// Function to convert directed graph into tree
+    // Function to convert directed graph into tree
     static void Graph_to_tree(int a[], int n) {
         // Vis array to check if an index is
         // visited or not root[] array is to

@@ -15,36 +15,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
  * @author ERON_AMD
  */
 public class SimpleModel {
-    
+
     private static final Logger log = LoggerFactory.getLogger(SimpleModel.class);
-    
+
     public static void main(String[] args) {
         log.info("custom annotation test");
-        
+
         Field[] fields = ExportModel.class.getDeclaredFields();
         String info = generateInfo(fields);
-        
+
         log.info("最终输出信息 : {}", info);
     }
-    
-    public static String generateInfo(Field[] fields){
+
+    public static String generateInfo(Field[] fields) {
         List<String> infos = new ArrayList<String>();
-        
-        for(int i = 0; i < fields.length; i++){
+
+        for (int i = 0; i < fields.length; i++) {
             log.info("生命field名称 : {}", fields[i].getName());
-            
+
             Annotation[] annotations = fields[i].getDeclaredAnnotations();
-            for(Annotation annotation : annotations){
-                if(annotation instanceof TestAnnotation){
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof TestAnnotation) {
                     infos.add(fields[i].getName());
                 }
             }
         }
-        
+
         log.info("final list values : {}, and size : {}", infos, infos.size());
         return StringUtils.join(infos, ",");
     }
@@ -91,6 +90,6 @@ public class SimpleModel {
             this.sex = sex;
         }
     }
-    
-    
+
+
 }

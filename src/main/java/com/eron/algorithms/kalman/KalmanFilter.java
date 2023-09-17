@@ -1,17 +1,17 @@
 package com.eron.algorithms.kalman;
 
 import static java.lang.Math.*;
+
 import Jama.Matrix;
 
 /**
-* 
-* CODE ADAPTED FROM:
-* http://the-lost-beauty.blogspot.com/2009/12/java-implementation-of-kalman-filter.html
-* AND:
-* http://the-lost-beauty.blogspot.com/2009/12/simulation-and-kalman-filter-for-3rd.html
-* 参考资料 : 
-* https://www.kalmanfilter.net/alphabeta.html
-*/
+ * CODE ADAPTED FROM:
+ * http://the-lost-beauty.blogspot.com/2009/12/java-implementation-of-kalman-filter.html
+ * AND:
+ * http://the-lost-beauty.blogspot.com/2009/12/simulation-and-kalman-filter-for-3rd.html
+ * 参考资料 :
+ * https://www.kalmanfilter.net/alphabeta.html
+ */
 
 public class KalmanFilter {
 
@@ -25,20 +25,20 @@ public class KalmanFilter {
 
         //state vector
         KF.setX(new Matrix(new double[][]{{     //状态向量
-                        0,
-                        0,
-                        0,
-                        0}}).transpose());
+                0,
+                0,
+                0,
+                0}}).transpose());
 
         //error covariance matrix
         KF.setP(Matrix.identity(4, 4).times(0d));   //生成一个  4X4  对角线  单元矩阵
-        
+
         //transition matrix
         KF.setF(new Matrix(new double[][]{
-                    {1, 0, dt, 0},
-                    {0, 1, 0d, dt},
-                    {0, 0, 1d, 0},
-                    {0, 0, 0d, 1d},}));
+                {1, 0, dt, 0},
+                {0, 1, 0d, dt},
+                {0, 0, 1d, 0},
+                {0, 0, 0d, 1d},}));
 
         //input gain matrix
         KF.setB(new Matrix(new double[][]{{0, 0, 0, 0}}).transpose());
@@ -48,15 +48,15 @@ public class KalmanFilter {
 
         //process noise covariance matrix
         KF.setQ(new Matrix(new double[][]{
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 1, 0},
-                    {0, 0, 0, 1}}).times(pow(processNoisePSD, 2)));
+                {0, 0, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1}}).times(pow(processNoisePSD, 2)));
 
         //measurement matrix
         KF.setH(new Matrix(new double[][]{
-                    {1, 0, 0, 0},
-                    {0, 1, 0, 0}}));
+                {1, 0, 0, 0},
+                {0, 1, 0, 0}}));
 
         //measurement noise covariance matrix
         KF.setR(Matrix.identity(2, 2).times(measurementNoiseVariance));
@@ -162,7 +162,7 @@ public class KalmanFilter {
     public void setX0(Matrix X0) {
         this.X0 = X0;
     }
-    
+
 }
 
 
