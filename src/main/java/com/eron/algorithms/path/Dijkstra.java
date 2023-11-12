@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * <a href="https://github.com/mburst/dijkstras-algorithm/blob/master/Dijkstras.java"> resource </a>
  */
 public class Dijkstra {
-
     private static final Logger log = LoggerFactory.getLogger(Dijkstra.class);
 
     public static void main(String[] args) {
@@ -113,9 +112,8 @@ public class Dijkstra {
 
     }
 
-    public enum Eage {  // 表示顶点集合
+    public enum Eage {
         A, B, C, D, E, F, G, H;
-
     }
 
     public static class Graph {
@@ -123,7 +121,7 @@ public class Dijkstra {
         private final Map<Character, List<Vertex>> vertices;  // 存储有向图 map
 
         public Graph() {
-            this.vertices = new HashMap<Character, List<Vertex>>();
+            this.vertices = new HashMap<>();
         }
 
         public void addVertex(Character character, List<Vertex> vertex) {
@@ -131,13 +129,13 @@ public class Dijkstra {
         }
 
         // 最后的结果 路径, 路径反向添加
-        private final LinkedList<Character> path = new LinkedList<Character>();
+        private final LinkedList<Character> path = new LinkedList<>();
 
         // 求 最短路径计算方法, 从 start到 finish
         public List<Character> getShortestPath(Character start, Character finish) {
-            final Map<Character, Integer> distances = new HashMap<Character, Integer>();  // 保存从起始点到其他点的距离
-            final Map<Character, Vertex> previous = new HashMap<Character, Vertex>();  // 记录节点的最短路径上一个节点
-            PriorityQueue<Vertex> nodes = new PriorityQueue<Vertex>();  // 计算得到最短路径的点 不断迭代更新最短距离 // 升序
+            final Map<Character, Integer> distances = new HashMap<>();  // 保存从起始点到其他点的距离
+            final Map<Character, Vertex> previous = new HashMap<>();  // 记录节点的最短路径上一个节点
+            PriorityQueue<Vertex> nodes = new PriorityQueue<>();  // 计算得到最短路径的点 不断迭代更新最短距离 // 升序
 
             for (Character vertex : vertices.keySet()) {  // 计算起始点到其他点的距离 初始化
                 if (vertex == start) {
@@ -178,23 +176,12 @@ public class Dijkstra {
                                 n.setDistance(alt);
                             }
                         });
-
-                        // forloop: // 可以不使用goto语句
-//						for (Vertex n : nodes) {  // 如果更新了节点的最短路径, 需要从nodes中移除 
-//							if (n.getId() == neighbor.getId()) {  // n 已经找到了最短路径  更新nodes的路径距离 
-//								// nodes.remove(n);  // 这里的操作更新nodes的距离值 直接引用修改的就是对象值 
-//								n.setDistance(alt);
-//								// nodes.add(n);
-//								break; // forloop;
-//							}
-//						}
                     }
                 }
             }
 
-            return new LinkedList<Character>(distances.keySet());  // 没有找到终点节点 返回所有的可达节点 list
+            return new LinkedList<>(distances.keySet());  // 没有找到终点节点 返回所有的可达节点 list
         }
-
     }
 }
 

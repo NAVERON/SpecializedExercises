@@ -20,5 +20,4 @@ public class AStartOrDStar {
     public void AStartImplement() {
         //
     }
-
 }

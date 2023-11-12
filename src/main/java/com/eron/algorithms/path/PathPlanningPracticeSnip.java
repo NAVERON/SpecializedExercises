@@ -53,8 +53,8 @@ public class PathPlanningPracticeSnip {
         int Max_row = map.length;
         int MAX_col = map[0].length;
         // 设置起点 终点
-        Node startPoint = new PathPlanningPracticeSnip().new Node(0, 0, null);
-        Node endPoint = new PathPlanningPracticeSnip().new Node(Max_row - 1, MAX_col - 1, null);
+        Node startPoint = new Node(0, 0, null);
+        Node endPoint = new Node(Max_row - 1, MAX_col - 1, null);
 
         seachWay(map, startPoint, endPoint);
     }
@@ -62,7 +62,7 @@ public class PathPlanningPracticeSnip {
     /**
      * 搜寻最短路径
      *
-     * @param arr        map
+     * @param map  map
      * @param startPoint
      * @param endPoint
      */
@@ -135,7 +135,7 @@ public class PathPlanningPracticeSnip {
 
     // 核心算法---检测节点是否通路
     private static boolean checkPath(int x, int y, Node preNode, Node endPoint, int c) {
-        Node node = new PathPlanningPracticeSnip().new Node(x, y, preNode);
+        Node node = new Node(x, y, preNode);
         // 查找地图中是否能通过
         if (map[x][y] == 1) {
             closeList.add(node);
@@ -214,7 +214,7 @@ public class PathPlanningPracticeSnip {
     }
 
     // 节点类
-    private class Node implements Comparator<Node> {
+    private static class Node implements Comparator<Node> {
         private int x;// X坐标
         private int y;// Y坐标
         private Node parentNode;// 父类节点
@@ -302,15 +302,6 @@ public class PathPlanningPracticeSnip {
             return o1.getF() - -o2.getF();
         }
     }
-
-    // 节点比较类
-//	class NodeFComparator implements Comparator<Node> {
-//		@Override
-//		public int compare(Node o1, Node o2) {
-//			return o1.getF() - o2.getF();
-//		}
-//
-//	}
 }
 
 

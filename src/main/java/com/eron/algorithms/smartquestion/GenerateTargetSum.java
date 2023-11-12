@@ -14,12 +14,13 @@ public class GenerateTargetSum {
         int[] x = new int[]{1, 0, 2, 3, 0, 4, 5, 0};
         // 数组中的数字 遇到0 多写一个 dup 
         GenerateTargetSum generateTargetSum = new GenerateTargetSum();
-        generateTargetSum.rewriteZero(x);
+        generateTargetSum.rewriteZero(x);  // 遍历2遍, 从后向前再过一遍, 遇到0直接多复制1位
         // 判断是否回文数字 
-        generateTargetSum.reverseNumber(12021);
+        generateTargetSum.reverseNumber(12021);  // 转换成字符串处理, ij索引相对而行
+        // 按照数字处理, 求得最大位数, 取余和求商 对比比大小
         // 增序数组 删除重复值 
         int[] arr = new int[]{1, 1, 2};
-        generateTargetSum.deleteDupNums(arr);
+        generateTargetSum.deleteDupNums(arr);  // 相等 j 向后一位， 不相等, 同时向后
         // 最大子数组和
         int[] arr2 = new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4};
         generateTargetSum.maxSubArray(arr2);
@@ -28,7 +29,6 @@ public class GenerateTargetSum {
         // + 1算法
         int[] digits = new int[]{9};
         generateTargetSum.plusOne(digits);
-
     }
 
     public void rewriteZero(int[] arr) {
@@ -121,7 +121,7 @@ public class GenerateTargetSum {
     }
 
     // 获取一个由空格分割的字符串的最后一个单词
-    public void getLastWord(String s) {
+    public void getLastWord(String s) { // 使用栈, 从后向前遍历
         String[] x = s.split("\s");
         Arrays.asList(x).forEach(ss -> System.out.println("分割结果-->" + ss));
         char[] chars = s.toCharArray();
@@ -149,7 +149,7 @@ public class GenerateTargetSum {
     }
 
     // 给一个数字数组 +1  输出结果
-    public void plusOne(int[] digits) {
+    public void plusOne(int[] digits) { // 从后向前遍历, carry = 0, 直接返回原来数组 否则继续向前遍历
         int n = digits.length;
         int[] digits2 = new int[n + 1];  // 多出来一个保存最后的carry
 
@@ -176,7 +176,6 @@ public class GenerateTargetSum {
             }
         }
     }
-
 }
 
 

@@ -83,7 +83,7 @@ public class CarGroupProblems {
 
         @Override
         public int compareTo(Car o) {  // 按照位置 降序 
-            return (int) (o.pos - this.pos);
+            return o.pos - this.pos;
         }
 
         @Override

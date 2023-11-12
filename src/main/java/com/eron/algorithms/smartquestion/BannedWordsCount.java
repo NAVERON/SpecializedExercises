@@ -28,12 +28,13 @@ public class BannedWordsCount {
         };
         BannedWordsCount bannedWordsCount = new BannedWordsCount();
         bannedWordsCount.checkWordsCount(a, b);
-
     }
 
     // 暴力解法 好像也没有什么其他精妙的办法 ? 
     public void checkWordsCount(String paragraph, String[] banned) {
-        String[] words = paragraph.toLowerCase().replaceAll(",", "").replaceAll("\\.", "").split("\s");
+        String[] words = paragraph.toLowerCase().replaceAll(",", "")
+                .replaceAll("\\.", "")
+                .split(" ");
         List<String> banWords = new ArrayList<>(Arrays.asList(banned));
 
         Map<String, Integer> countsStatic = new HashMap<>();
@@ -48,22 +49,10 @@ public class BannedWordsCount {
             }
         });
         // 这个比较其需要自定义 
-        Comparator<Map.Entry<String, Integer>> mapComparator = new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-                return o2.getValue() - o1.getValue();
-            }
-        };
-        countsStatic.entrySet().stream().forEach(entry -> log.info("entry {} : {}", entry.getKey(), entry.getValue()));
-        Optional<Map.Entry<String, Integer>> result = countsStatic.entrySet().stream().sorted(mapComparator).findFirst();
-        result.ifPresent(x -> {
-            log.info("stream操作直接找到 --> {}", result.get());
-        });
-
-//        List<Map.Entry<String, Integer>> list = new ArrayList<>(countsStatic.entrySet());
-//        Collections.sort(list, mapComparator);
-//        log.info("直接获取第一个 --> {}", list.get(0));  // 频次最大的一个 
-
+        Comparator<Map.Entry<String, Integer>> mapComparator = (o1, o2) -> o2.getValue() - o1.getValue();
+        countsStatic.forEach((key, value) -> log.info("entry {} : {}", key, value));
+        Optional<Map.Entry<String, Integer>> result = countsStatic.entrySet().stream().min(mapComparator); // reduce 操作
+        result.ifPresent(x -> log.info("stream操作直接找到 --> {}", result.get()));
     }
 
 }

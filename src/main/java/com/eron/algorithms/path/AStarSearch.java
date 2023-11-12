@@ -138,7 +138,7 @@ public class AStarSearch {
         System.out.println("Path: " + path);
     }
 
-    public static class Node {
+    public static class Node implements Comparable<Node> {
 
         public final String value;
         public double g_scores;
@@ -156,9 +156,13 @@ public class AStarSearch {
             return value;
         }
 
+        @Override
+        public int compareTo(Node o) {
+            return Double.compare(this.f_scores, o.f_scores);
+        }
     }
 
-    public static class Edge {
+    private static class Edge {
         public final double cost;
         public final Node target;
 
@@ -170,7 +174,7 @@ public class AStarSearch {
 
     // h scores is the stright-line distance from the current city to Bucharest
     public static List<Node> printPath(Node target) {
-        List<Node> path = new ArrayList<Node>();
+        List<Node> path = new ArrayList<>();
 
         for (Node node = target; node != null; node = node.parent) {
             path.add(node);
@@ -185,21 +189,8 @@ public class AStarSearch {
 
         Set<Node> explored = new HashSet<Node>();
 
-        PriorityQueue<Node> queue = new PriorityQueue<Node>(20,
-                new Comparator<Node>() {
-                    //override compare method
-                    public int compare(Node i, Node j) {
-                        if (i.f_scores > j.f_scores) {
-                            return 1;
-                        } else if (i.f_scores < j.f_scores) {
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    }
-
-                }
-        );
+        //override compare method
+        PriorityQueue<Node> queue = new PriorityQueue<>(20);
 
         // cost from start
         source.g_scores = 0;
@@ -229,25 +220,21 @@ public class AStarSearch {
                     continue;
                 }
                 // else if child node is not in queue or newer f_score is lower
-                else if ((!queue.contains(child)) ||
-                        (temp_f_scores < child.f_scores)) {
+                else if ((!queue.contains(child)) || (temp_f_scores < child.f_scores)) {
 
                     child.parent = current;
                     child.g_scores = temp_g_scores;
                     child.f_scores = temp_f_scores;
 
-                    if (queue.contains(child)) {
-                        queue.remove(child);
-                    }
-
+                    queue.remove(child);
                     queue.add(child);
-
                 }
-
             }
-
         }
-
     }
-
 }
+
+
+
+
+

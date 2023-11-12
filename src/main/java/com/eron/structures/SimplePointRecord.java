@@ -9,8 +9,8 @@ public record SimplePointRecord(double x, double y) {
     }
 
     public double distance(SimplePoint another) {
-        double diffX = another.getX() - this.x();
-        double diffY = another.getY() - this.y();
+        double diffX = another.x() - this.x();
+        double diffY = another.y() - this.y();
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 

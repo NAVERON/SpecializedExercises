@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
  * @author wangy
  */
 public class BFSTravelResolve {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(BFSTravelResolve.class);
 
     // 一般有2中遍历 深度优先 和广度优先  计算终结条件和方式 
@@ -62,6 +61,7 @@ public class BFSTravelResolve {
                     Pos top = pos.pop();
                     visited[top.x][top.y] = true;
 
+                    // 特殊处理的是 终结条件
                     List<Pos> neighbors = getNeighbor(top, m, n);
                     if (neighbors.size() < 4) {
                         // 有一个边超过了边界 表示不可能包围起来 
@@ -72,7 +72,7 @@ public class BFSTravelResolve {
 
                     List<Pos> validNeighbor = neighbors.stream()
                             .filter(p -> arr[p.x][p.y] == 0 && !visited[p.x][p.y])
-                            .collect(Collectors.toList());
+                            .toList();
                     // 如果周围没有新增的 0 表示范围查找已经结束 
                     validNeighbor.forEach(p -> {
                         LOGGER.info("{} == 邻居 位置 --> {}", top, p);
@@ -101,27 +101,18 @@ public class BFSTravelResolve {
 
     }
 
-    private static class Pos {
-        public int x;
-        public int y;
-
-        public Pos(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public String toString() {
-            return "Pos [x=" + x + ", y=" + y + "]";
-        }
-    }
+    /**
+     * 尝试使用 java 最新的特性 record
+     *
+     * @param x x
+     * @param y y
+     */
+    private record Pos(int x, int y) {}
 
     private static List<Pos> getNeighbor(Pos pos, int row, int col) {
         List<Pos> res = new LinkedList<>();
-        // 上下左右判断 返回有效的邻居 
-        int top_i = pos.x - 1;
-        int top_j = pos.y;
-        if (top_i >= 0) res.add(new Pos(top_i, top_j));
+        // 上下左右判断 返回有效的邻居
+        if (pos.x - 1 >= 0) res.add(new Pos(pos.x - 1, pos.y));
 
         int left_i = pos.x;
         int left_j = pos.y - 1;
@@ -135,9 +126,7 @@ public class BFSTravelResolve {
         int bottom_j = pos.y;
         if (bottom_i <= row - 1) res.add(new Pos(bottom_i, bottom_j));
 
-        res.forEach(p -> {
-            LOGGER.info("邻居 --> {}", p);
-        });
+        res.forEach(p -> LOGGER.info("邻居 --> {}", p));
         return res;
     }
 

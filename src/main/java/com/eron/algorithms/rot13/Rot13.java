@@ -58,7 +58,7 @@ public class Rot13 {
      * <p>
      * ASCII alphabetic characters in the given buffer are rotated 13 positions.
      *
-     * @param buf    target of the ROT-13 operation
+     * @param input    target of the ROT-13 operation
      * @param offset starting offset within {@code buf} which is the segment to be
      *               rotated
      * @param length length of the segment starting at {@code offset}
@@ -85,7 +85,7 @@ public class Rot13 {
      * <p>
      * ASCII alphabetic characters in the given buffer are rotated 13 positions.
      *
-     * @param buf    target of the ROT-13 operation
+     * @param input    target of the ROT-13 operation
      * @param offset starting offset within {@code buf} which is the segment to be
      *               rotated
      * @param length length of the segment starting at {@code offset}
@@ -106,7 +106,6 @@ public class Rot13 {
      */
     public static char rotate(char c) {
         // 整体上将26 字母且分为2部分, 前半段向后移, 后半段向前移
-
         if (c >= 'a' && c <= 'm')
             c += 13;
         else if (c >= 'A' && c <= 'M')

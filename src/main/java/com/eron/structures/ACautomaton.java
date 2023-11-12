@@ -39,8 +39,7 @@ public class ACautomaton {
 
     public static void main(String[] args) {
         ACautomaton auto = new ACautomaton();
-        @SuppressWarnings("serial")
-        List<String> list = new ArrayList<String>() {{
+        List<String> list = new ArrayList<>() {{
             add("he");
             add("she");
             add("his");
