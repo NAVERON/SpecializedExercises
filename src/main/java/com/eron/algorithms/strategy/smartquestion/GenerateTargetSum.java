@@ -1,7 +1,6 @@
-package com.eron.algorithms.smartquestion;
+package com.eron.algorithms.strategy.smartquestion;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 /**
  * 随机生成一组和为给定数字的数组

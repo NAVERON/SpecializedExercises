@@ -25,9 +25,9 @@ public class BubbleSort {
 //        sort2(arr_two);
 
         // 打印排序结果
-        log.info("第一個排序結果 : {}", arrToString(arr));
+        log.info("第一个排序結果 : {}", arrToString(arr));
 
-        log.info("第二個排序結果 : {}", arrToString(arr_two));
+        log.info("第二个排序結果 : {}", arrToString(arr_two));
 
         insertSort(arr_two);
         log.info("插入排序 : {}", arrToString(arr_two));

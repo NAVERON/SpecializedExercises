@@ -1,4 +1,4 @@
-package com.eron.mutithread;
+package com.eron.basic.concurrency;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;

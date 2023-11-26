@@ -20,7 +20,7 @@
 
 ## 代码演示
 
-```
+```shell
 # Three points are a counter-clockwise turn if ccw > 0, clockwise if
 # ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
 # gives twice the signed  area of the triangle formed by p1, p2 and p3.
@@ -28,7 +28,7 @@ function ccw(p1, p2, p3):
     return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
 ```
 
-```
+```shell
 let N           = number of points
 let points[N+1] = the array of points
 swap points[1] with the point with the lowest y-coordinate

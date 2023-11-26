@@ -129,7 +129,7 @@ public class GrahamConvexScanner {
      */
     public static List<SimplePoint> getConvexHullOfSimplePoint(List<SimplePoint> points) throws IllegalArgumentException {
 
-        List<SimplePoint> sorted = new ArrayList<>(getSortedPointSetOfSimplePoint(points));
+        List<SimplePoint> sorted = List.copyOf(getSortedPointSetOfSimplePoint(points));
 
         if (sorted.size() < 3) {
             throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");

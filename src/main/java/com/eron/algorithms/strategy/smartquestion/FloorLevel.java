@@ -1,4 +1,4 @@
-package com.eron.algorithms.smartquestion;
+package com.eron.algorithms.strategy.smartquestion;
 
 import java.util.HashMap;
 import java.util.Map;

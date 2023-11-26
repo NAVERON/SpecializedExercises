@@ -1,8 +1,7 @@
-package com.eron.algorithms.smartquestion;
+package com.eron.algorithms.strategy.smartquestion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,7 @@ public class UserTransactionLogProcess {
     private static final Logger log = LoggerFactory.getLogger(UserTransactionLogProcess.class);
 
     public static void main(String[] args) {
-        List<String> logs = new ArrayList<String>() {{
+        List<String> logs = new ArrayList<>() {{
             add("1 2 34");
             add("1 3 33");
             add("1 5 33");
@@ -41,7 +40,6 @@ public class UserTransactionLogProcess {
         UserTransactionLogProcess transaction = new UserTransactionLogProcess();
         List<String> userids = transaction.processLog(logs, 3);
         log.info("最终结果 --> {}", userids);
-
     }
 
     // 日志 输出top n 
@@ -58,7 +56,7 @@ public class UserTransactionLogProcess {
      * @return userid 排名
      */
     public List<String> processLog(List<String> logs, int threshold) {
-        List<String> res = null;
+        List<String> res;
 
         Map<Integer, Integer> userTransaction = new HashMap<>();  // userid + transCount 
         logs.forEach(log -> {

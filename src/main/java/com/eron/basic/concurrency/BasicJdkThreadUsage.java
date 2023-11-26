@@ -1,4 +1,4 @@
-package com.eron.mutithread;
+package com.eron.basic.concurrency;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.eron.mutithread;
+package com.eron.basic.concurrency;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.eron.algorithms.smartquestion;
+package com.eron.algorithms.strategy.smartquestion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,9 +39,9 @@ public class Solution {
 
     // 给定一句话 根据这一句话随机生成一定长度的句子 
     public List<String> generateSentence(String input, Integer length) {
-        List<String> res = new LinkedList<String>();
+        List<String> res = new LinkedList<>();
 
-        List<String> words = new ArrayList<String>(Arrays.asList(input.split("\s")));
+        List<String> words = new ArrayList<>(Arrays.asList(input.split("\s")));
         Map<String, Set<Integer>> mapper = this.preDeal(words);
         // 生成第一个单词 
         Random rd = new Random();
