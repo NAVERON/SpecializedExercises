@@ -86,7 +86,7 @@ public class GenerateTargetSum {
         int n = arr.length;
         System.out.println("数组长度 - " + n);
         if (n <= 1) System.out.println("数组长度 < 1 == " + n);
-        ;
+
         int i = 0, j = 1;
         while (j < n) {
 //            if(arr[i] == arr[j]) {

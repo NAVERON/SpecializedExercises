@@ -12,7 +12,7 @@ import java.util.*;
  *
  * @author xukaifang
  */
-public class PathPlanningPracticeSnip {
+public class AStarPathSearchMatrix {
 
     private static int[][] map = null;
     private static List<Node> openList = new ArrayList<Node>();// 开启列表  没有遍历过的
@@ -46,15 +46,13 @@ public class PathPlanningPracticeSnip {
                 {1, 0, 1, 0},
                 {0, 0, 0, 0}
         };
-        // 地图数组 { 0, 1, 0, 0}, { 0, 0, 0, 1}, { 1, 0, 1, 0}, { 0, 0, 0, 0}};
+        map = map1;
 
-        // map=map1;
-
-        int Max_row = map.length;
-        int MAX_col = map[0].length;
+        int maxRow = map.length;
+        int maxCol = map[0].length;
         // 设置起点 终点
         Node startPoint = new Node(0, 0, null);
-        Node endPoint = new Node(Max_row - 1, MAX_col - 1, null);
+        Node endPoint = new Node(maxRow - 1, maxCol - 1, null);
 
         seachWay(map, startPoint, endPoint);
     }

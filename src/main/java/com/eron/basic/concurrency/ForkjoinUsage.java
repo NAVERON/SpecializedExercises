@@ -70,9 +70,7 @@ public class ForkjoinUsage {
             double res2 = task2.join();
             return res1 + res2;
         }
-
     }
-
 }
 
 

@@ -117,6 +117,20 @@ public class Rot13 {
         return c;
     }
 
+    public static void main(String[] args) {
+        String hello = "hello world";
+        System.out.println(hello);
+
+        char[] tmp = hello.toCharArray();
+        rotate(tmp);
+        System.out.println(String.valueOf(tmp));
+
+        System.out.println(rotate(hello));
+
+        CharBuffer cb = CharBuffer.wrap(hello.toCharArray());
+        rotate(cb);
+        System.out.println(cb);
+    }
 }
 
 

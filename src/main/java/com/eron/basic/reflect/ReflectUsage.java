@@ -33,7 +33,7 @@ public class ReflectUsage {
                  | SecurityException | IllegalArgumentException
                  | IllegalAccessException | NoSuchMethodException
                  | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
+            log.error("reflect error", e);
         }
 
     }

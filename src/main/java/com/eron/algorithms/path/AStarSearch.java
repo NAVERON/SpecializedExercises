@@ -187,7 +187,7 @@ public class AStarSearch {
 
     public static void AstarSearch(Node source, Node goal) {
 
-        Set<Node> explored = new HashSet<Node>();
+        Set<Node> explored = new HashSet<>();
 
         //override compare method
         PriorityQueue<Node> queue = new PriorityQueue<>(20);
@@ -197,7 +197,7 @@ public class AStarSearch {
         queue.add(source);
         boolean found = false;
 
-        while ((!queue.isEmpty()) && (!found)) {
+        while (!queue.isEmpty() && !found) {
             // the node in having the lowest f_score value
             Node current = queue.poll();
 
@@ -216,11 +216,11 @@ public class AStarSearch {
                 double temp_f_scores = temp_g_scores + child.h_scores;
 
                 // if child node has been evaluated and the newer f_score is higher, skip
-                if ((explored.contains(child)) && (temp_f_scores >= child.f_scores)) {
+                if (explored.contains(child) && temp_f_scores >= child.f_scores) {
                     continue;
                 }
                 // else if child node is not in queue or newer f_score is lower
-                else if ((!queue.contains(child)) || (temp_f_scores < child.f_scores)) {
+                else if (!queue.contains(child) || temp_f_scores < child.f_scores) {
 
                     child.parent = current;
                     child.g_scores = temp_g_scores;

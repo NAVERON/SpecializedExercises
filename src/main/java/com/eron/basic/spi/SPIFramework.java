@@ -14,20 +14,17 @@ import org.slf4j.LoggerFactory;
  * 参考文档博客 https://reflectoring.io/service-provider-interface/
  */
 public class SPIFramework {
-
     // 当前实现只针对某个接口的实现扫描 
     private static final Logger log = LoggerFactory.getLogger(SPIFramework.class);
 
     public static void main(String[] args) {
-        // 测试框架 
-        Optional<CommonLog> usageLogger = SPIFramework.getInstance().getImplByName("SimpleJDKLogger");
-        if (usageLogger.isPresent()) {
-            CommonLog impl = usageLogger.get();
-            log.info("获取到的实现 --> {}, {}", impl.info("impl->info[method]"), impl.error("impl->[error]"));
-        } else {
-            throw new IllegalCallerException();
-        }
-
+        // 测试框架
+        CommonLog impl = SPIFramework.getInstance().getImplByName("SimpleJDKLogger").orElseThrow(
+            IllegalCallerException::new);
+        log.info("获取到的实现 --> {}, {}",
+            impl.info("impl->info[method]"),
+            impl.error("impl->[error]")
+        );
     }
 
     private static SPIFramework commonLogService = null;

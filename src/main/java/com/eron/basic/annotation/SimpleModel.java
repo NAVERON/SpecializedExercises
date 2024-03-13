@@ -5,6 +5,8 @@
  */
 package com.eron.basic.annotation;
 
+import com.eron.basic.annotation.TestAnnotation.SimpleTestColor;
+import java.awt.Color;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class SimpleModel {
     }
 
     public static String generateInfo(Field[] fields) {
-        List<String> infos = new ArrayList<String>();
+        List<String> infos = new ArrayList<>();
 
         for (int i = 0; i < fields.length; i++) {
             log.info("生命field名称 : {}", fields[i].getName());
@@ -52,7 +54,7 @@ public class SimpleModel {
 
         @TestAnnotation
         private String name;
-        @TestAnnotation
+        @TestAnnotation(color = SimpleTestColor.WHITE)
         private String addressString;
         @TestAnnotation
         private int age;

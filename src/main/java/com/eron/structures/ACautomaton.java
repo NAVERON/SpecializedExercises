@@ -99,14 +99,13 @@ public class ACautomaton {
         }
     }
 
-    public void createGoto(Trie trie, List<String> patterns) {  // 生成 
-        patterns.forEach(p -> {
-            trie.insert(p);
-        });
+    public void createGoto(Trie trie, List<String> patterns) {
+        // 插入 逐步生成 trie
+        patterns.forEach(trie::insert);
     }
 
-    public void createFail(Trie trie) {  // 失败节点 
-        // trie 广度优先遍历 
+    public void createFail(Trie trie) {
+        // trie 广度优先遍历  传入参数trie 应当当作对戏那个的内部控制变量, 封装
         Node root = trie.root;
         Queue<Node> queue = new ArrayBlockingQueue<>(trie.count);
         queue.add(root);
@@ -114,11 +113,8 @@ public class ACautomaton {
         while (!queue.isEmpty()) {
             Node node = queue.poll();
             if (node != null) {
-                node.children.entrySet().forEach(childEntry -> {
-                    Character i = childEntry.getKey();
-                    Node child = childEntry.getValue();
-
-                    if (node == root) {  // 如果是根节点 失败链指向自己
+                node.children.forEach((i, child) -> {
+                    if (node == root) {  // 如果是根节点 直接子节点, 失败指向root
                         child.fail = root;
                     } else {
                         Node p = node.fail;
@@ -137,11 +133,11 @@ public class ACautomaton {
 
                     queue.add(child);
                 });
-
             }
         }
 
-        root.fail = root;  // 不处理 root的fail指针是null; 不能在循环中处理, 因为在回溯fail指针有无限循环 所以只能最后处理 
+        // 不处理 root的fail指针是null; 不能在循环中处理, 因为在回溯fail指针有无限循环 所以只能最后处理
+        root.fail = root;
     }
 
     public List<String> match(Trie trie, String text) {  // 匹配 
