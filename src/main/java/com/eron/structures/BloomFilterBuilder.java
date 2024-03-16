@@ -20,8 +20,6 @@ public class BloomFilterBuilder {
         BloomFilterBuilder builder = new BloomFilterBuilder();
 
         builder.guavaBloomFilterUsgae();
-
-
     }
 
     // 使用guava的实现

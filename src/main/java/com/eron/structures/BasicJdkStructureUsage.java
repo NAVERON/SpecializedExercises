@@ -72,7 +72,7 @@ public class BasicJdkStructureUsage {
 
         @Override
         public long getDelay(TimeUnit unit) {
-            Long timeOff = this.availableTime - System.currentTimeMillis();
+            long timeOff = this.availableTime - System.currentTimeMillis();
             return unit.convert(timeOff, TimeUnit.MILLISECONDS);
         }
 

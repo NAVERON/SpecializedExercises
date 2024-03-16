@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import com.eron.structures.SimplePoint;
+import com.eron.structures.Simple2DPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,17 +67,17 @@ public class GrahamConvexScanner {
      * @param points the list of points.
      * @return true if all points in <code>points</code> are collinear.
      */
-    protected static boolean areAllCollinearOfSimplePoint(List<SimplePoint> points) {
+    protected static boolean areAllCollinearOfSimplePoint(List<Simple2DPoint> points) {
         // 判断是不是所有的点都在一条线上
         if (points.size() < 2) {
             return true;
         }
 
-        final SimplePoint a = points.get(0);
-        final SimplePoint b = points.get(1);
+        final Simple2DPoint a = points.get(0);
+        final Simple2DPoint b = points.get(1);
 
         for (int i = 2; i < points.size(); i++) {
-            SimplePoint c = points.get(i);
+            Simple2DPoint c = points.get(i);
 
             if (getTurnOfSimplePoint(a, b, c) != Turn.COLLINEAR) {
                 return false;
@@ -101,15 +101,15 @@ public class GrahamConvexScanner {
      *                                  are collinear or if there are less than
      *                                  3 unique points present.
      */
-    public static List<SimplePoint> getConvexHullOfSimplePoint(int[] xs, int[] ys) throws IllegalArgumentException {
+    public static List<Simple2DPoint> getConvexHullOfSimplePoint(int[] xs, int[] ys) throws IllegalArgumentException {
         // 外部数据输入
         if (xs.length != ys.length) {
             throw new IllegalArgumentException("xs and ys don't have the same size");
         }
 
-        List<SimplePoint> points = new ArrayList<>();
+        List<Simple2DPoint> points = new ArrayList<>();
         for (int i = 0; i < xs.length; i++) {
-            points.add(new SimplePoint(xs[i], ys[i]));
+            points.add(new Simple2DPoint(xs[i], ys[i]));
         }
 
         return getConvexHullOfSimplePoint(points);
@@ -127,9 +127,9 @@ public class GrahamConvexScanner {
      * @throws IllegalArgumentException if all points are collinear or if there
      *                                  are less than 3 unique points present.
      */
-    public static List<SimplePoint> getConvexHullOfSimplePoint(List<SimplePoint> points) throws IllegalArgumentException {
+    public static List<Simple2DPoint> getConvexHullOfSimplePoint(List<Simple2DPoint> points) throws IllegalArgumentException {
 
-        List<SimplePoint> sorted = List.copyOf(getSortedPointSetOfSimplePoint(points));
+        List<Simple2DPoint> sorted = List.copyOf(getSortedPointSetOfSimplePoint(points));
 
         if (sorted.size() < 3) {
             throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");
@@ -139,15 +139,15 @@ public class GrahamConvexScanner {
             throw new IllegalArgumentException("cannot create a convex hull from collinear points");
         }
 
-        Stack<SimplePoint> stack = new Stack<>();
+        Stack<Simple2DPoint> stack = new Stack<>();
         stack.push(sorted.get(0));
         stack.push(sorted.get(1));
 
         for (int i = 2; i < sorted.size(); i++) {
 
-            SimplePoint head = sorted.get(i);
-            SimplePoint middle = stack.pop();
-            SimplePoint tail = stack.peek();
+            Simple2DPoint head = sorted.get(i);
+            Simple2DPoint middle = stack.pop();
+            Simple2DPoint tail = stack.peek();
 
             Turn turn = getTurnOfSimplePoint(tail, middle, head);
 
@@ -185,12 +185,12 @@ public class GrahamConvexScanner {
      * @return a sorted set of points from the list <code>points</code>.
      * @see GrahamConvexScanner#getSortedPointSetOfSimplePoint(java.util.List)
      */
-    protected static Set<SimplePoint> getSortedPointSetOfSimplePoint(List<SimplePoint> points) {
+    protected static Set<Simple2DPoint> getSortedPointSetOfSimplePoint(List<Simple2DPoint> points) {
 
-        SimplePoint lowest = getLowestPointOfSimplePoint(points);  // 获取基准点
+        Simple2DPoint lowest = getLowestPointOfSimplePoint(points);  // 获取基准点
 
         // 与基准点的角度比较
-        TreeSet<SimplePoint> set = new TreeSet<>((a, b) -> {
+        TreeSet<Simple2DPoint> set = new TreeSet<>((a, b) -> {
 
             if (a == b || a.equals(b)) {
                 return 0;
@@ -232,15 +232,15 @@ public class GrahamConvexScanner {
     /**
      * 比较器单独实现
      */
-    public static class Point2DComparator implements Comparator<SimplePoint> {
-        private SimplePoint lowest;
+    public static class Point2DComparator implements Comparator<Simple2DPoint> {
+        private Simple2DPoint lowest;
 
-        public Point2DComparator(SimplePoint lowest) {  // 点云最左下角 或者传入所有点云points
+        public Point2DComparator(Simple2DPoint lowest) {  // 点云最左下角 或者传入所有点云points
             this.lowest = lowest;
         }
 
         @Override
-        public int compare(SimplePoint a, SimplePoint b) {
+        public int compare(Simple2DPoint a, Simple2DPoint b) {
             if (a == b || a.equals(b)) {
                 return 0;
             }
@@ -276,13 +276,13 @@ public class GrahamConvexScanner {
      * 1 such point exists, the one with the lowest x coordinate
      * is returned.
      */
-    protected static SimplePoint getLowestPointOfSimplePoint(List<SimplePoint> points) {  // 获取左下角的点 -> 使用点作为向量起始点 
+    protected static Simple2DPoint getLowestPointOfSimplePoint(List<Simple2DPoint> points) {  // 获取左下角的点 -> 使用点作为向量起始点
 
-        SimplePoint lowest = points.get(0);
+        Simple2DPoint lowest = points.get(0);
 
         for (int i = 1; i < points.size(); i++) {
 
-            SimplePoint temp = points.get(i);
+            Simple2DPoint temp = points.get(i);
 
             if (temp.y() < lowest.y() || (temp.y() == lowest.y() && temp.x() < lowest.x())) {
                 lowest = temp;
@@ -312,7 +312,7 @@ public class GrahamConvexScanner {
      * ordered points <code>a</code>, <code>b</code> and
      * <code>c</code>.
      */
-    private static Turn getTurnOfSimplePoint(SimplePoint a, SimplePoint b, SimplePoint c) {
+    private static Turn getTurnOfSimplePoint(Simple2DPoint a, Simple2DPoint b, Simple2DPoint c) {
 
         long crossProduct = (long) (((b.x() - a.y()) * (c.y() - a.y())) -
                 ((b.y() - a.y()) * (c.x() - a.x())));
@@ -334,45 +334,45 @@ public class GrahamConvexScanner {
         // y coordinates
         int[] ys = {9, 2, -4, 3, 90, 3, -11};
         // find the convex hull
-        List<SimplePoint> convexHull = GrahamConvexScanner.getConvexHullOfSimplePoint(xs, ys); // 返回最外层点链接形成的hull
-        for (SimplePoint p : convexHull) {
+        List<Simple2DPoint> convexHull = GrahamConvexScanner.getConvexHullOfSimplePoint(xs, ys); // 返回最外层点链接形成的hull
+        for (Simple2DPoint p : convexHull) {
             System.out.println(p);
         }
 
         System.out.println("案例2 ====================");
         // ==> 官方案例2
         // the same points as the previous example
-        List<SimplePoint> points = Arrays.asList(
-                new SimplePoint(3, 9),
-                new SimplePoint(5, 2),
-                new SimplePoint(-1, -4),
-                new SimplePoint(8, 3),
-                new SimplePoint(-6, 90),
-                new SimplePoint(23, 3),
-                new SimplePoint(4, -11)
+        List<Simple2DPoint> points = Arrays.asList(
+                new Simple2DPoint(3, 9),
+                new Simple2DPoint(5, 2),
+                new Simple2DPoint(-1, -4),
+                new Simple2DPoint(8, 3),
+                new Simple2DPoint(-6, 90),
+                new Simple2DPoint(23, 3),
+                new Simple2DPoint(4, -11)
         );
 
         // find the convex hull
-        List<SimplePoint> convexHull2 = GrahamConvexScanner.getConvexHullOfSimplePoint(points);
+        List<Simple2DPoint> convexHull2 = GrahamConvexScanner.getConvexHullOfSimplePoint(points);
 
-        for (SimplePoint p : convexHull2) {
+        for (Simple2DPoint p : convexHull2) {
             System.out.println(p);
         }
 
         // 需要实现堆非使用fx 库的支持
-        List<SimplePoint> pointsOfSimple = Arrays.asList(
-                new SimplePoint(3, 9),
-                new SimplePoint(5, 2),
-                new SimplePoint(-1, -4),
-                new SimplePoint(8, 3),
-                new SimplePoint(-6, 90),
-                new SimplePoint(23, 3),
-                new SimplePoint(4, -11)
+        List<Simple2DPoint> pointsOfSimple = Arrays.asList(
+                new Simple2DPoint(3, 9),
+                new Simple2DPoint(5, 2),
+                new Simple2DPoint(-1, -4),
+                new Simple2DPoint(8, 3),
+                new Simple2DPoint(-6, 90),
+                new Simple2DPoint(23, 3),
+                new Simple2DPoint(4, -11)
         );
-        List<SimplePoint> convexHull3 = GrahamConvexScanner.getConvexHullOfSimplePoint(pointsOfSimple);
+        List<Simple2DPoint> convexHull3 = GrahamConvexScanner.getConvexHullOfSimplePoint(pointsOfSimple);
 
         System.out.println("案例3 ====================");
-        for (SimplePoint p : convexHull3) {
+        for (Simple2DPoint p : convexHull3) {
             System.out.println(p);
         }
     }

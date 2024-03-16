@@ -1,6 +1,6 @@
 package com.eron.structures;
 
-public record SimplePointRecord(double x, double y) {
+public record Simple2DPoint(double x, double y) {
 
     public double distance(double x, double y) {
         double diffX = x - this.x();
@@ -8,17 +8,24 @@ public record SimplePointRecord(double x, double y) {
         return Math.sqrt(diffX * diffX + diffY * diffY);
     }
 
-    public double distance(SimplePoint another) {
-        double diffX = another.x() - this.x();
-        double diffY = another.y() - this.y();
-        return Math.sqrt(diffX * diffX + diffY * diffY);
+    public double distance(Simple2DPoint another) {
+        return this.distance(another.x, another.y);
     }
 
     @Override
     public String toString() {
-        return "SimplePointRecord{" +
+        return "SimplePoint{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';
     }
 }
+
+
+
+
+
+
+
+
+

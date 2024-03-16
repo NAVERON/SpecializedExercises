@@ -199,7 +199,7 @@ public class Sort {
             return data;
         }
 
-        private void sink(int i) {
+        private void sink(int i) { // 同 heapify 方法，下沉
             while (i < size) {
                 int c1 = 2 * i + 1;
                 int c2 = 2 * i + 2;

@@ -3,7 +3,7 @@ package com.eron.designpattern;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.eron.structures.SimplePoint;
+import com.eron.structures.Simple2DPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +39,10 @@ public class TemplatePattern {
             log.info("把做好的饭放到盘子上");
         }
 
-        public final void cooking(Supplier<SimplePoint> start, Consumer<SimplePoint> deal) {
+        public final void cooking(Supplier<Simple2DPoint> start, Consumer<Simple2DPoint> deal) {
             log.info("实际的处理中, 根据不同的制作方法应当实现不同的处理过程");
 
-            SimplePoint init = start.get();
+            Simple2DPoint init = start.get();
             log.info("获取到初始数据 : {}", init.toString());
             deal.accept(init);  // 对获取的数据进一步处理
             log.info("使用传入的consumer 函数处理完成...");
@@ -50,7 +50,7 @@ public class TemplatePattern {
 
         // 可以传入多个处理函数 根据需要变化 对外暴露的接口/直接使用此方法作为门面
         @SafeVarargs
-        public final void make(Supplier<SimplePoint> start, Consumer<SimplePoint> deal, Consumer<String>... unknow) {
+        public final void make(Supplier<Simple2DPoint> start, Consumer<Simple2DPoint> deal, Consumer<String>... unknow) {
             log.info("=================================");
 
             this.wokTools();
@@ -62,8 +62,8 @@ public class TemplatePattern {
 
         // 自己调用make 并传入自定义处理函数
         public void eggFriedRice() {
-            Supplier<SimplePoint> startPosition = () -> new SimplePoint(123, 111);
-            Consumer<SimplePoint> dealPosition = (x) -> log.info("deal start position -> {}", x);
+            Supplier<Simple2DPoint> startPosition = () -> new Simple2DPoint(123, 111);
+            Consumer<Simple2DPoint> dealPosition = (x) -> log.info("deal start position -> {}", x);
             Consumer<String> other = (x) -> log.info("输入数据进行处理 -> {}", x);  // 额外的处理
 
             this.make(startPosition, dealPosition, other);
@@ -71,20 +71,20 @@ public class TemplatePattern {
 
         // 自定义实现 案例2
         public void shreddedPotatoes() {
-            Supplier<SimplePoint> first = () -> new SimplePoint(145, 999);
-            Consumer<SimplePoint> checkout = new CustomComsumer();
+            Supplier<Simple2DPoint> first = () -> new Simple2DPoint(145, 999);
+            Consumer<Simple2DPoint> checkout = new CustomComsumer();
 
             this.make(first, checkout);
         }
 
     }
 
-    public static class CustomComsumer implements Consumer<SimplePoint> {  // 自定义实现消费接口
+    public static class CustomComsumer implements Consumer<Simple2DPoint> {  // 自定义实现消费接口
 
         private static Logger log = LoggerFactory.getLogger(CustomComsumer.class);
 
         @Override
-        public void accept(SimplePoint t) {
+        public void accept(Simple2DPoint t) {
             log.info("实现接口对象, 计算距离 : {}", t.distance(123, 222));
         }
 
