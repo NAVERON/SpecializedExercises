@@ -140,7 +140,7 @@ public class MedianOfTwoArray {
         return sb.toString();
     }
 
-    public static void reverseArray(Integer[] arr1, Integer[] arr2) {
+    public static void reverseArray(Integer[] arr1, Integer[] arr2) { // 这里问题很大
 
         System.out.println("近来 : " + MedianOfTwoArray.arrToString(arr1));
         // 交换两个数组

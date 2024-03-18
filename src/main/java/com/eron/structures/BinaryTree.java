@@ -1,12 +1,16 @@
 package com.eron.structures;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.logging.XMLFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +27,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
     public static void main(String[] args) {
         // 整体性的测试使用 元素应具备唯一性
-        List<Integer> nodes = new LinkedList<>() {{
-            add(14);
-            add(23);
-            add(-1);
-            add(56);
-            add(-5);
-            add(10);
-            add(44);
-            add(90);
-            add(3);
-        }};
+        List<Integer> nodes = List.of(14, 23, -1, 56, -5, 10, 44, 90, 3);
         List<Integer> travelRes = new ArrayList<>();
 
         // 创建二叉树
@@ -82,14 +76,11 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         travelRes.clear();
     }
 
-    private static class BinaryTreeNode<T extends Comparable<T>> {
+    public static class BinaryTreeNode<T extends Comparable<T>> {
 
         public T value;
         public BinaryTreeNode<T> left;  // 简略 get/set方法
         public BinaryTreeNode<T> right;
-
-        public BinaryTreeNode() {
-        }
 
         public BinaryTreeNode(T value) {
             this.value = value;
@@ -105,8 +96,29 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
         return root;
     }
+
+    // 重设当前tree root根节点
+    public BinaryTreeNode<T> setRoot(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            throw new IllegalArgumentException("root node is null");
+        }
+        // 省略销毁原有tree数据
+
+        this.root = node;
+        return this.root;
+    }
+
+    private BinaryTree() {} // 只允许静态方法创建树
+
     public static <T extends Comparable<T>> BinaryTree<T> buildTree(List<T> nodes) {
-        BinaryTree<T> bt = new BinaryTree<T>();
+        if (Objects.isNull(nodes)) {
+            throw new IllegalArgumentException("nodes null");
+        }
+        if (nodes.isEmpty()) {
+            throw new IllegalArgumentException("nodes empty");
+        }
+
+        BinaryTree<T> bt = new BinaryTree<>();
         nodes.forEach(bt::add);
 
         return bt;
@@ -198,7 +210,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
     // 获取树的所有节点数
     public Integer getSize() {
-        return getSizeRecursive(this.root);
+        return getSizeRecursive(this.getRoot());
     }
 
     private Integer getSizeRecursive(BinaryTreeNode<T> current) {
@@ -375,7 +387,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         return this.checkIsMirrorNode(root.left, root.right);
     }
 
-    // 迭代检查器
+    // 迭代检查器 / 也可以实现为 翻转二叉树, 将当前树镜像
     private boolean checkIsMirrorNode(BinaryTreeNode<T> p, BinaryTreeNode<T> q) {
         if (p == null && q == null) {
             return true;
@@ -388,6 +400,23 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
             && this.checkIsMirrorNode(p.left, q.right);
     }
 
+    // 将当前树 镜像, 翻转树
+    public void mirrorTree(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            return;
+        }
+        if (Objects.isNull(node.left) && Objects.isNull(node.right)) {
+            return;
+        }
+
+        BinaryTreeNode<T> temp = node.left;
+        node.left = node.right;
+        node.right = temp;
+
+        this.mirrorTree(node.left);
+        this.mirrorTree(node.right);
+    }
+
     // 树最大叶子长度 --> 展开树最长是多长
     public long maxLengthOfLeaf() {
         return 1 + this.maxDepth(this.getRoot().left) + this.maxDepth(this.getRoot().right);
@@ -397,6 +426,87 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         if (node == null) return 0;
         return Math.max(this.maxDepth(node.left), this.maxDepth(node.right)) + 1;
     }
+
+    // 计算树的深度
+    public int depthOfTree(BinaryTreeNode<T> node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int left = this.depthOfTree(node.left);
+        int right = this.depthOfTree(node.right);
+        return Math.max(left, right) + 1;
+    }
+
+    // 计算一共有多少个节点
+    private int getTreeNodeAmount() {
+        return this.countNodeAmount(this.getRoot());
+    }
+
+    private int countNodeAmount(BinaryTreeNode<T> node) {
+        int nodeNum = 0;
+        if (Objects.isNull(node)) {
+            return nodeNum;
+        }
+
+        nodeNum = 1 + this.countNodeAmount(node.left) + this.countNodeAmount(node.right);
+        return nodeNum;
+    }
+
+    // 计算一共有多少个叶子
+    public int getTreeLeafAmount() {
+        return this.countLeafAmount(this.getRoot());
+    }
+
+    private int countLeafAmount(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            return 0;
+        }
+
+        if (node.left == null && node.right == null) {
+            return 1;
+        }
+
+        return this.countLeafAmount(node.left) + this.countLeafAmount(node.right);
+    }
+
+    // 二叉树 中序遍历 + 其他任意一个遍历 可以还原tree
+    // 根据先序遍历和中序遍历还原
+    public void rebuildByTravelPaths(T[] prePath, T[] inPath) {
+        // 参数校验 不为空
+        BinaryTreeNode<T> node = this.rebuildTreeNode(prePath, 0, prePath.length, inPath, 0,
+            inPath.length);
+        this.setRoot(node);
+    }
+
+    private BinaryTreeNode<T> rebuildTreeNode(T[] prePath, int preStart, int preEnd, T[] inPath,
+        int inStart, int inEnd) {
+        // 参数校验
+        if (preStart > preEnd) {
+            return null;
+        }
+
+        T rootKeyValue = prePath[preStart];
+        // 找到根节点，并查询在中序中的位置
+        int index = inStart; // 表示当前根在中序中的位置
+        for (int i = inStart; i < inEnd; i++) {
+            if (rootKeyValue.equals(inPath[i])) {
+                index = i; // 找到当前根在中序中的位置
+                break;
+            }
+        }
+
+        int range = index - inStart;
+
+        BinaryTreeNode<T> buildNode = new BinaryTreeNode<>(rootKeyValue);
+        buildNode.left = this.rebuildTreeNode(prePath, preStart + 1, preStart + range, inPath,
+            inStart, inStart + range - 1);
+        buildNode.right = this.rebuildTreeNode(prePath, preStart + range + 1, preEnd, inPath,
+            inStart + range + 1, inEnd);
+
+        return buildNode;
+    }
+
 }
 
 

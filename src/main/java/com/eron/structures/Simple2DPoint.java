@@ -14,10 +14,10 @@ public record Simple2DPoint(double x, double y) {
 
     @Override
     public String toString() {
-        return "SimplePoint{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Simple2DPoint{" +
+            "x=" + x +
+            ", y=" + y +
+            '}';
     }
 }
 

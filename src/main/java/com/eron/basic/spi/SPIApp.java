@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.ServiceLoader;
 import java.util.StringJoiner;
 
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +25,6 @@ public class SPIApp {
 
         services.forEach(service -> {
             log.warn("service info : {}", service.getClass().getName());
-            // 获取加载的实现类全路径 拆分
-            String[] classPath = service.getClass().getName().split("\\.");
-            StringJoiner joiner = new StringJoiner(",");
-            Arrays.asList(classPath).forEach(joiner::add);
-            log.warn("class path analyse : {}", joiner.toString());
 
             log.info("-------------------------------------");
             log.info("service : {}", service.info("HELLO"));

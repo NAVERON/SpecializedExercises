@@ -1,25 +1,26 @@
 package com.eron.algorithms.exam;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
-import org.apache.lucene.search.similarities.NormalizationH1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * 各种小算法题目的实现
  */
-public class Examination {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Examination.class);
+public class ArrayOptions {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArrayOptions.class);
 
     public static void main(String[] args) {
-        Examination examination = new Examination();
+        ArrayOptions arrayOptions = new ArrayOptions();
         int[] arr = new int[]{1, 2, 5, 6, 10};
         // 数组可以被分割成多少个递增子序列
-        examination.arrCanSplits(arr);
+        arrayOptions.arrCanSplits(arr);
         // 数组中数字 可组合成的最大数字
-        examination.bigestNumber(arr);
+        arrayOptions.bigestNumber(arr);
+        // 数组中每个位置 最临近的最大值
+        arrayOptions.nextBiggerNumber(arr);
     }
 
     /**
@@ -75,5 +76,47 @@ public class Examination {
         LOGGER.info("数组可拼接的最大数字是 {}", res);
     }
 
+    /**
+     * 数组中 下一个比自己大的数字位置
+     * ---
+     * 思路: 单调栈 递增栈；如果后一个比栈顶的大，更新栈顶位置的 最临近最大值
+     * 还有一些问题，需要倒着对比: 单调递减栈
+     */
+    public void nextBiggerNumber(int[] arr) {
+        int n = arr.length;
+        Stack<Integer> stack = new Stack<>();
+        int[] ans = new int[n]; // 最大的一个没有比它更大的， 默认值为0
+        boolean needNext = true;
 
+        for (int i = 0; i < 2 * n - 1; i++) {
+            if (!needNext) {
+                break;
+            }
+
+            while (!stack.isEmpty() && arr[stack.peek() % n] < arr[i % n]) {
+                int preIndex = stack.pop();
+                if (preIndex > n - 1) {
+                    needNext = false;
+                    break;
+                }
+                ans[preIndex] = arr[i % n];
+            }
+            stack.push(i);
+        }
+
+        // 结果
+        LOGGER.info("单调栈 最临近最大值 计算结果 --> {}", Arrays.stream(ans).boxed().collect(
+            Collectors.toList()));
+    }
+
+    // 线段树问题 二位数组：排序的实现
+    public void periodExchange() {
+
+    }
+
+    // 两个排序好的数组，求数组的中位数 --> 简单办法：合并数组，计算中位数
+    // 巧妙方法，夹逼两个数组，得到中间的值 或 中间2个值的平均
+    public void midOfArray(int[] arr1, int[] arr2) {
+
+    }
 }
