@@ -36,6 +36,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         LOGGER.info("获取大小 --> {}", bt.getSize());  // 获取当前树存储key的数量
         LOGGER.info("树中是否存在某个元素 --> {}, {}", bt.containsNode(11), bt.containsNode(0));
 
+        // 先序遍历
         travelRes.clear();
         bt.traversePreOrder(bt.getRoot(), travelRes);
         LOGGER.info("进行先序遍历 --------> {}", travelRes);
@@ -43,6 +44,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         bt.traversePreOrderWithoutRecursion(bt.getRoot(), travelRes);
         LOGGER.info("不使用递归, 先序遍历 ----> {}", travelRes);
 
+        // 中序遍历
         travelRes.clear();
         bt.traverseInOrder(bt.getRoot(), travelRes);
         LOGGER.info("进行中序遍历 -------> {}", travelRes);
@@ -50,6 +52,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         bt.traverseInOrderWithoutRecursion(bt.getRoot(), travelRes);
         LOGGER.info("不使用递归 中序遍历 ----> {}", travelRes);
 
+        // 后序遍历
         travelRes.clear();
         bt.traversePostOrder(bt.getRoot(), travelRes);
         LOGGER.info("后序遍历 -------> {}", travelRes);
@@ -57,10 +60,12 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         bt.traversePostOrderWithoutRecursion(bt.getRoot(), travelRes);
         LOGGER.info("不使用递归 后序遍历 ----> {}", travelRes);
 
+        // 层序遍历
         travelRes.clear();
         bt.travelByLevel(bt.getRoot(), travelRes);
         LOGGER.info("层次遍历 -----> {}", travelRes);
 
+        // 删除
         int delNum = 10;
         LOGGER.info("删除操作, 当前是否包含待元素 --> {}", bt.containsNode(delNum));
         bt.delete(delNum);
@@ -73,7 +78,35 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
             travelRes.add(it.next());
         }
         LOGGER.info("迭代器 结果 (等同不使用递归的中序遍历) ---> {}", travelRes);
+
+        // 是否为镜像树
+        LOGGER.info("是否为镜像树 --> {}", bt.isMirrorTree());
+
+        // 最长的叶子可连接长度
+        LOGGER.info("最长宽度，叶子可连接长度 --> {}", bt.maxLengthOfLeaf());
+
+        // 最大深度
+        LOGGER.info("树的最大深度 --> {}", bt.maxDepth(bt.getRoot()));
+
+        // 获取所有节点数量
+        LOGGER.info("树的节点数量/等同于getize() --> {}", bt.getTreeNodeAmount());
+
+        // 获取叶子数量
+        LOGGER.info("树的叶子数量 --> {}", bt.getTreeLeafAmount());
+
+        // 根据先序 + 中序遍历，还原树
+        List<Integer> prePath = List.of(8, 3, 1, 9, 2, 5, 13);
+        List<Integer> inPath = List.of(9, 1, 2, 3, 5, 8, 13);
+        BinaryTreeNode<Integer> rebuildRoot = rebuildByTravelPaths(prePath, inPath);
+        bt.setRoot(rebuildRoot); // 重设bt根节点
+        // 重新先序遍历 = {8, 3, 1, 9, 2, 5, 13}
+
+        // 镜像树
+        bt.mirrorTree(bt.getRoot());
+
         travelRes.clear();
+        bt.traversePreOrder(bt.getRoot(), travelRes);
+        LOGGER.info("重新检查 镜像后的树 先序遍历 --> {}", travelRes);
     }
 
     public static class BinaryTreeNode<T extends Comparable<T>> {
@@ -84,6 +117,15 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
         public BinaryTreeNode(T value) {
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "BinaryTreeNode{" +
+                "value=" + value +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
         }
     }
 
@@ -282,7 +324,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
         Stack<BinaryTreeNode<T>> stack = new Stack<>();
 //        stack.push(current);
-//        while (!stack.isEmpty()) {
+//        while (!stack.isEmpty()) { // 这种方式 在中序和后续遍历中无法实现, 会导致原有树的修改
 //            current = stack.pop();
 //            travelList.add(current.value);
 //
@@ -440,17 +482,7 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
     // 计算一共有多少个节点
     private int getTreeNodeAmount() {
-        return this.countNodeAmount(this.getRoot());
-    }
-
-    private int countNodeAmount(BinaryTreeNode<T> node) {
-        int nodeNum = 0;
-        if (Objects.isNull(node)) {
-            return nodeNum;
-        }
-
-        nodeNum = 1 + this.countNodeAmount(node.left) + this.countNodeAmount(node.right);
-        return nodeNum;
+        return this.getSize();
     }
 
     // 计算一共有多少个叶子
@@ -472,25 +504,27 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
 
     // 二叉树 中序遍历 + 其他任意一个遍历 可以还原tree
     // 根据先序遍历和中序遍历还原
-    public void rebuildByTravelPaths(T[] prePath, T[] inPath) {
+    // 需要注意 ： id必须唯一，否则可能会出现还原的树与原始不一样
+    public static <T extends Comparable<T>> BinaryTreeNode<T> rebuildByTravelPaths(List<T> prePath,
+        List<T> inPath) {
         // 参数校验 不为空
-        BinaryTreeNode<T> node = this.rebuildTreeNode(prePath, 0, prePath.length, inPath, 0,
-            inPath.length);
-        this.setRoot(node);
+        return rebuildTreeNode(prePath, 0, prePath.size() - 1, inPath, 0,
+            inPath.size() - 1);
     }
 
-    private BinaryTreeNode<T> rebuildTreeNode(T[] prePath, int preStart, int preEnd, T[] inPath,
+    private static <T extends Comparable<T>> BinaryTreeNode<T> rebuildTreeNode(List<T> prePath,
+        int preStart, int preEnd, List<T> inPath,
         int inStart, int inEnd) {
         // 参数校验
         if (preStart > preEnd) {
             return null;
         }
 
-        T rootKeyValue = prePath[preStart];
+        T rootKeyValue = prePath.get(preStart);
         // 找到根节点，并查询在中序中的位置
         int index = inStart; // 表示当前根在中序中的位置
         for (int i = inStart; i < inEnd; i++) {
-            if (rootKeyValue.equals(inPath[i])) {
+            if (rootKeyValue.equals(inPath.get(i))) {
                 index = i; // 找到当前根在中序中的位置
                 break;
             }
@@ -499,9 +533,9 @@ public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
         int range = index - inStart;
 
         BinaryTreeNode<T> buildNode = new BinaryTreeNode<>(rootKeyValue);
-        buildNode.left = this.rebuildTreeNode(prePath, preStart + 1, preStart + range, inPath,
+        buildNode.left = rebuildTreeNode(prePath, preStart + 1, preStart + range, inPath,
             inStart, inStart + range - 1);
-        buildNode.right = this.rebuildTreeNode(prePath, preStart + range + 1, preEnd, inPath,
+        buildNode.right = rebuildTreeNode(prePath, preStart + range + 1, preEnd, inPath,
             inStart + range + 1, inEnd);
 
         return buildNode;

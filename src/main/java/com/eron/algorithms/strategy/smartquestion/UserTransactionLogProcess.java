@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * 题目英文 开素阅读, 了解题意
  * 总体思路快速定下, 考虑参数校验和边界问题
  */
-public class UserTransactionLogProcess {
+public class UserTransactionLogProcess {  // 矩阵的思路和想法 ......
 
     private static final Logger log = LoggerFactory.getLogger(UserTransactionLogProcess.class);
 

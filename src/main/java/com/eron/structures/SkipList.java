@@ -266,11 +266,6 @@ public class SkipList<K extends Comparable<K>, V> implements Iterable<K> {
         Iterable.super.forEach(action); //To change body of generated methods, choose Tools | Templates.
     }
 
-//    @Override 
-//    public Iterator<K> iterator(){
-//        return new SkipListIterator<K, V>(this.head);
-//    }
-
     protected static class SkipListIterator<K extends Comparable<K>, V> implements Iterator<K> {
 
         private Node<K, V> node;

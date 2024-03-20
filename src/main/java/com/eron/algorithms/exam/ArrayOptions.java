@@ -21,6 +21,10 @@ public class ArrayOptions {
         arrayOptions.bigestNumber(arr);
         // 数组中每个位置 最临近的最大值
         arrayOptions.nextBiggerNumber(arr);
+        // 求两个有序数组中的 中位数
+        arrayOptions.midOfArray(arr, arr);
+        // 求数组中子数组 和 为target的集合
+        arrayOptions.subArraySumOfTarget(arr, 0);
     }
 
     /**
@@ -116,7 +120,105 @@ public class ArrayOptions {
 
     // 两个排序好的数组，求数组的中位数 --> 简单办法：合并数组，计算中位数
     // 巧妙方法，夹逼两个数组，得到中间的值 或 中间2个值的平均
-    public void midOfArray(int[] arr1, int[] arr2) {
+    public float midOfArray(int[] arr1, int[] arr2) {
+        // Integer[] arr1 = {1, 4, 6, 7, 9, 25};
+        // Integer[] arr2 = {1, 3, 6, 8, 14, 22, 32, 43};
+        // 二分法思路， 每次比较切分点两边的大小
 
+        System.out.println("==============================");
+        float result = 0F;
+        // 二分法 查找中位数
+//		奇数：
+//		median = max(maxLeftA, maxLeftB)
+//		偶数：
+//		median = (max(maxLeftA, maxLeftB) + min(minRightA, minRightB)) / 2
+
+        /**
+         * 过程
+         * 1 短数组放前面， 长数组放后面
+         * 2 遍历短数组， i++, 长数组指针 bIndex = (m+n+1)/2 - aIndex
+         * 3 找到邻近的4个值, 判断
+         * 4 左右边界 变化，最终缩小到临界
+         */
+
+        Integer len1 = arr1.length;
+        Integer len2 = arr2.length;
+
+        boolean isEven = (len1 + len2) % 2 == 0 ? true : false;  // 偶数还是奇数
+
+        if (len1 > len2) { // arr1 始终选择短的那个， 减少长短判断
+            // MedianOfTwoArray.reverseArray(arr1, arr2);
+        }
+
+        Integer low = 0;
+        Integer high = len1;
+
+        while (low <= high) {
+            System.out.println("当前 [low, high] : " + low + ", " + high);
+
+            int partation1 = (high - low) / 2 + low;
+            int partation2 = (len1 + len2 + 1) / 2 - partation1;  // 这样计算就可以保证 i + j = 中间的数量
+
+            int maxLeftA = partation1 == 0 ? Integer.MIN_VALUE : arr1[partation1 - 1];
+            int minRightA = partation1 == len1 ? Integer.MAX_VALUE : arr1[partation1];
+            int maxLeftB = partation2 == 0 ? Integer.MIN_VALUE : arr2[partation2 - 1];
+            int minRightB = partation2 == len2 ? Integer.MAX_VALUE : arr2[partation2];
+
+            if (maxLeftA <= minRightB && minRightA >= maxLeftB) {
+                // 如果找到临界
+                // 如果是偶数
+                System.out.println("找到时 分界线附近的变量 : [maxLeft1, minRight1, maxLeft2, minRight2] "
+                    + maxLeftA + ", " + minRightA
+                    + ", " + maxLeftB + ", " + minRightB);
+                if (isEven) {
+                    result = Float.sum(Math.max(maxLeftA, maxLeftB), Math.min(minRightA, minRightB)) / 2;
+                    System.out.println("结果 " + result);
+                } else {
+                    result = Float.max(maxLeftA, maxLeftB);
+                    System.out.println("结果 " + result);
+                }
+                break;
+            } else if (maxLeftA > minRightB) {
+                // partation1 靠右了/太大了， 中位数在左边的地方
+                high = partation1 - 1;  // 缩小查找范围
+            } else {
+                low = partation1 + 1;
+            }
+        }
+
+        return result;
     }
+
+    // 求一个数组中 有哪些连续子数组的和为给定的值
+    // 思路 ：滑动窗空 -> 提前计算 + 遍历
+    public void subArraySumOfTarget(int[] arr, int target) {
+        int count = 0;  // 左右指针 合格数量
+        int n = arr.length;
+        int[] preSum = new int[n];  // 前缀和
+
+        // 计算前缀和 双循环快速判断是否有条件形成
+        for (int x = 0; x < n; x++) {
+            if (x == 0) {
+                preSum[x] = arr[x];
+                continue;
+            }
+
+            preSum[x] = preSum[x - 1] + arr[x];
+        }
+
+        LOGGER.info("打印前缀和 --> {}", Arrays.stream(preSum).boxed().collect(Collectors.toList()));
+
+        // 数组本身等于 target
+        // 包含在逻辑中
+        for (int i = 0; i < n; i++) {
+            if (preSum[i] == target) count++;
+            for (int j = 0; j < i; j++) {
+                int diff = preSum[i] - preSum[j];
+                if (diff == target) count++;
+            }
+        }
+
+        LOGGER.info("总数 --> {}", count);
+    }
+
 }

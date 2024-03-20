@@ -21,14 +21,14 @@ import com.google.common.collect.ImmutableMultiset;
  *
  * @author wangy
  */
-public class GuavaUsage {
-    private static final Logger log = LoggerFactory.getLogger(GuavaUsage.class);
+public class GuavaSimpleUsage {
+    private static final Logger log = LoggerFactory.getLogger(GuavaSimpleUsage.class);
 
     public static void main(String[] args) throws IOException {
-        GuavaUsage guavaUsage = new GuavaUsage();
-        guavaUsage.simpleJsonUsage();
-        guavaUsage.guavaSimpleUsage();
-        guavaUsage.commonsLangUsage();
+        GuavaSimpleUsage guavaSimpleUsage = new GuavaSimpleUsage();
+        guavaSimpleUsage.simpleJsonUsage();
+        guavaSimpleUsage.guavaSimpleUsage();
+        guavaSimpleUsage.commonsLangUsage();
     }
 
     // 使用simple json 

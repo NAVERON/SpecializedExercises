@@ -35,13 +35,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author eron
  */
-public class BasicJdkStructureUsage {
+public class BasicJdkSTLUsage {
 
-    private static final Logger log = LoggerFactory.getLogger(BasicJdkStructureUsage.class);
+    private static final Logger log = LoggerFactory.getLogger(BasicJdkSTLUsage.class);
 
     public static void main(String[] args) {
         // 测试jdk 集合类
-        BasicJdkStructureUsage usages = new BasicJdkStructureUsage();
+        BasicJdkSTLUsage usages = new BasicJdkSTLUsage();
 
         usages.listUsage();  // 容器 list
 
