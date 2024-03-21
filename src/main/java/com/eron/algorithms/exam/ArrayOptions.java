@@ -25,6 +25,9 @@ public class ArrayOptions {
         arrayOptions.midOfArray(arr, arr);
         // 求数组中子数组 和 为target的集合
         arrayOptions.subArraySumOfTarget(arr, 0);
+        // 重写0 数组中遇到0，则辅之以个顺后多协议个0
+        arr = new int[]{1, 0, 2, 3, 0, 4, 5, 0};
+        arrayOptions.rewriteZero(arr);
     }
 
     /**
@@ -219,6 +222,32 @@ public class ArrayOptions {
         }
 
         LOGGER.info("总数 --> {}", count);
+    }
+
+    public void rewriteZero(int[] arr) {
+        // 预先计算位置 然后正常逻辑填充
+        int index = 0;
+        int cur = 0;
+        for (; cur < arr.length && index < arr.length; cur++) {
+            if (arr[cur] == 0) {
+                index++;
+            }
+            index++;
+        }
+        cur--; // 索引，向前退一步
+
+        // 从后向前复原操作
+        int last = arr.length - 1;
+        for (; cur >= 0 && last >= 0; cur--) {
+            if (arr[cur] == 0) {
+                arr[last--] = 0;
+                arr[last--] = 0;
+            } else {
+                arr[last--] = arr[cur];
+            }
+        }
+
+        LOGGER.info("重写0后的数组 --> {}", Arrays.stream(arr).boxed().collect(Collectors.toList()));
     }
 
 }

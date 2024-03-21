@@ -8,7 +8,7 @@ package com.eron.designpattern;
 public class StrategyPattern {
 
     public interface Strategy {
-        public int doOption(int x, int y);
+        int doOption(int x, int y);
     }
 
     public static class AddStrategy implements Strategy {

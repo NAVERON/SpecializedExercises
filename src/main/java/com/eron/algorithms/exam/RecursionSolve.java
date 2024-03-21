@@ -18,7 +18,6 @@ public class RecursionSolve {
         recursionSolve.hanoiTower(10, "A", "B", "C");
         // 斐波那契 数列计算
         LOGGER.info("斐波那契数列计算结果 --> {}", recursionSolve.fibonacciSequence(10));
-
     }
 
     // 汉诺塔问题 把n个圆盘 从 'from' 上移到 'to'上
