@@ -1,4 +1,4 @@
-package com.eron.algorithms.strategy;
+package com.eron.algorithms.exam;
 
 
 import org.slf4j.Logger;
@@ -48,8 +48,7 @@ public class KMPStringMatcher {
          * 执行匹配
          *
          * @param origin  原始字符串
-         * @param pattern 匹配字符串
-         */
+s         */
         public int match(String origin) {
             // 匹配计算方法
             int M = origin.length();

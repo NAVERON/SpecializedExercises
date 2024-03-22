@@ -1,7 +1,12 @@
 package com.eron.algorithms.exam;
 
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -248,6 +253,163 @@ public class ArrayOptions {
         }
 
         LOGGER.info("重写0后的数组 --> {}", Arrays.stream(arr).boxed().collect(Collectors.toList()));
+    }
+
+    // 最长递增子序列
+    public int longestIncreamentString(int[] arr) {
+        int[] dp = new int[arr.length];  // 自动全部初始化为0，每一个索引位作为最后一个 前面可有的最长递增子序列
+        dp[0] = 1;
+
+        for (int i = 1; i < arr.length; i++) {
+            int maxLength = 0;
+            for (int j = 0; j < i; j++) {
+                if (arr[j] < arr[i]) {
+                    maxLength = Math.max(maxLength, dp[j]);  // 从0 至j的最大递增
+                    // 如果需要输出数组, 这里添加
+                }
+            }
+
+            dp[i] = maxLength + 1;
+            LOGGER.info("第{}个循环, 当前maxLength = {}, 输出当前dp : {}", i, maxLength, dp);
+        }
+
+        int maxResult = 0;
+        for (int i = 0; i < dp.length; i++) {
+            maxResult = maxResult >= dp[i] ? maxResult : dp[i];
+        }
+
+        return maxResult;
+    }
+
+    // 数组中找到连续和 大于target的
+    // 滑动窗口 思想
+    private static void targetSumArray(int[] arr, int target) {
+        int n = arr.length;
+        int i = 0, j = 0;
+        int sum = 0;
+
+        int ans = 0;
+
+        while (j < n) {
+            sum += arr[j];
+            while (sum >= target) {
+                ans = Math.min(ans, j - i + 1);
+                sum -= arr[i];
+                i++;
+            }
+
+            j++;
+        }
+        LOGGER.info("最小数组长度 --> {}", ans);
+    }
+
+
+    // 构建cars list  给出的原始数据是 car[i] = [pos_i, speed_i], 保证所有i位置 < i+1 位置
+    // 因为没有终点距离 只要后面的比前面的速度快，就一定能追上
+    // t = (a2.pos - a1.pos) / (a2.speed - a1.speed)
+
+    /**
+     *         log.info("计算相遇时间...");
+     *         Integer[][] carArrays = new Integer[][]{
+     * //            {1, 2},
+     * //            {2, 1},
+     * //            {4, 3},
+     * //            {7, 2},
+     *                 {3, 4},
+     *                 {5, 4},
+     *                 {6, 3},
+     *                 {9, 1}
+     *         };
+     * @param carsArray carsArray
+     */
+    public void solveCars2(Integer[][] carsArray) {
+        int n = carsArray.length;  // 车辆数量
+        Double[] ans = new Double[n];
+        ans[n - 1] = -1D;
+        Deque<Integer> stack = new LinkedList<>();
+        stack.push(n - 1);  // 插入栈顶
+
+        for (int i = n - 2; i >= 0; i--) {  // n-2 因为第一个前面没有车
+            while (!stack.isEmpty()) {
+                Integer topPos = carsArray[stack.peek()][0];
+                Integer topSpeed = carsArray[stack.peek()][1];
+                // 当前车追上 栈顶车辆 所需要的时间 > 栈顶车辆追上它右面的车的时间 , 表示看栈顶右边的车即可
+                // 前面的车速快 追不上
+                Double t = carsArray[i][1] - topSpeed > 0.001 ? (topPos - carsArray[i][0]) / (double) (carsArray[i][1] - topSpeed) : Integer.MAX_VALUE;
+                Boolean checkSpeed = carsArray[i][1] <= topSpeed;  // 当前车速度 <= 栈顶
+                Boolean checkAns = ans[stack.peek()] > 1e-9 && t > ans[stack.peek()];  // 栈顶追不上更右边的 且 当前追上的时间比栈顶的时间大
+                if (checkSpeed || checkAns) {  // 两种情况 追不上 + 能追上但是前面的已经合并到它的右车队了
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+
+            if (stack.isEmpty()) {
+                ans[i] = -1D;
+            } else {
+                // 栈顶有值 计算时间
+                ans[i] = (carsArray[stack.peek()][0] - carsArray[i][0]) / (double) (carsArray[i][1] - carsArray[stack.peek()][1]);
+            }
+            stack.push(i);
+        }
+
+        Arrays.asList(ans).forEach(x -> {
+            LOGGER.info("输出 -> {}", x);
+        });
+    }
+
+    // 动态规划算法 解决 k个鸡蛋 n层楼最少几次可以获取最大不碎的楼层
+    AtomicInteger x = new AtomicInteger(0);
+    private static Map<String, Integer> memo = new HashMap<>();
+    // 楼层 丢鸡蛋问题
+    public void ballDrop(int K, int N) {  // K 个鸡蛋 N层楼
+        LOGGER.info("进入循环体, 最终需要计算的条件 = {}, {}", K, N);
+        int res = this.dp(K, N);
+        LOGGER.info("res = {}, 迭代次数 = {}", res, x.get());
+    }
+
+    public Integer dp(Integer K, Integer N) {  // K 鸡蛋数 N 楼层  返回步数
+        x.incrementAndGet();
+        if (K == 1) return N;
+        if (N == 0) return 0;
+
+        String genKey = K + ":" + N;
+        if (memo.containsKey(genKey)) {
+            return memo.get(genKey);
+        }
+
+        int res = Integer.MAX_VALUE;
+        for (int i = 1; i < N + 1; i++) {  // 从1 到 N [1, N]
+            res = Math.min(res,
+                Math.max(
+                    dp(K - 1, i - 1), // 碎了
+                    dp(K, N - i)  // 没碎
+                ) + 1  // 当前步数 + 1
+            );
+        }
+        memo.put(genKey, res);
+
+        return res;
+    }
+
+    // 股票售卖 利润最大问题
+    public void standardStockSellSolve(int[] arr) {
+        // arr = new int[] {7,1,5,3,6,4}; 这种情况下可以 但是特殊情况下
+        // 找到全局的最大值和最小值即可
+        int min = Integer.MAX_VALUE, max = 0;  // min 最小值 max-> 最大收益
+        int lastMin = 0, minIndex = 0, maxIndex = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (min > arr[i]) {
+                min = arr[i];
+                lastMin = i;
+            } else if (max < arr[i] - min) {
+                max = arr[i] - min;
+                minIndex = lastMin;
+                maxIndex = i;
+            }
+        }
+        LOGGER.info("股票最大 => {}, 以及对应的索引 -> {}, {}", max, minIndex, maxIndex);
     }
 
 }

@@ -20,9 +20,11 @@ public class ArrayGraph {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArrayGraph.class);
 
     public static void main(String[] args) {
-        int[][] arr = new int[][] {
-            {},
-            {}
+        int[][] arr = new int[][]{
+            {1, 1, 1, 1},
+            {1, 0, 0, 1},
+            {1, 1, 0, 1},
+            {1, 0, 1, 1}
         };
         ArrayGraph arrayGraph = new ArrayGraph();
         arrayGraph.dfs(0, 0);
@@ -152,7 +154,7 @@ public class ArrayGraph {
                 rowStatus.add(status);
             }
             graphArray.add(rowStatus);
-            log.info("{}", rowStatus);  // 打印当前的格式转换结果
+            LOGGER.info("{}", rowStatus);  // 打印当前的格式转换结果
         });
 
         return graphArray;
@@ -181,7 +183,7 @@ public class ArrayGraph {
         Deque<Integer> stack = new ArrayDeque<>();
         // info.entrySet().forEach(x->{}); // 取出每个entry  遍历
         info.forEach((key, value) -> {
-            log.info("当前遍历 --> {} --> {}", key, value.toString());
+            LOGGER.info("当前遍历 --> {} --> {}", key, value.toString());
 
             if (visited.contains(key)) return;
             stack.push(key);
@@ -193,7 +195,7 @@ public class ArrayGraph {
                 if (edges.isEmpty() || res.containsAll(edges)) {  // 符合条件
                     // 如果当前节点 出度为 0 , 表示它没有向下的指向节点 | 或者指向都已经入结果队列
                     int x = stack.pop();
-                    log.info("出现复合条件的 --> {}, {}, {}", top, x, edges);
+                    LOGGER.info("出现复合条件的 --> {}, {}, {}", top, x, edges);
                     res.push(x);
                     continue;
                 }
@@ -201,7 +203,7 @@ public class ArrayGraph {
                 edges.stream().forEach(nearby -> {
                     if (visited.contains(nearby)) return;  // 如果
 
-                    log.info("新加入的节点 --> {}", nearby);
+                    LOGGER.info("新加入的节点 --> {}", nearby);
                     stack.push(nearby);
                     visited.add(nearby);
                 });
@@ -209,7 +211,7 @@ public class ArrayGraph {
 
         });
 
-        log.info("最终res  结果 --> {}", res);
+        LOGGER.info("最终res  结果 --> {}", res);
     }
 
 }

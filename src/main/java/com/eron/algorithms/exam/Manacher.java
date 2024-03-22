@@ -1,4 +1,4 @@
-package com.eron.algorithms.strategy;
+package com.eron.algorithms.exam;
 
 import java.util.ArrayList;
 import java.util.List;
