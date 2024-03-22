@@ -1,375 +1,546 @@
 package com.eron.structures;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
-
+import java.util.logging.XMLFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// 自己实现搜索二叉树等树的结构 
-// 树的创建和搜索 删除是有规律/固定规则的, 不能像 普通容器 没有插入规则
-// ref : https://github.com/eugenp/tutorials/blob/master/data-structures/src/main/java/com/baeldung/tree/BinaryTree.java
-public class BinaryTree<T extends Comparable<T>> implements Iterable<T>{ 
-	
-	private static Logger log = LoggerFactory.getLogger(BinaryTree.class);
-	
-	public static void main(String[] args) {
-        // 整体性的测试使用 
-	    BinaryTree<Integer> bt = new BinaryTree<>() {{  // 这里面的 T 代表了bst的id 复合结构中需要实现 
-	        add(14);
-	        add(23);
-	        add(1);
-	        add(56);
-	        add(5);
-	        add(10);
-	        add(44);
-	        add(90);
-	        add(3);
-	    }};
-	    log.info("获取大小 --> {}", bt.getSize());  // 获取当前树存储key的数量
-	    log.info("进行先序遍历 -------->");
-	    bt.traversePreOrder(bt.root);
-	    log.info("进行中序遍历 ------->");
-	    bt.traverseInOrder(bt.root);
-	    log.info("后序遍历=========");
-	    bt.traversePostOrder(bt.root);
-	    log.info("判断是否包含--> {}", bt.containsNode(10));  // 使用key包含函数 
-	    log.info("层次遍历 ----->");
-	    bt.travelLevelSeperation(bt.root);
-	    
-	    bt.delete(10);
-	    log.info("判断是否删除 10 --> {}", bt.containsNode(10));
-	    log.info("遍历一遍输出检查");
-	    bt.traverseInOrder(bt.root);
-	    
-	    bt.travelByLevel(bt.root);
+/**
+ * 自己实现搜索二叉树等树的结构 树的创建和搜索
+ * 删除是有规律/固定规则的, 不能像 普通容器 没有插入规则
+ * 参考 <link ref = "https://github.com/eugenp/tutorials/blob/master/data-structures/src/main/java/com/baeldung/tree/BinaryTree.java">
+ *
+ * @param <T> T 泛型类型
+ */
+public class BinaryTree<T extends Comparable<T>> implements Iterable<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BinaryTree.class);
+
+    public static void main(String[] args) {
+        // 整体性的测试使用 元素应具备唯一性
+        List<Integer> nodes = List.of(14, 23, -1, 56, -5, 10, 44, 90, 3);
+        List<Integer> travelRes = new ArrayList<>();
+
+        // 创建二叉树
+        BinaryTree<Integer> bt = BinaryTree.buildTree(nodes);
+        bt.add(100);
+        LOGGER.info("获取大小 --> {}", bt.getSize());  // 获取当前树存储key的数量
+        LOGGER.info("树中是否存在某个元素 --> {}, {}", bt.containsNode(11), bt.containsNode(0));
+
+        // 先序遍历
+        travelRes.clear();
+        bt.traversePreOrder(bt.getRoot(), travelRes);
+        LOGGER.info("进行先序遍历 --------> {}", travelRes);
+        travelRes.clear();
+        bt.traversePreOrderWithoutRecursion(bt.getRoot(), travelRes);
+        LOGGER.info("不使用递归, 先序遍历 ----> {}", travelRes);
+
+        // 中序遍历
+        travelRes.clear();
+        bt.traverseInOrder(bt.getRoot(), travelRes);
+        LOGGER.info("进行中序遍历 -------> {}", travelRes);
+        travelRes.clear();
+        bt.traverseInOrderWithoutRecursion(bt.getRoot(), travelRes);
+        LOGGER.info("不使用递归 中序遍历 ----> {}", travelRes);
+
+        // 后序遍历
+        travelRes.clear();
+        bt.traversePostOrder(bt.getRoot(), travelRes);
+        LOGGER.info("后序遍历 -------> {}", travelRes);
+        travelRes.clear();
+        bt.traversePostOrderWithoutRecursion(bt.getRoot(), travelRes);
+        LOGGER.info("不使用递归 后序遍历 ----> {}", travelRes);
+
+        // 层序遍历
+        travelRes.clear();
+        bt.travelByLevel(bt.getRoot(), travelRes);
+        LOGGER.info("层次遍历 -----> {}", travelRes);
+
+        // 删除
+        int delNum = 10;
+        LOGGER.info("删除操作, 当前是否包含待元素 --> {}", bt.containsNode(delNum));
+        bt.delete(delNum);
+        LOGGER.info("判断是否删除 --> {}", bt.containsNode(delNum));
+
+        // 迭代器
+        travelRes.clear();
+        Iterator<Integer> it = bt.iterator();
+        while (it.hasNext()) {
+            travelRes.add(it.next());
+        }
+        LOGGER.info("迭代器 结果 (等同不使用递归的中序遍历) ---> {}", travelRes);
+
+        // 是否为镜像树
+        LOGGER.info("是否为镜像树 --> {}", bt.isMirrorTree());
+
+        // 最长的叶子可连接长度
+        LOGGER.info("最长宽度，叶子可连接长度 --> {}", bt.maxLengthOfLeaf());
+
+        // 最大深度
+        LOGGER.info("树的最大深度 --> {}", bt.maxDepth(bt.getRoot()));
+
+        // 获取所有节点数量
+        LOGGER.info("树的节点数量/等同于getize() --> {}", bt.getTreeNodeAmount());
+
+        // 获取叶子数量
+        LOGGER.info("树的叶子数量 --> {}", bt.getTreeLeafAmount());
+
+        // 根据先序 + 中序遍历，还原树
+        List<Integer> prePath = List.of(8, 3, 1, 9, 2, 5, 13);
+        List<Integer> inPath = List.of(9, 1, 2, 3, 5, 8, 13);
+        BinaryTreeNode<Integer> rebuildRoot = rebuildByTravelPaths(prePath, inPath);
+        bt.setRoot(rebuildRoot); // 重设bt根节点
+        // 重新先序遍历 = {8, 3, 1, 9, 2, 5, 13}
+
+        // 镜像树
+        bt.mirrorTree(bt.getRoot());
+
+        travelRes.clear();
+        bt.traversePreOrder(bt.getRoot(), travelRes);
+        LOGGER.info("重新检查 镜像后的树 先序遍历 --> {}", travelRes);
     }
-	
-	public static class Node<T extends Comparable<T>> {
-		public T value;
-		public Node<T> left;
-		public Node<T> right;
-		
-		public Node() {}
-		public Node(T value) {
-			this.value = value;
-		}
-	}
-	
-	public Node<T> root;  // 根节点 
-	public void buildTree(List<T> nodes){
-	    nodes.forEach(node -> this.add(node));
-	}
-	
-	// 小的在左边, 大的在右边子树
-	// 往树中添加节点 
-	public void add(T value) {
-	    root = addRecursive(root, value);
-	}
-	
-	private Node<T> addRecursive(Node<T> current, T value) {
-	    if (current == null) {  // 如果当前节点不村, 则直接添加  
-	        return new Node<T>(value);
-	    }
-	    
-	    // 如果新添加的值 小 = 左边  大 = 右边 
-	    if (value.compareTo(current.value) < 0) {
-	        current.left = addRecursive(current.left, value);
-	    } else if (value.compareTo(current.value) > 0) {
-	        current.right = addRecursive(current.right, value);
-	    } else {
-	        // value already exists
-	        return current;
-	    }
 
-	    return current;
-	}
-	
-	// 查找值  是否存在 
-	public Boolean containsNode(T value) {
-	    return containsNodeRecursive(root, value);
-	}
+    public static class BinaryTreeNode<T extends Comparable<T>> {
 
-	private Boolean containsNodeRecursive(Node<T> current, T value) {
-	    if (current == null) {
-	        return false;
-	    } 
-	    if (value.compareTo(current.value) == 0) {
-	        return true;
-	    } 
-	    // 如果查找的值比当前节点的小 左子树查找, 如果大, 则右子树查找 
-	    return value.compareTo(current.value) < 0 
-	      ? containsNodeRecursive(current.left, value)
-	      : containsNodeRecursive(current.right, value);
-	    
-	}
-	
-	// 删除节点
-	public void delete(T value) {
-	    root = deleteRecursive(root, value);
-	}
-	private Node<T> deleteRecursive(Node<T> current, T value) {
-	    if (current == null) {
-	        return null;
-	    }
-	    
-	    // 找到了删除的节点 
-	    if (value.compareTo(current.value) == 0) {
-	        // Node to delete found
-	        // ... code to delete the node will go here
-	    	// 从树的之阵中移除当前节点, 并返回当前节点 
-	    	if(current.left == null && current.right == null) {
-	    		return null;
-	    	}
-	    	if(current.right == null) {
-	    		return current.left;
-	    	}
-	    	if(current.left == null) {
-	    		return current.right;
-	    	}
-	    	T smallestOfRight = findSmallestValue(current.right);
-	    	current.value = smallestOfRight;
-	    	current.right = deleteRecursive(current.right, smallestOfRight);
-	    	
-	    	return current;
-	    }
-	    if (value.compareTo(current.value) < 0) {
-	        current.left = deleteRecursive(current.left, value);
-	        return current;
-	    }
-	    current.right = deleteRecursive(current.right, value);
-	    return current;
-	    
-	}
-	
-	// 查找root节点下的最小值 
-	public T findSmallestValue(Node<T> root) {
-		return root.left == null ? root.value : findSmallestValue(root.left);
-	}
-	
-	// 获取树的所有节点数 
-	public Integer getSize() {
-		return getSizeRecursive(this.root);
-	}
-	private Integer getSizeRecursive(Node<T> current) {
-		return current == null ? 0 : getSizeRecursive(current.left) + 1 + getSizeRecursive(current.right);
-	}
-	
-	/**
-	 * 遍历二叉树的实现
-	 * @param root
-	 */
-	// 中序遍历 
-	public void traverseInOrder(Node<T> root) {
-		if (root != null) {
-			traverseInOrder(root.left);
-			log.info("traverseInOrder -> {}", root.value);
-			traverseInOrder(root.right);
-		}
-	}
-	
-	// 先序遍历
-	public void traversePreOrder(Node<T> root) {
-		if(root != null) {
-			log.info("traversePreOrder -> {}", root.value);
-			traversePreOrder(root.left);
-			traversePreOrder(root.right);
-		}
-	}
-	
-	// 后序遍历
-	public void traversePostOrder(Node<T> root) {
-		if(root != null) {
-			traversePostOrder(root.left);
-			traversePostOrder(root.right);
-			log.info("traversePostOrder -> {}", root.value);
-		}
-	}
-	
-	// 层次遍历  按照顺序一层一层的遍历 
-	public void traversesLevelOrder(Node<T> root) {
-		if(root == null) {
-			return;
-		}
-		Queue<Node<T>> queue = new LinkedBlockingDeque<>();
-		queue.add(root);
-		
-		while (!queue.isEmpty()) {  // 如果需要指导每层的详细呢？ 提供每层的索引 
-			Node<T> current = queue.poll();  // remove 也可以
-			log.info("traversesLevelOrder -> {}", current.value);
-			
-			if(current.left != null) {
-				queue.add(current.left);
-			}
-			if(current.right != null) {
-				queue.add(current.right);
-			}
-			
-		}
-	}
-	// 层次分别遍历 每一层单独list 每层都输出一个list 
-	public void travelLevelSeperation(Node<T> root) {
-	    if(root == null) {
-	        return;
-	    }
-	    Queue<Node<T>> queue = new LinkedBlockingQueue<>();
-	    queue.add(root);
-	    // List<List<Node<T>>> travels = new LinkedList<>();
-	    int curLevel = 0; // 当前处于第几层 
-	    int levelCount = 1; // 当前遍历层的数量 
-	    
-	    while(!queue.isEmpty()) {
-	        int curCount = levelCount; 
-	        levelCount = 0;
-	        log.info("当前遍历树 {} 层, {} 个节点 ", curLevel, curCount);
-	        
-	        while(curCount > 0) {  // 遍历当前层 
-	            Node<T> x = queue.poll();
-	            log.info("取出当前层 {} = {}", curCount, x.value);
-	            if(x.left != null) {
-	                queue.add(x.left);
-	                levelCount++;
-	            }
-	            if(x.right != null) {
-	                queue.add(x.right);
-	                levelCount++;
-	            }
-	            
-	            curCount--;
-	        }
-	        curLevel++;
-	    }
-	}
-	public void travelByLevel(Node<T> root) {
-	    if(root == null) return;
-	    Queue<Node<T>> q = new LinkedList<Node<T>>();
-	    q.add(root);
-	    int depth = 0;
-	    while(!q.isEmpty()) {
-	        int sz = q.size();  // 当前蹭的数量 
-	        for(int i = 0; i < sz; i++) {
-	            Node<T> node = q.poll();
-	            log.info("层序遍历, 当前遍历 -> {}", node.value);
-	            if(node.left != null) {
-	                q.add(node.left);
-	            }
-	            if(node.right != null) {
-	                q.add(node.right);
-	            }
-	        }
-	        depth++;  // 当前层遍历完成 深度+1 
-	        log.info("当前遍历完成到第 = {} = 层", depth);
-	    }
-	}
-	
-	/**
-	 *  不使用递归  的遍历树方法 
-	 */
-	public void traverseInOrderWithoutRecursion() {  // 中序遍历  中根遍历 
-        Stack<Node<T>> stack = new Stack<>();
-        Node<T> current = root;  // 根节点
+        public T value;
+        public BinaryTreeNode<T> left;  // 简略 get/set方法
+        public BinaryTreeNode<T> right;
 
-        while (current != null || !stack.isEmpty()) {
-            while (current != null) {
-                stack.push(current);
-                current = current.left;
-            }
+        public BinaryTreeNode(T value) {
+            this.value = value;
+        }
 
-            // 如果 到了最左边的叶子节点 则取出stack top 
-            Node<T> top = stack.pop();
-            log.info("traverseInOrderWithoutRecursion -> {}", top.value);
-            
-            current = top.right;
+        @Override
+        public String toString() {
+            return "BinaryTreeNode{" +
+                "value=" + value +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
         }
     }
 
-    public void traversePreOrderWithoutRecursion() {  // 先序遍历  就是先根遍历 
-        Stack<Node<T>> stack = new Stack<>();
-        Node<T> current = root;
-        stack.push(root);
+    private BinaryTreeNode<T> root;  // 根节点
 
-        while (current != null && !stack.isEmpty()) {
-            current = stack.pop();
-            log.info("traversePreOrderWithoutRecursion -> {}", current.value);
+    public BinaryTreeNode<T> getRoot() {
+        if (Objects.isNull(root)) {
+            throw new IllegalStateException("binary tree root is not exists");
+        }
 
-            if (current.right != null) {
-                stack.push(current.right);
+        return root;
+    }
+
+    // 重设当前tree root根节点
+    public BinaryTreeNode<T> setRoot(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            throw new IllegalArgumentException("root node is null");
+        }
+        // 省略销毁原有tree数据
+
+        this.root = node;
+        return this.root;
+    }
+
+    private BinaryTree() {} // 只允许静态方法创建树
+
+    public static <T extends Comparable<T>> BinaryTree<T> buildTree(List<T> nodes) {
+        if (Objects.isNull(nodes)) {
+            throw new IllegalArgumentException("nodes null");
+        }
+        if (nodes.isEmpty()) {
+            throw new IllegalArgumentException("nodes empty");
+        }
+
+        BinaryTree<T> bt = new BinaryTree<>();
+        nodes.forEach(bt::add);
+
+        return bt;
+    }
+
+    // 小的在左边, 大的在右边子树: 往树中添加节点
+    public void add(T value) {
+        root = addRecursive(root, value);
+    }
+
+    private BinaryTreeNode<T> addRecursive(BinaryTreeNode<T> current, T value) {
+        if (current == null) {  // 如果当前节点不村, 则直接添加
+            return new BinaryTreeNode<>(value);
+        }
+
+        // 如果新添加的值 小 = 左边  大 = 右边
+        if (value.compareTo(current.value) < 0) {
+            current.left = addRecursive(current.left, value);
+        } else if (value.compareTo(current.value) > 0) {
+            current.right = addRecursive(current.right, value);
+        } else {
+            // value already exists
+            return current;
+        }
+
+        return current;
+    }
+
+    // 查找值 是否存在
+    public Boolean containsNode(T value) {
+        return this.containsNodeRecursive(root, value);
+    }
+
+    private Boolean containsNodeRecursive(BinaryTreeNode<T> current, T value) {
+        if (current == null) {
+            return false;
+        }
+        if (value.compareTo(current.value) == 0) {
+            return true;
+        }
+        // 如果查找的值比当前节点的小 左子树查找, 如果大, 则右子树查找
+        return value.compareTo(current.value) < 0
+            ? containsNodeRecursive(current.left, value)
+            : containsNodeRecursive(current.right, value);
+    }
+
+    // 删除节点
+    public void delete(T value) {
+        root = deleteRecursive(root, value);
+    }
+
+    private BinaryTreeNode<T> deleteRecursive(BinaryTreeNode<T> current, T value) {
+        if (current == null) {
+            return null;
+        }
+
+        // 找到了删除的节点
+        if (value.compareTo(current.value) == 0) {
+            // Node to delete found, code to delete the node will go here
+            // 从树的之阵中移除当前节点, 并返回当前节点
+            if (current.left == null && current.right == null) {
+                return null;
+            }
+            if (current.right == null) {
+                return current.left;
+            }
+            if (current.left == null) {
+                return current.right;
             }
 
-            if (current.left != null) {
-                stack.push(current.left);
-            }
+            T smallestOfRight = findSmallestValue(current.right);
+            current.value = smallestOfRight;
+            current.right = deleteRecursive(current.right, smallestOfRight);
+
+            return current;
+        } else if (value.compareTo(current.value) < 0) {
+            current.left = deleteRecursive(current.left, value);
+            return current;
+        } else {
+            current.right = deleteRecursive(current.right, value);
+            return current;
         }
     }
-    
-    public void traversePostOrderWithoutRecursion() {  // 后序遍历 
-        Stack<Node<T>> stack = new Stack<>();
-        Node<T> prev = root;
-        Node<T> current = root;
-        stack.push(root);
 
-        while (current != null && !stack.isEmpty()) {
-            current = stack.peek();
-            boolean hasChild = (current.left != null || current.right != null);
-            boolean isPrevLastChild = (prev == current.right || (prev == current.left && current.right == null));
+    // 查找root节点下的最小值
+    private T findSmallestValue(BinaryTreeNode<T> root) {
+        return root.left == null ? root.value : findSmallestValue(root.left);
+    }
 
-            if (!hasChild || isPrevLastChild) {
+    // 获取树的所有节点数
+    public Integer getSize() {
+        return getSizeRecursive(this.getRoot());
+    }
+
+    private Integer getSizeRecursive(BinaryTreeNode<T> current) {
+        return current == null ? 0
+            : getSizeRecursive(current.left) + 1 + getSizeRecursive(current.right);
+    }
+
+    // 中序遍历
+    public void traverseInOrder(BinaryTreeNode<T> root, List<T> travelList) {
+        if (root != null) {
+            traverseInOrder(root.left, travelList);
+            travelList.add(root.value);  // 获取值
+            traverseInOrder(root.right, travelList);
+        }
+    }
+
+    // 先序遍历
+    public void traversePreOrder(BinaryTreeNode<T> root, List<T> travelList) {
+        if (root != null) {
+            travelList.add(root.value);
+            traversePreOrder(root.left, travelList);
+            traversePreOrder(root.right, travelList);
+        }
+    }
+
+    // 后序遍历
+    public void traversePostOrder(BinaryTreeNode<T> root, List<T> travelList) {
+        if (root != null) {
+            traversePostOrder(root.left, travelList);
+            traversePostOrder(root.right, travelList);
+            travelList.add(root.value);
+        }
+    }
+
+    // 层序遍历
+    public void travelByLevel(BinaryTreeNode<T> root, List<T> travelList) {
+        if (Objects.isNull(root)) {
+            return;
+        }
+        Queue<BinaryTreeNode<T>> q = new LinkedList<>();
+        q.add(root);
+        int depth = 0;
+        while (!q.isEmpty()) {
+            int sz = q.size();  // 当前蹭的数量
+            LOGGER.info("当前遍历完成到第 {} 层, 本层 {} 个元素", depth, sz);
+
+            while (sz > 0) {
+                BinaryTreeNode<T> node = q.remove();
+                travelList.add(node.value);
+                if (node.left != null) {
+                    q.add(node.left);
+                }
+                if (node.right != null) {
+                    q.add(node.right);
+                }
+
+                sz--;
+            }
+
+            depth++;  // 当前层遍历完成 深度+1
+        }
+    }
+
+    // 不使用递归 先根遍历
+    public void traversePreOrderWithoutRecursion(BinaryTreeNode<T> current, List<T> travelList) {
+        if (Objects.isNull(current)) {
+            return;
+        }
+
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+//        stack.push(current);
+//        while (!stack.isEmpty()) { // 这种方式 在中序和后续遍历中无法实现, 会导致原有树的修改
+//            current = stack.pop();
+//            travelList.add(current.value);
+//
+//            if (current.right != null) {
+//                stack.push(current.right);
+//            }
+//
+//            if (current.left != null) {
+//                stack.push(current.left);
+//            }
+//        }
+
+        BinaryTreeNode<T> node = current;
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                travelList.add(node.value);
+                stack.push(node);
+                node = node.left;
+            }
+
+            node = stack.pop();
+            node = node.right;
+        }
+    }
+
+    // 不使用递归 中序遍历
+    public void traverseInOrderWithoutRecursion(BinaryTreeNode<T> current, List<T> travelList) {
+        if (Objects.isNull(current)) {
+            return;
+        }
+
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+        BinaryTreeNode<T> node = current;
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+
+            node = stack.pop();
+            travelList.add(node.value);
+            node = node.right;
+        }
+    }
+
+    public void traversePostOrderWithoutRecursion(BinaryTreeNode<T> current, List<T> travelList) {
+        if (Objects.isNull(current)) {
+            return;
+        }
+
+        Stack<BinaryTreeNode<T>> stack = new Stack<>();
+        Stack<BinaryTreeNode<T>> reverseStack = new Stack<>();
+        BinaryTreeNode<T> node = current;
+        while (!stack.isEmpty() || node != null) {
+            while (node != null) {
+                reverseStack.push(node);  // 先序的反, 根, 左, 右; 所以入栈完全反向
+                stack.push(node);
+                node = node.right;
+            }
+
+            node = stack.pop();
+            node = node.left;
+        }
+
+        while (!reverseStack.isEmpty()) {
+            node = reverseStack.pop();
+            travelList.add(node.value);
+        }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() { // 自定义迭代器
+            private BinaryTreeNode<T> current = getRoot();  // 获取根引用 并在迭代中指向下一个节点
+
+            private Stack<BinaryTreeNode<T>> stack = new Stack<>();
+
+            @Override
+            public boolean hasNext() {
+                return current != null || !stack.isEmpty();
+            }
+
+            @Override
+            public T next() {
+                while (current != null) {
+                    stack.push(current);
+                    current = current.left;
+                }
+
                 current = stack.pop();
-                log.info("traversePreOrderWithoutRecursion -> {}", current.value);
-                prev = current;
-            } else {
-                if (current.right != null) {
-                    stack.push(current.right);
-                }
-                if (current.left != null) {
-                    stack.push(current.left);
-                }
+                T value = current.value;
+                current = current.right;
+
+                return value;
             }
-        }   
+        };
     }
-    
-	@Override
-	public Iterator<T> iterator() {
-		// 实现迭代器 
-				
-		Iterator<T> iterator = new Iterator<T>() {  // 不实现移除功能 
-			
-			Stack<Node<T>> stack = new Stack<>();
-			Node<T> current = root;  // 获取根引用   并在迭代中指向下一个节点 
-			
-			@Override 
-			public boolean hasNext() {
-				return current != null || !stack.isEmpty();
-			}
-			
-			@Override 
-			public T next() {  // 中根遍历 
-				
-				while (current != null) {
-	                stack.push(current);
-	                current = current.left;
-	            }
-				
-	            // 如果 到了最左边的叶子节点 则取出stack top 
-	            Node<T> top = stack.pop();
-	            log.info("traverseInOrderWithoutRecursion -> {}", top.value);
-	            current = top.right;
-	            
-				return top.value;
-			}
-			
-		}; 
-		
-		return iterator;
-		
-	}
-    
-	
+
+    // 检查 树 是否为镜像树
+    public boolean isMirrorTree() {
+        BinaryTreeNode<T> root = this.getRoot();
+        return this.checkIsMirrorNode(root.left, root.right);
+    }
+
+    // 迭代检查器 / 也可以实现为 翻转二叉树, 将当前树镜像
+    private boolean checkIsMirrorNode(BinaryTreeNode<T> p, BinaryTreeNode<T> q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null) {
+            return false;
+        }
+
+        return p.value == q.value && this.checkIsMirrorNode(p.right, q.left)
+            && this.checkIsMirrorNode(p.left, q.right);
+    }
+
+    // 将当前树 镜像, 翻转树
+    public void mirrorTree(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            return;
+        }
+        if (Objects.isNull(node.left) && Objects.isNull(node.right)) {
+            return;
+        }
+
+        BinaryTreeNode<T> temp = node.left;
+        node.left = node.right;
+        node.right = temp;
+
+        this.mirrorTree(node.left);
+        this.mirrorTree(node.right);
+    }
+
+    // 树最大叶子长度 --> 展开树最长是多长
+    public long maxLengthOfLeaf() {
+        return 1 + this.maxDepth(this.getRoot().left) + this.maxDepth(this.getRoot().right);
+    }
+
+    private long maxDepth(BinaryTreeNode<T> node) {
+        if (node == null) return 0;
+        return Math.max(this.maxDepth(node.left), this.maxDepth(node.right)) + 1;
+    }
+
+    // 计算树的深度
+    public int depthOfTree(BinaryTreeNode<T> node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int left = this.depthOfTree(node.left);
+        int right = this.depthOfTree(node.right);
+        return Math.max(left, right) + 1;
+    }
+
+    // 计算一共有多少个节点
+    private int getTreeNodeAmount() {
+        return this.getSize();
+    }
+
+    // 计算一共有多少个叶子
+    public int getTreeLeafAmount() {
+        return this.countLeafAmount(this.getRoot());
+    }
+
+    private int countLeafAmount(BinaryTreeNode<T> node) {
+        if (Objects.isNull(node)) {
+            return 0;
+        }
+
+        if (node.left == null && node.right == null) {
+            return 1;
+        }
+
+        return this.countLeafAmount(node.left) + this.countLeafAmount(node.right);
+    }
+
+    // 二叉树 中序遍历 + 其他任意一个遍历 可以还原tree
+    // 根据先序遍历和中序遍历还原
+    // 需要注意 ： id必须唯一，否则可能会出现还原的树与原始不一样
+    public static <T extends Comparable<T>> BinaryTreeNode<T> rebuildByTravelPaths(List<T> prePath,
+        List<T> inPath) {
+        // 参数校验 不为空
+        return rebuildTreeNode(prePath, 0, prePath.size() - 1, inPath, 0,
+            inPath.size() - 1);
+    }
+
+    private static <T extends Comparable<T>> BinaryTreeNode<T> rebuildTreeNode(List<T> prePath,
+        int preStart, int preEnd, List<T> inPath,
+        int inStart, int inEnd) {
+        // 参数校验
+        if (preStart > preEnd) {
+            return null;
+        }
+
+        T rootKeyValue = prePath.get(preStart);
+        // 找到根节点，并查询在中序中的位置
+        int index = inStart; // 表示当前根在中序中的位置
+        for (int i = inStart; i < inEnd; i++) {
+            if (rootKeyValue.equals(inPath.get(i))) {
+                index = i; // 找到当前根在中序中的位置
+                break;
+            }
+        }
+
+        int range = index - inStart;
+
+        BinaryTreeNode<T> buildNode = new BinaryTreeNode<>(rootKeyValue);
+        buildNode.left = rebuildTreeNode(prePath, preStart + 1, preStart + range, inPath,
+            inStart, inStart + range - 1);
+        buildNode.right = rebuildTreeNode(prePath, preStart + range + 1, preEnd, inPath,
+            inStart + range + 1, inEnd);
+
+        return buildNode;
+    }
+
 }
 
 

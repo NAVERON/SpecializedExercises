@@ -5,6 +5,6 @@ import java.rmi.RemoteException;
 
 public interface RMICallingAPI extends Remote {
 
-	public String sayHello(String message) throws RemoteException;
-	
+    public String sayHello(String message) throws RemoteException;
+
 }

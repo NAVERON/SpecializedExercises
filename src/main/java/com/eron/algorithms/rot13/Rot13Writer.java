@@ -28,45 +28,45 @@ import java.io.Writer;
  */
 public class Rot13Writer extends Writer {
 
-	private final Writer delegate;
-	private final String header;
-	private boolean started;
+    private final Writer delegate;
+    private final String header;
+    private boolean started;
 
-	public Rot13Writer(Writer output) {
-		this(output, null);
-	}
+    public Rot13Writer(Writer output) {
+        this(output, null);
+    }
 
-	public Rot13Writer(Writer output, String header) {
-		this.delegate = output;
-		this.header = header;
-	}
+    public Rot13Writer(Writer output, String header) {
+        this.delegate = output;
+        this.header = header;
+    }
 
-	@Override
-	public void write(char[] buf, int off, int len) throws IOException {
-		writeHeader();
-		Rot13.rotate(buf, off, len);
-		delegate.write(buf, off, len);
-	}
+    @Override
+    public void write(char[] buf, int off, int len) throws IOException {
+        writeHeader();
+        Rot13.rotate(buf, off, len);
+        delegate.write(buf, off, len);
+    }
 
-	@Override
-	public void flush() throws IOException {
-		delegate.flush();
-	}
+    @Override
+    public void flush() throws IOException {
+        delegate.flush();
+    }
 
-	@Override
-	public void close() throws IOException {
-		delegate.close();
-	}
+    @Override
+    public void close() throws IOException {
+        delegate.close();
+    }
 
-	private void writeHeader() throws IOException {
-		if (started)
-			return;
-		started = true;
-		if (header == null)
-			return;
-		delegate.write(header.toCharArray());
-		delegate.write(System.lineSeparator());
-	}
+    private void writeHeader() throws IOException {
+        if (started)
+            return;
+        started = true;
+        if (header == null)
+            return;
+        delegate.write(header.toCharArray());
+        delegate.write(System.lineSeparator());
+    }
 
 }
 

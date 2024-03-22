@@ -5,6 +5,8 @@
  */
 package com.eron.basic.annotation;
 
+import com.eron.basic.annotation.TestAnnotation.SimpleTestColor;
+import java.awt.Color;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,36 +17,35 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
  * @author ERON_AMD
  */
 public class SimpleModel {
-    
+
     private static final Logger log = LoggerFactory.getLogger(SimpleModel.class);
-    
+
     public static void main(String[] args) {
         log.info("custom annotation test");
-        
+
         Field[] fields = ExportModel.class.getDeclaredFields();
         String info = generateInfo(fields);
-        
+
         log.info("最终输出信息 : {}", info);
     }
-    
-    public static String generateInfo(Field[] fields){
-        List<String> infos = new ArrayList<String>();
-        
-        for(int i = 0; i < fields.length; i++){
+
+    public static String generateInfo(Field[] fields) {
+        List<String> infos = new ArrayList<>();
+
+        for (int i = 0; i < fields.length; i++) {
             log.info("生命field名称 : {}", fields[i].getName());
-            
+
             Annotation[] annotations = fields[i].getDeclaredAnnotations();
-            for(Annotation annotation : annotations){
-                if(annotation instanceof TestAnnotation){
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof TestAnnotation) {
                     infos.add(fields[i].getName());
                 }
             }
         }
-        
+
         log.info("final list values : {}, and size : {}", infos, infos.size());
         return StringUtils.join(infos, ",");
     }
@@ -53,7 +54,7 @@ public class SimpleModel {
 
         @TestAnnotation
         private String name;
-        @TestAnnotation
+        @TestAnnotation(color = SimpleTestColor.WHITE)
         private String addressString;
         @TestAnnotation
         private int age;
@@ -91,6 +92,6 @@ public class SimpleModel {
             this.sex = sex;
         }
     }
-    
-    
+
+
 }

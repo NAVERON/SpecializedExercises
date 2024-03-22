@@ -10,19 +10,21 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  在实际的项目中  自定义注解需要配合自己的实现来做， 一般放在拦截器里实现 
+ * 在实际的项目中  自定义注解需要配合自己的实现来做， 一般放在拦截器里实现
+ *
  * @author ERON_AMD
  */
 public class AnotherAnnotationTest {
 
     private static final Logger log = LoggerFactory.getLogger(AnotherAnnotationTest.class);
 
-    public static void main(String[] args) throws IntrospectionException, InstantiationException, 
-    				IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public static void main(String[] args) throws IntrospectionException, InstantiationException,
+            IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         log.info("实现注解的实现将Person实例注入PersonoDAO");
 
         PropertyDescriptor descriptor = new PropertyDescriptor("person", PersonDAO.class);

@@ -45,7 +45,7 @@ public class ReactorClient implements Runnable {
             while (true) {
                 try {
                     InputStream inputStream = socket.getInputStream();
-                    byte[] buffer = new byte[1024];  
+                    byte[] buffer = new byte[1024];
                     inputStream.read(buffer);
 
                     log.info("Client 接收到的 -> {}", new String(buffer, StandardCharsets.UTF_8));

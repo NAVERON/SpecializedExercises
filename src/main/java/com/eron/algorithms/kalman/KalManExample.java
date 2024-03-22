@@ -2,8 +2,11 @@ package com.eron.algorithms.kalman;
 
 
 import java.awt.event.MouseEvent;
+
 import static java.lang.Math.*;
+
 import Jama.Matrix;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseMotionListener;
@@ -15,11 +18,11 @@ import javax.swing.JPanel;
 public class KalManExample extends JPanel {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4629537531434387339L;
-	
-	private KalmanFilter KF;
+     *
+     */
+    private static final long serialVersionUID = -4629537531434387339L;
+
+    private KalmanFilter KF;
     private double mouseX, mouseY;
 
     public KalManExample() {
@@ -88,7 +91,7 @@ public class KalManExample extends JPanel {
     public static void main(String[] args) {
         new KalManExample().test();
     }
-    
+
 }
 
 
