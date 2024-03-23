@@ -1,18 +1,13 @@
-package com.eron.algorithms.exam;
+package com.eron.algorithms.strategy;
 
-import java.lang.ProcessHandle.Info;
+import com.eron.designpattern.JdkDynamicProxy;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.SimpleTimeZone;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
+import javax.lang.model.util.ElementScanner6;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +37,15 @@ public class StringOptions {
                 "456".toCharArray()));
 
         // KMP 字符串搜索算法
-        LOGGER.info("kmp 搜索 --> {}", stringOptions.KMPSearch("hello world", "rl"));
+        LOGGER.info("kmp 搜索 --> {}", stringOptions.KMPSearch("rl", "hello world"));
+        LOGGER.info("最长回文字串 --> {}", stringOptions.manacher("nduiebhufrvkd"));
+        // 最长公共子序列
+        LOGGER.info("最长公共字串 --> {}",
+            stringOptions.longestCommonString("xxx".toCharArray(), "ccc".toCharArray()));
+        LOGGER.info("最长无重复子串 --> {}",
+            stringOptions.longestUniqueChars("heloji".toCharArray()));
+        LOGGER.info("把一个字符串转换成另一个 限制转换次数 --> {}",
+            stringOptions.maxLengthOfLimitCost("hello", "world", 12));
     }
 
     // 字符串转换成正整数
@@ -173,67 +176,69 @@ public class StringOptions {
     }
 
     // kmp 字符串搜寻算法
-    public int KMPSearch(String str, String pattern) {
-        char[] strs = str.toCharArray();
-        char[] patterns = pattern.toCharArray();
+    // 参考资料
+    // (1) https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
+    // (2) jakeboxer.com/blog/2009/12/13/the-knuth-morris-pratt-algorithm-in-my-own-words/
+    public int KMPSearch(String pattern, String txt) {
+        int M = pattern.length();
+        int N = txt.length();
 
-        int L = strs.length, N = patterns.length;
-        int i = 0, j = 0; // i: str pointer, j: pattern pointer
-
-        // 特殊情况处理
-        if (N < 1) return 0;
-        if (L < N) return -1;
-
-        int[] lps = lps(pattern); // get the array that stores the longest subarray whose prefix is also its suffix
-        while (i < L) {
-            // 如果两个char相等 前进1位
-            if (strs[i] == patterns[j]) { // same value found, move both str and pattern pointers to their right
-                ++i;
-                ++j;
-                if (j == N) return i - N; // whole match found
+        int i = 0, j = 0;
+        int[] lps = this.computeLPSArray(pattern);
+        while ((N - i) >= (M - j)) { // 需要比对的字符串长度 > 匹配字符串长度
+            if (txt.charAt(i) == pattern.charAt(j)) {
+                i++;
+                j++;
             }
-            // 判断回溯位置
-            else if (j > 0) j = lps[j - 1]; // move pattern pointer to a previous safe location
-                // 如果j在起始位置 表示第一个字符就不匹配
-            else ++i; // restart searching at next str pointer
+
+            if ( j == M) {
+                // 如果匹配到了匹配字符串最后 表示找到了目标
+                LOGGER.info("找到匹配位置 --> {}, {}", i, j);
+                // j = lps[j - 1];
+                return i - j;
+            } else if (i < N && txt.charAt(i) != pattern.charAt(j)) {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
+            }
         }
+
         return -1;
     }
 
-    // next指针数组生成 关键**
-    private int[] lps(String pattern) {
-        int j = 0, i = 1, L = pattern.length();  // 两个指针
+    // next指针数组生成 关键**, 找出匹配字符串的前缀相同的影子状态
+    // longest proper prefix
+    private int[] computeLPSArray(String pattern) {
+        int[] lps = new int[pattern.length()];
+        lps[0] = 0;
 
-        int[] res = new int[L];  // 全部初始化为 0
-
-        char[] chars = pattern.toCharArray();
-
-        while (i < L) {
-            if (chars[i] == chars[j]) {
-                res[i++] = ++j;  // j++; res[i] = j; i++;  // 直接跳到下一个匹配位
+        // length of the previous longest prefix suffix
+        int len = 0;
+        int i = 1;
+        while (i < pattern.length()) {
+            if (pattern.charAt(len) == pattern.charAt(i)) {
+                len++;
+                lps[i] = len;
+                i++;
             } else {
-                int temp = i - 1;  // 上一个可以判断公共前后缀的信息
-                while (temp > 0) {
-                    int prevLPS = res[temp];
-                    if (chars[i] == chars[prevLPS]) {  // 表示前后缀匹配+1 i的位置就是新增相同char的索引
-                        res[i++] = prevLPS + 1;
-                        j = prevLPS;
-                        break;
-                    } else temp = prevLPS - 1;  // 如果不匹配 找前部分前缀的对称位置 res[temp - 1] 获取前面的位置, 因为对称性
-                }
-                if (temp <= 0) {
-                    res[i++] = 0;
-                    j = 0;
+                if (len != 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = len;
+                    i++;
                 }
             }
         }
-        return res;
+
+        return lps;
     }
 
     // 最长回文字符串匹配
     public String manacher(String s) {
-        String T = preProcess(s);
-        int n = T.length();
+        String s1 = preProcess(s);
+        int n = s1.length();
 
         int[] P = new int[n];  //记录每个索引中心的 回文半径
         int C = 0, R = 0;  // C 回文中心index  回文半径
@@ -247,7 +252,8 @@ public class StringOptions {
             }
 
             // 碰到之前讲的三种情况时候，需要利用中心扩展法
-            while (T.charAt(i + 1 + P[i]) == T.charAt(i - 1 - P[i])) {  // 如果可以拓展就拓展，否则表示已经到边界
+            // 如果可以拓展就拓展，否则表示已经到边界
+            while (s1.charAt(i + 1 + P[i]) == s1.charAt(i - 1 - P[i])) {
                 P[i]++;
             }
 
@@ -256,7 +262,6 @@ public class StringOptions {
                 C = i;
                 R = i + P[i];  // 所以R 是半径的索引， 不是半径 p[i]是半径
             }
-
         }
 
         // 找出 P 的最大值
@@ -269,6 +274,7 @@ public class StringOptions {
             }
         }
         int start = (centerIndex - maxLen) / 2; //最开始讲的求原字符串下标
+        LOGGER.info("最长回文 下标 {}, 长度 : {}", start, maxLen);
         return s.substring(start, start + maxLen);
     }
 
@@ -286,7 +292,7 @@ public class StringOptions {
     }
 
     // 最长公共子序列
-    public void longestCommonString(char[] chars1, char[] chars2) {
+    public int longestCommonString(char[] chars1, char[] chars2) {
         // 最长公共子序列
         int n1 = chars1.length, n2 = chars2.length;
         int[][] dp = new int[n1 + 1][n2 + 1];
@@ -320,10 +326,12 @@ public class StringOptions {
         }
 
         LOGGER.info("最长子序列 : {}", maxLength);
+        return maxLength;
     }
 
+    // 滑动窗口思想
     // 无重复字符 最长长度
-    private static void longestUniqueChars(char[] str) {
+    private int longestUniqueChars(char[] str) {
         int n = str.length;
         int i = 0, j = 0;
         Set<Character> sets = new HashSet<>();
@@ -341,10 +349,11 @@ public class StringOptions {
         }
 
         LOGGER.info("最长不重复字符 --> {}", maxNum);
+        return maxNum;
     }
 
     // 字符转换最大长度  s --> t 转化字符, 限制最大消耗, 可以得到的最大长度
-    private static void maxLengthOfLimitCost(String s, String t, int cost) {
+    public int maxLengthOfLimitCost(String s, String t, int cost) {
         int n = s.toCharArray().length;
         int[] diff = new int[n];
         for (int i = 0; i < n; i++) {
@@ -367,6 +376,7 @@ public class StringOptions {
         }
 
         LOGGER.info("最长 --> {}", maxLength);
+        return maxLength;
     }
 
 }

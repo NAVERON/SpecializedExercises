@@ -1,4 +1,4 @@
-package com.eron.algorithms.exam;
+package com.eron.algorithms.strategy;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -369,7 +369,7 @@ public class ArrayOptions {
         LOGGER.info("res = {}, 迭代次数 = {}", res, x.get());
     }
 
-    public Integer dp(Integer K, Integer N) {  // K 鸡蛋数 N 楼层  返回步数
+    private int dp(Integer K, Integer N) {  // K 鸡蛋数 N 楼层  返回步数
         x.incrementAndGet();
         if (K == 1) return N;
         if (N == 0) return 0;

@@ -1,4 +1,4 @@
-package com.eron.algorithms.exam;
+package com.eron.algorithms.strategy;
 
 import java.util.Map;
 import org.slf4j.Logger;
