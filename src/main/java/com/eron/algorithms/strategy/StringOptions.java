@@ -1,13 +1,9 @@
 package com.eron.algorithms.strategy;
 
-import com.eron.designpattern.JdkDynamicProxy;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.lang.model.util.ElementScanner6;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,43 +15,17 @@ public class StringOptions {
         StringOptions stringOptions = new StringOptions();
         // 字符串翻转
         LOGGER.info("翻转字符串 --> {}", stringOptions.reverse("helloworld", 3));
-        // 字符串 转换成 数字
-        LOGGER.info("字符串转换为数字 --> {}", stringOptions.parseToNumber("123".toCharArray()));
-
-        // 两个字符串数字相加
-        LOGGER.info("两个字符串数字相加 --> {}",
-            stringOptions.plusNumber("12".toCharArray(), "34".toCharArray()));
-        LOGGER.info("使用简单方法 两数相加 --> {}",
-            stringOptions.parseToNumber("12".toCharArray()) + stringOptions.parseToNumber(
-                "34".toCharArray()));
-
-        // 两个字符串相乘
-        LOGGER.info("两数相乘 --> {}",
-            stringOptions.timesNumber("123".toCharArray(), "456".toCharArray()));
-        LOGGER.info("验证两数相乘结果 --> {}",
-            stringOptions.parseToNumber("123".toCharArray()) * stringOptions.parseToNumber(
-                "456".toCharArray()));
 
         // KMP 字符串搜索算法
         LOGGER.info("kmp 搜索 --> {}", stringOptions.KMPSearch("rl", "hello world"));
         LOGGER.info("最长回文字串 --> {}", stringOptions.manacher("nduiebhufrvkd"));
         // 最长公共子序列
-        LOGGER.info("最长公共字串 --> {}",
-            stringOptions.longestCommonString("xxx".toCharArray(), "ccc".toCharArray()));
+        LOGGER.info("最长连续公共子串 --> {}",
+            stringOptions.longestCommonString("xcx".toCharArray(), "ccc".toCharArray()));
         LOGGER.info("最长无重复子串 --> {}",
             stringOptions.longestUniqueChars("heloji".toCharArray()));
         LOGGER.info("把一个字符串转换成另一个 限制转换次数 --> {}",
             stringOptions.maxLengthOfLimitCost("hello", "world", 12));
-    }
-
-    // 字符串转换成正整数
-    private long parseToNumber(char[] chars) {
-        int base = 0;
-        for (char c : chars) {
-            base = base * 10 + (c - '0');
-        }
-
-        return base;
     }
 
     // 翻转字符串 设定一个位置，将其前后的字符串调换位置, 例子 : helloworld ---> loworldhel
@@ -83,96 +53,6 @@ public class StringOptions {
             start++;
             end--;
         }
-    }
-
-    // 字符串 计算相加,只考虑正整数
-    public long plusNumber(char[] c1, char[] c2) {
-        // 简单的方法 将两个转换为数字，直接进行运算
-        long base = 0, carry = 0;
-        int m = c1.length - 1, n = c2.length - 1;
-        Deque<Long> ans = new ArrayDeque<>();
-
-        while (m >= 0 && n >= 0) {
-            long num1 = c1[m] - '0';
-            long num2 = c2[n] - '0';
-            base = (num1 + num2 + carry) % 10;
-            carry = (num1 + num2 + carry) / 10;
-
-            ans.addFirst(base);
-            m--;
-            n--;
-        }
-
-        while (m >= 0) {
-            long num1 = c1[m] - '0';
-            base = (num1 + carry) % 10;
-            carry = (num1 + carry) / 10;
-
-            ans.addFirst(base);
-            m--;
-        }
-
-        while (n >= 0) {
-            long num2 = c2[n] - '0';
-            base = (num2 + carry) % 10;
-            carry = (num2 + carry) / 10;
-
-            ans.addFirst(base);
-            n--;
-        }
-
-        if (carry > 0) {
-            ans.addFirst(carry);
-        }
-
-        // 队列中的数字 转换成真正的number
-        long sum = 0;
-        while (!ans.isEmpty()) {
-            sum = sum * 10 + ans.pollFirst();
-        }
-        return sum;
-    }
-
-    public long timesNumber(char[] c1, char[] c2) {
-        long sum = 0;
-        int level = 1;
-        int n = c1.length;
-
-        for (int i = n - 1; i >= 0; i--) {
-            char x = c1[i];
-            sum += this.singleTimesNumber(x, c2) * level;
-
-            level *= 10;
-        }
-
-        return sum;
-    }
-
-    // 提供底层实现 单个数字 乘以 一个多位数
-    private long singleTimesNumber(char a, char[] chars) {
-        int n = chars.length - 1;
-        long base = 0, carry = 0;
-        long num0 = a - '0'; // 乘数基数
-
-        int level = 1; // 每次上一个层次，乘法计算
-        long sum = 0; // 最终乘法结果
-
-        while (n >= 0) {
-            long num1 = chars[n] - '0';
-            base = (num0 * num1 + carry) % 10;
-            carry = (num0 * num1 + carry) / 10;
-
-            sum = sum + base * level;
-
-            level *= 10;
-            n--;
-        }
-
-        if (carry > 0) {
-            sum = sum + carry * level;
-        }
-
-        return sum;
     }
 
     // kmp 字符串搜寻算法
@@ -314,23 +194,10 @@ public class StringOptions {
             }
         }
 
-        // 打印出整个数组
-        // 最大值
-        int maxLength = 0;
-        for (int i = 0; i < n1 + 1; i++) {
-            for (int j = 0; j < n2 + 1; j++) {
-                System.err.print(dp[i][j] + "  ");
-                maxLength = Math.max(maxLength, dp[i][j]);
-            }
-            System.err.println("\n");
-        }
-
-        LOGGER.info("最长子序列 : {}", maxLength);
-        return maxLength;
+        return Arrays.stream(dp).flatMapToInt(Arrays::stream).max().orElse(0);
     }
 
-    // 滑动窗口思想
-    // 无重复字符 最长长度
+    // 无重复字符 最长长度 : 滑动窗口思想
     private int longestUniqueChars(char[] str) {
         int n = str.length;
         int i = 0, j = 0;
@@ -348,34 +215,32 @@ public class StringOptions {
             }
         }
 
-        LOGGER.info("最长不重复字符 --> {}", maxNum);
         return maxNum;
     }
 
     // 字符转换最大长度  s --> t 转化字符, 限制最大消耗, 可以得到的最大长度
     public int maxLengthOfLimitCost(String s, String t, int cost) {
-        int n = s.toCharArray().length;
+        int n = s.length();
         int[] diff = new int[n];
         for (int i = 0; i < n; i++) {
-            diff[i] = Math.abs(s.charAt(i) - t.charAt(i));
+            diff[i] = Math.abs(s.charAt(i) - t.charAt(i)); // 字符之间的差距花费
         }
 
         int start = 0, end = 0;
         int maxLength = 0;
         int curCost = 0;
 
-        while (end < n && start <= end) {
+        while (start <= end && end < n) { // 转换成：求一个数组中，连续和不大于某个数的最长索引长度
             curCost += diff[end];
             while (start <= end && curCost > cost) {
-                curCost -= diff[end];
+                curCost -= diff[start];
                 start++;
             }
 
             end++;
-            maxLength = Math.max(maxLength, end - start);
+            maxLength = Math.max(maxLength, end - start); // 更新连续最长长度
         }
 
-        LOGGER.info("最长 --> {}", maxLength);
         return maxLength;
     }
 
