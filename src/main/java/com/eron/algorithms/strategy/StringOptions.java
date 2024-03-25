@@ -18,7 +18,7 @@ public class StringOptions {
 
         // KMP 字符串搜索算法
         LOGGER.info("kmp 搜索 --> {}", stringOptions.KMPSearch("rl", "hello world"));
-        LOGGER.info("最长回文字串 --> {}", stringOptions.manacher("nduiebhufrvkd"));
+        LOGGER.info("最长回文字串 --> {}", stringOptions.manacher("nduiabbafrvkd"));
         // 最长公共子序列
         LOGGER.info("最长连续公共子串 --> {}",
             stringOptions.longestCommonString("xcx".toCharArray(), "ccc".toCharArray()));

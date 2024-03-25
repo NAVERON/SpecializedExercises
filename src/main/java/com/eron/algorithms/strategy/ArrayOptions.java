@@ -23,7 +23,7 @@ public class ArrayOptions {
         // 数组可以被分割成多少个递增子序列
         arrayOptions.arrCanSplits(arr);
         // 数组中数字 可组合成的最大数字
-        arrayOptions.bigestNumber(arr);
+        arrayOptions.biggestNumber(arr);
         // 数组中每个位置 最临近的最大值
         arrayOptions.nextBiggerNumber(arr);
         // 求两个有序数组中的 中位数
@@ -31,8 +31,18 @@ public class ArrayOptions {
         // 求数组中子数组 和 为target的集合
         arrayOptions.subArraySumOfTarget(arr, 0);
         // 重写0 数组中遇到0，则辅之以个顺后多协议个0
-        arr = new int[]{1, 0, 2, 3, 0, 4, 5, 0};
-        arrayOptions.rewriteZero(arr);
+        int[] arr1 = new int[]{1, 0, 2, 3, 0, 4, 5, 0};
+        arrayOptions.rewriteZero(arr1);
+
+        // 最长递增子序列
+        arrayOptions.longestIncreaseArray(arr);
+        // 滑动窗口，求 连续子序列和 > 目标数字的最小数组长度
+        arrayOptions.targetSumArray(arr, 12);
+
+        // 鸡蛋 楼层问题
+        arrayOptions.ballDrop(5, 12);
+        int[] arr2 = new int[]{7,1,5,3,6,4};
+        arrayOptions.standardStockSellSolve(arr2);
     }
 
     /**
@@ -78,7 +88,7 @@ public class ArrayOptions {
      * 思路：数字大的放在高位 将数字的组合按照大小排列
      * 两两比对，交换2个数字的前后顺序并比较大小， 组成后的数字大的放在前面, 否则放在后面
      */
-    private void bigestNumber(int[] arr) {
+    private void biggestNumber(int[] arr) {
         String res = Arrays.stream(arr).boxed().sorted((n1, n2) -> {
             String n1String = Integer.toString(n1);
             String n2String = Integer.toString(n2);
@@ -121,49 +131,34 @@ public class ArrayOptions {
             Collectors.toList()));
     }
 
-    // 线段树问题 二位数组：排序的实现
-    public void periodExchange() {
-
-    }
-
+    /**
+     * 过程
+     * 1 短数组放前面， 长数组放后面
+     * 2 遍历短数组， i++, 长数组指针 bIndex = (m+n+1)/2 - aIndex
+     * 3 找到邻近的4个值, 判断
+     * 4 左右边界 变化，最终缩小到临界
+     */
     // 两个排序好的数组，求数组的中位数 --> 简单办法：合并数组，计算中位数
     // 巧妙方法，夹逼两个数组，得到中间的值 或 中间2个值的平均
     public float midOfArray(int[] arr1, int[] arr2) {
-        // Integer[] arr1 = {1, 4, 6, 7, 9, 25};
-        // Integer[] arr2 = {1, 3, 6, 8, 14, 22, 32, 43};
-        // 二分法思路， 每次比较切分点两边的大小
-
-        System.out.println("==============================");
         float result = 0F;
         // 二分法 查找中位数
-//		奇数：
-//		median = max(maxLeftA, maxLeftB)
-//		偶数：
-//		median = (max(maxLeftA, maxLeftB) + min(minRightA, minRightB)) / 2
+        // 奇数：median = max(maxLeftA, maxLeftB)
+        // 偶数：median = (max(maxLeftA, maxLeftB) + min(minRightA, minRightB)) / 2
 
-        /**
-         * 过程
-         * 1 短数组放前面， 长数组放后面
-         * 2 遍历短数组， i++, 长数组指针 bIndex = (m+n+1)/2 - aIndex
-         * 3 找到邻近的4个值, 判断
-         * 4 左右边界 变化，最终缩小到临界
-         */
+        int len1 = arr1.length;
+        int len2 = arr2.length;
 
-        Integer len1 = arr1.length;
-        Integer len2 = arr2.length;
-
-        boolean isEven = (len1 + len2) % 2 == 0 ? true : false;  // 偶数还是奇数
+        boolean isEven = (len1 + len2) % 2 == 0;  // 偶数还是奇数
 
         if (len1 > len2) { // arr1 始终选择短的那个， 减少长短判断
-            // MedianOfTwoArray.reverseArray(arr1, arr2);
+            // reverseArray(arr1, arr2); // 这里需要实现 数组引用调换
         }
 
-        Integer low = 0;
-        Integer high = len1;
+        int low = 0;
+        int high = len1;
 
         while (low <= high) {
-            System.out.println("当前 [low, high] : " + low + ", " + high);
-
             int partation1 = (high - low) / 2 + low;
             int partation2 = (len1 + len2 + 1) / 2 - partation1;  // 这样计算就可以保证 i + j = 中间的数量
 
@@ -172,19 +167,10 @@ public class ArrayOptions {
             int maxLeftB = partation2 == 0 ? Integer.MIN_VALUE : arr2[partation2 - 1];
             int minRightB = partation2 == len2 ? Integer.MAX_VALUE : arr2[partation2];
 
-            if (maxLeftA <= minRightB && minRightA >= maxLeftB) {
-                // 如果找到临界
-                // 如果是偶数
-                System.out.println("找到时 分界线附近的变量 : [maxLeft1, minRight1, maxLeft2, minRight2] "
-                    + maxLeftA + ", " + minRightA
-                    + ", " + maxLeftB + ", " + minRightB);
-                if (isEven) {
-                    result = Float.sum(Math.max(maxLeftA, maxLeftB), Math.min(minRightA, minRightB)) / 2;
-                    System.out.println("结果 " + result);
-                } else {
-                    result = Float.max(maxLeftA, maxLeftB);
-                    System.out.println("结果 " + result);
-                }
+            if (maxLeftA <= minRightB && minRightA >= maxLeftB) { // 找到临界值
+                result = isEven
+                    ? Float.sum(Math.max(maxLeftA, maxLeftB), Math.min(minRightA, minRightB)) / 2
+                    : Float.max(maxLeftA, maxLeftB);
                 break;
             } else if (maxLeftA > minRightB) {
                 // partation1 靠右了/太大了， 中位数在左边的地方
@@ -256,7 +242,7 @@ public class ArrayOptions {
     }
 
     // 最长递增子序列
-    public int longestIncreamentString(int[] arr) {
+    public int longestIncreaseArray(int[] arr) {
         int[] dp = new int[arr.length];  // 自动全部初始化为0，每一个索引位作为最后一个 前面可有的最长递增子序列
         dp[0] = 1;
 
@@ -265,7 +251,6 @@ public class ArrayOptions {
             for (int j = 0; j < i; j++) {
                 if (arr[j] < arr[i]) {
                     maxLength = Math.max(maxLength, dp[j]);  // 从0 至j的最大递增
-                    // 如果需要输出数组, 这里添加
                 }
             }
 
@@ -273,17 +258,11 @@ public class ArrayOptions {
             LOGGER.info("第{}个循环, 当前maxLength = {}, 输出当前dp : {}", i, maxLength, dp);
         }
 
-        int maxResult = 0;
-        for (int i = 0; i < dp.length; i++) {
-            maxResult = maxResult >= dp[i] ? maxResult : dp[i];
-        }
-
-        return maxResult;
+        return Arrays.stream(dp).max().orElse(-1);
     }
 
-    // 数组中找到连续和 大于target的
-    // 滑动窗口 思想
-    private static void targetSumArray(int[] arr, int target) {
+    // 数组中找到连续和 大于target的 : 滑动窗口
+    public void targetSumArray(int[] arr, int target) {
         int n = arr.length;
         int i = 0, j = 0;
         int sum = 0;
@@ -300,14 +279,12 @@ public class ArrayOptions {
 
             j++;
         }
-        LOGGER.info("最小数组长度 --> {}", ans);
+        LOGGER.info("数组中 连续和大于target, 最小数组长度 --> {}", ans);
     }
-
 
     // 构建cars list  给出的原始数据是 car[i] = [pos_i, speed_i], 保证所有i位置 < i+1 位置
     // 因为没有终点距离 只要后面的比前面的速度快，就一定能追上
     // t = (a2.pos - a1.pos) / (a2.speed - a1.speed)
-
     /**
      *         log.info("计算相遇时间...");
      *         Integer[][] carArrays = new Integer[][]{
@@ -369,7 +346,7 @@ public class ArrayOptions {
         LOGGER.info("res = {}, 迭代次数 = {}", res, x.get());
     }
 
-    private int dp(Integer K, Integer N) {  // K 鸡蛋数 N 楼层  返回步数
+    private int dp(int K, int N) { // K 鸡蛋数 N 楼层  返回步数
         x.incrementAndGet();
         if (K == 1) return N;
         if (N == 0) return 0;
