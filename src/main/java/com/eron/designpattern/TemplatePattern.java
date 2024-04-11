@@ -21,7 +21,6 @@ public class TemplatePattern {
         // 做两道不同的菜  根据业务实现需要增加
         cooker.eggFriedRice();
         cooker.shreddedPotatoes();
-
     }
 
     // 当前没有模板方法的完全思路, 以后再实现

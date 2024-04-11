@@ -33,7 +33,7 @@ public class CustomStack<T> {
     }
 
     // 2个queue实现一个stack
-    private Queue<T> c1 = new LinkedBlockingDeque<>();
+    private final Queue<T> c1 = new LinkedBlockingDeque<>();
     private long volume = 10; // 栈容量
 
     public CustomStack(){}

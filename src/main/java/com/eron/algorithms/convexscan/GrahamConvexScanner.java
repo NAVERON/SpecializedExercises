@@ -55,9 +55,40 @@ import org.slf4j.LoggerFactory;
  */
 public class GrahamConvexScanner {
 
-    private static final Logger log = LoggerFactory.getLogger(GrahamConvexScanner.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GrahamConvexScanner.class);
 
-    protected static enum Turn { // 表示 两个向量的转向
+
+    public static void main(String[] args) {
+        // 测试算法
+        // ==> 官方案例1
+        LOGGER.info("官方案例 1 ......");
+        // x coordinates
+        int[] xs = {3, 5, -1, 8, -6, 23, 4};
+        // y coordinates
+        int[] ys = {9, 2, -4, 3, 90, 3, -11};
+        // find the convex hull // 返回最外层点链接形成的hull
+        List<Simple2DPoint> convexHull = GrahamConvexScanner.getConvexHullOfSimplePoint(xs, ys);
+        convexHull.forEach(p -> LOGGER.info("{}", p));
+
+        // ==> 官方案例2
+        LOGGER.info("官方案例 2 ......");
+        // the same points as the previous example
+        List<Simple2DPoint> points = Arrays.asList(
+            new Simple2DPoint(3, 9),
+            new Simple2DPoint(5, 2),
+            new Simple2DPoint(-1, -4),
+            new Simple2DPoint(8, 3),
+            new Simple2DPoint(-6, 90),
+            new Simple2DPoint(23, 3),
+            new Simple2DPoint(4, -11)
+        );
+
+        // find the convex hull
+        List<Simple2DPoint> convexHull2 = GrahamConvexScanner.getConvexHullOfSimplePoint(points);
+        convexHull2.forEach(p -> LOGGER.info("{}", p));
+    }
+
+    protected enum Turn { // 表示 两个向量的转向
         CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR;
     }
 
@@ -168,7 +199,7 @@ public class GrahamConvexScanner {
             }
         }
 
-        // close the hull
+        // close the hull // 根据算法的实际情况增加和删除
         stack.push(sorted.get(0));
 
         return new ArrayList<>(stack);
@@ -192,13 +223,13 @@ public class GrahamConvexScanner {
         // 与基准点的角度比较
         TreeSet<Simple2DPoint> set = new TreeSet<>((a, b) -> {
 
-            if (a == b || a.equals(b)) {
+            if (a.equals(b)) {
                 return 0;
             }
 
             // use longs to guard against int-underflow  这里point2D 由先后从呢个的方法计算2点的tan值
-            double thetaA = Math.atan2((long) a.y() - lowest.y(), (long) a.x() - lowest.x());
-            double thetaB = Math.atan2((long) b.y() - lowest.y(), (long) b.x() - lowest.x());
+            double thetaA = lowest.atan2(a);
+            double thetaB = lowest.atan2(b);
 
             if (thetaA < thetaB) {  // A 点与基准形成的角度小
                 return -1;
@@ -207,12 +238,8 @@ public class GrahamConvexScanner {
             } else {  // 在一条线上
                 // collinear with the 'lowest' point, let the point closest to it come first
                 // use longs to guard against int-over/underflow
-                double distanceA = Math.sqrt((((long) lowest.x() - a.x()) * ((long) lowest.x() - a.x())) +
-                        (((long) lowest.y() - a.y()) * ((long) lowest.y() - a.y())));
-                double distanceB = Math.sqrt(
-                        (((long) lowest.x() - b.x()) * ((long) lowest.x() - b.x())) +
-                                (((long) lowest.y() - b.y()) * ((long) lowest.y() - b.y()))
-                );
+                double distanceA = lowest.distance(a);
+                double distanceB = lowest.distance(b);
 
                 if (distanceA < distanceB) {
                     return -1;
@@ -233,7 +260,7 @@ public class GrahamConvexScanner {
      * 比较器单独实现
      */
     public static class Point2DComparator implements Comparator<Simple2DPoint> {
-        private Simple2DPoint lowest;
+        private final Simple2DPoint lowest;
 
         public Point2DComparator(Simple2DPoint lowest) {  // 点云最左下角 或者传入所有点云points
             this.lowest = lowest;
@@ -241,23 +268,19 @@ public class GrahamConvexScanner {
 
         @Override
         public int compare(Simple2DPoint a, Simple2DPoint b) {
-            if (a == b || a.equals(b)) {
+            if (a.equals(b)) {
                 return 0;
             }
 
-            double thetaA = Math.atan2((long) a.y() - lowest.y(), (long) a.x() - lowest.x());
-            double thetaB = Math.atan2((long) b.y() - lowest.y(), (long) b.x() - lowest.x());
+            double thetaA = lowest.atan2(a);
+            double thetaB = lowest.atan2(b);
             if (thetaA < thetaB) {
                 return -1;
             } else if (thetaA > thetaB) {
                 return 1;
             } else {
-                double distanceA = Math.sqrt((((long) lowest.x() - a.x()) * ((long) lowest.x() - a.x())) +
-                        (((long) lowest.y() - a.y()) * ((long) lowest.y() - a.y())));
-                double distanceB = Math.sqrt(
-                        (((long) lowest.x() - b.x()) * ((long) lowest.x() - b.x())) +
-                                (((long) lowest.y() - b.y()) * ((long) lowest.y() - b.y()))
-                );
+                double distanceA = lowest.distance(a);
+                double distanceB = lowest.distance(b);
                 if (distanceA < distanceB) {
                     return -1;
                 } else {
@@ -276,12 +299,11 @@ public class GrahamConvexScanner {
      * 1 such point exists, the one with the lowest x coordinate
      * is returned.
      */
-    protected static Simple2DPoint getLowestPointOfSimplePoint(List<Simple2DPoint> points) {  // 获取左下角的点 -> 使用点作为向量起始点
-
+    protected static Simple2DPoint getLowestPointOfSimplePoint(List<Simple2DPoint> points) {
+        // 获取左下角的点 -> 使用点作为向量起始点
         Simple2DPoint lowest = points.get(0);
 
         for (int i = 1; i < points.size(); i++) {
-
             Simple2DPoint temp = points.get(i);
 
             if (temp.y() < lowest.y() || (temp.y() == lowest.y() && temp.x() < lowest.x())) {
@@ -298,7 +320,7 @@ public class GrahamConvexScanner {
      * ordered points <code>a</code>, <code>b</code> and <code>c</code>.
      * More specifically, the cross product <tt>C</tt> between the
      * 3 points (vectors) is calculated:
-     *
+     * <p>
      * <tt>(b.x-a.x * c.y-a.y) - (b.y-a.y * c.x-a.x)</tt>
      * <p>
      * and if <tt>C</tt> is less than 0, the turn is CLOCKWISE, if
@@ -326,69 +348,7 @@ public class GrahamConvexScanner {
         }
     }
 
-    public static void main(String[] args) {
-        // 测试算法
-        // ==> 官方案例1
-        // x coordinates
-        int[] xs = {3, 5, -1, 8, -6, 23, 4};
-        // y coordinates
-        int[] ys = {9, 2, -4, 3, 90, 3, -11};
-        // find the convex hull
-        List<Simple2DPoint> convexHull = GrahamConvexScanner.getConvexHullOfSimplePoint(xs, ys); // 返回最外层点链接形成的hull
-        for (Simple2DPoint p : convexHull) {
-            System.out.println(p);
-        }
-
-        System.out.println("案例2 ====================");
-        // ==> 官方案例2
-        // the same points as the previous example
-        List<Simple2DPoint> points = Arrays.asList(
-                new Simple2DPoint(3, 9),
-                new Simple2DPoint(5, 2),
-                new Simple2DPoint(-1, -4),
-                new Simple2DPoint(8, 3),
-                new Simple2DPoint(-6, 90),
-                new Simple2DPoint(23, 3),
-                new Simple2DPoint(4, -11)
-        );
-
-        // find the convex hull
-        List<Simple2DPoint> convexHull2 = GrahamConvexScanner.getConvexHullOfSimplePoint(points);
-
-        for (Simple2DPoint p : convexHull2) {
-            System.out.println(p);
-        }
-
-        // 需要实现堆非使用fx 库的支持
-        List<Simple2DPoint> pointsOfSimple = Arrays.asList(
-                new Simple2DPoint(3, 9),
-                new Simple2DPoint(5, 2),
-                new Simple2DPoint(-1, -4),
-                new Simple2DPoint(8, 3),
-                new Simple2DPoint(-6, 90),
-                new Simple2DPoint(23, 3),
-                new Simple2DPoint(4, -11)
-        );
-        List<Simple2DPoint> convexHull3 = GrahamConvexScanner.getConvexHullOfSimplePoint(pointsOfSimple);
-
-        System.out.println("案例3 ====================");
-        for (Simple2DPoint p : convexHull3) {
-            System.out.println(p);
-        }
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

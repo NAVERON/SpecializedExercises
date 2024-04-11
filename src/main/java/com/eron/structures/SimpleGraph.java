@@ -21,7 +21,7 @@ public class SimpleGraph {
     public static void main(String[] args) {
         SimpleGraph.simpleGraphCases();  // 测试普通图结构
 
-        int a[] = {6, 6, 0, 1, 4, 3, 3, 4, 0};
+        int[] a = {6, 6, 0, 1, 4, 3, 3, 4, 0};
 
         int n = a.length;
 
@@ -76,10 +76,8 @@ public class SimpleGraph {
             String to = edge.to;
             Integer weight = edge.weight;
 
-            List<GraphNode> neighbors = nodesRelation.get(from);
-            if (neighbors == null) {  // 如果没有这个节点 需要增加
-                nodesRelation.put(from, new ArrayList<>());
-            }
+            // 如果没有这个节点 需要增加
+            nodesRelation.computeIfAbsent(from, k -> new ArrayList<>());
             // 创建node 添加
             GraphNode node = new GraphNode(to, weight);
             nodesRelation.get(from).add(node);
@@ -87,11 +85,7 @@ public class SimpleGraph {
     }
 
     public void printGraph() {
-        nodesRelation.entrySet().forEach(relation -> {
-            String from = relation.getKey();
-            List<GraphNode> tos = relation.getValue();
-            LOGGER.info("{} = < {} >", from, tos);
-        });
+        nodesRelation.forEach((from, tos) -> LOGGER.info("{} = < {} >", from, tos));
     }
 
     // 图的遍历  DFS BFS 省略
@@ -159,8 +153,7 @@ public class SimpleGraph {
         simpleGraph.dfsCirculate();
     }
 
-    private static int find(int x, int a[],
-        int vis[], int root[]) {
+    private static int find(int x, int[] a, int[] vis, int[] root) {
         if (vis[x] == 1) {
             return root[x];
         }
@@ -172,7 +165,7 @@ public class SimpleGraph {
     }
 
     // Function to convert directed graph into tree
-    private static void Graph_to_tree(int a[], int n) {
+    private static void Graph_to_tree(int[] a, int n) {
         // Vis array to check if an index is
         // visited or not root[] array is to
         // store parent of each vertex
