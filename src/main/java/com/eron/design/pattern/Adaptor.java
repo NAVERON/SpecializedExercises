@@ -44,7 +44,7 @@ public class Adaptor {
 
     // 为了让方钉也能使现判断 进入圆孔， 实现适配器
     public static class SquarePegAdaptor extends RoundPeg {
-        private SquarePeg squarePeg;
+        private final SquarePeg squarePeg;
 
         public SquarePegAdaptor(SquarePeg squarePeg) {
             this.squarePeg = squarePeg;

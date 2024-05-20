@@ -9,11 +9,22 @@ import com.eron.design.pattern.Adaptor.RoundHole;
 import com.eron.design.pattern.Adaptor.RoundPeg;
 import com.eron.design.pattern.Adaptor.SquarePeg;
 import com.eron.design.pattern.Adaptor.SquarePegAdaptor;
+import com.eron.design.pattern.Bridge.AdvanceRemoteController;
+import com.eron.design.pattern.Bridge.Device;
+import com.eron.design.pattern.Bridge.Radio;
+import com.eron.design.pattern.Bridge.Remote;
+import com.eron.design.pattern.Bridge.RemoteController;
+import com.eron.design.pattern.Bridge.TV;
 import com.eron.design.pattern.Builder.Car;
 import com.eron.design.pattern.Builder.CarBuilder;
 import com.eron.design.pattern.Builder.Director;
 import com.eron.design.pattern.Builder.Thing;
 import com.eron.design.pattern.Builder.ThingBuilder;
+import com.eron.design.pattern.Composite;
+import com.eron.design.pattern.Composite.CompoundGraphic;
+import com.eron.design.pattern.Composite.Dot;
+import com.eron.design.pattern.Composite.Graphic;
+import com.eron.design.pattern.Composite.Triangle;
 import com.eron.design.pattern.FactoryMethod.MyDialog;
 import com.eron.design.pattern.FactoryMethod.MyDialogA;
 import com.eron.design.pattern.FactoryMethod.MyDialogB;
@@ -23,6 +34,7 @@ import com.eron.design.pattern.Prototype.Shape;
 import com.eron.design.pattern.Singleton;
 import com.eron.design.pattern.Singleton.DataBase;
 import com.eron.design.pattern.Singleton.SingletonEnum;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +60,8 @@ public class PatternUsage {
 
         // 结构型设计模式
         patternUsage.adaptor();
+        patternUsage.bridge();
+        patternUsage.composite();
 
         // 行为型设计模式
 
@@ -144,6 +158,7 @@ public class PatternUsage {
         singleton3.action();
     }
 
+    // 适配器
     private void adaptor() {
         RoundHole roundHole = new RoundHole(10);
         RoundPeg roundPeg = new RoundPeg(5);
@@ -152,6 +167,44 @@ public class PatternUsage {
         SquarePeg squarePeg = new SquarePeg(20);
         SquarePegAdaptor squarePegAdaptor = new SquarePegAdaptor(squarePeg);
         LOGGER.info("圆孔 vs 方钉 --> {}", roundHole.fits(squarePegAdaptor));
+    }
+
+    // 桥接模式
+    private void bridge() {
+        Device device = new TV();
+        Remote controller = new RemoteController(device);
+        LOGGER.info("设备状态 --> {}", controller.getDevice());
+
+        controller.togglePower();
+        controller.volumeUp();
+        controller.channelUp();
+        LOGGER.info("当前设备状态 --> {}", controller.getDevice());
+
+        Device radio = new Radio();
+        controller = new AdvanceRemoteController(radio);
+        LOGGER.info("更换后 设备状态 --> {}", controller.getDevice());
+
+        controller.togglePower();
+        controller.volumeUp();
+        controller.channelUp();
+        LOGGER.info("更换后 设备状态 --> {}", controller.getDevice());
+    }
+
+    private void composite() {
+        List<Graphic> imageEditor = new ArrayList<>();
+
+        Dot dot = new Dot(10, 20);
+        Triangle triangle = new Triangle(5, 5, 10);
+        imageEditor.add(dot);
+        imageEditor.add(triangle);
+
+        CompoundGraphic groupGraphic = new CompoundGraphic(); // 组合的图形 也算作一种图形
+        groupGraphic.addGraphic(dot);
+        groupGraphic.addGraphic(triangle);
+
+        imageEditor.add(groupGraphic);
+
+        imageEditor.forEach(Graphic::draw);
     }
 
 
