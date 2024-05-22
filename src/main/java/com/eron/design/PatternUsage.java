@@ -25,12 +25,21 @@ import com.eron.design.pattern.Composite.CompoundGraphic;
 import com.eron.design.pattern.Composite.Dot;
 import com.eron.design.pattern.Composite.Graphic;
 import com.eron.design.pattern.Composite.Triangle;
+import com.eron.design.pattern.Decorator.CompressionDataSourceDecorator;
+import com.eron.design.pattern.Decorator.DataSourceWrapper;
+import com.eron.design.pattern.Decorator.EncryptionDataSourceDecorator;
+import com.eron.design.pattern.Decorator.FileDataSource;
+import com.eron.design.pattern.Facade.VideoConversionFacade;
 import com.eron.design.pattern.FactoryMethod.MyDialog;
 import com.eron.design.pattern.FactoryMethod.MyDialogA;
 import com.eron.design.pattern.FactoryMethod.MyDialogB;
+import com.eron.design.pattern.FlyWeight;
+import com.eron.design.pattern.FlyWeight.Forest;
 import com.eron.design.pattern.Prototype.Circle;
 import com.eron.design.pattern.Prototype.Rectangle;
 import com.eron.design.pattern.Prototype.Shape;
+import com.eron.design.pattern.Proxy.YouTubeCacheProxy;
+import com.eron.design.pattern.Proxy.YouTubeSource;
 import com.eron.design.pattern.Singleton;
 import com.eron.design.pattern.Singleton.DataBase;
 import com.eron.design.pattern.Singleton.SingletonEnum;
@@ -62,6 +71,10 @@ public class PatternUsage {
         patternUsage.adaptor();
         patternUsage.bridge();
         patternUsage.composite();
+        patternUsage.decorator();
+        patternUsage.facade();
+        patternUsage.flyweight();
+        patternUsage.proxy();
 
         // 行为型设计模式
 
@@ -190,6 +203,7 @@ public class PatternUsage {
         LOGGER.info("更换后 设备状态 --> {}", controller.getDevice());
     }
 
+    // 组合模是
     private void composite() {
         List<Graphic> imageEditor = new ArrayList<>();
 
@@ -207,5 +221,46 @@ public class PatternUsage {
         imageEditor.forEach(Graphic::draw);
     }
 
+    // 装饰器
+    public void decorator() {
+        String rawText = "hello world";
+
+        FileDataSource dataSource = new FileDataSource();
+        // 以下为装饰器部分
+        DataSourceWrapper wrapper = new DataSourceWrapper(dataSource); // 包装之前的实现
+        DataSourceWrapper encryptDecorator = new EncryptionDataSourceDecorator(wrapper);
+        DataSourceWrapper compressionDecorator = new CompressionDataSourceDecorator(encryptDecorator);
+
+        compressionDecorator.writeData(rawText);
+        compressionDecorator.readData();
+    }
+
+    // 门面
+    public void facade() {
+        VideoConversionFacade facade = new VideoConversionFacade();
+        facade.convertFile("hello", "xxx");
+    }
+
+    // 享元
+    public void flyweight() {
+        Forest forest = new Forest();
+        forest.plantTree(5, 5, "hello", "RED", "xxx");
+        forest.plantTree(10, 10, "world", "RED", "sss");
+
+        forest.plantTree(0, 0, "hello", "", ""); // color 空, 读取缓存中的内容
+    }
+
+    // 代理
+    public void proxy() {
+        YouTubeSource source = new YouTubeSource();
+        YouTubeCacheProxy cacheProxy = new YouTubeCacheProxy(source);
+
+        cacheProxy.popularVideos();
+        cacheProxy.getVideo("xxx");
+    }
+
 
 }
+
+
+
