@@ -2,6 +2,7 @@ package com.eron.design.pattern;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,12 +31,12 @@ public class Proxy {
         public Map<String, Video> popularVideos() {
             LOGGER.info("爬虫执行: 链接视频网站, 通过认证, 爬取目标视频信息");
             LOGGER.info("爬取视频资源并下载");
-            return null;
+            return new HashMap<>();
         }
         @Override
         public Video getVideo(String videoId) {
             LOGGER.info("根据资源id获取");
-            return null;
+            return new Video("001", "", "");
         }
     }
 
@@ -51,6 +52,7 @@ public class Proxy {
         public Map<String, Video> popularVideos() {
             if (cache.isEmpty()) {
                 cache.putAll(this.thirdPartLib.popularVideos());
+                LOGGER.info("已缓存videos...");
             } else {
                 LOGGER.info("video from cache");
             }
@@ -61,6 +63,7 @@ public class Proxy {
         public Video getVideo(String videoId) {
             Video video = cache.get(videoId);
             if (Objects.isNull(video)) {
+                LOGGER.info("从源获取...");
                 video = this.thirdPartLib.getVideo(videoId);
                 cache.put(videoId, video);
             } else {

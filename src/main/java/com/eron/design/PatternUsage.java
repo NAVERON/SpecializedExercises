@@ -20,7 +20,12 @@ import com.eron.design.pattern.Builder.CarBuilder;
 import com.eron.design.pattern.Builder.Director;
 import com.eron.design.pattern.Builder.Thing;
 import com.eron.design.pattern.Builder.ThingBuilder;
-import com.eron.design.pattern.Composite;
+import com.eron.design.pattern.ChainOfResponsibility;
+import com.eron.design.pattern.ChainOfResponsibility.FakeService;
+import com.eron.design.pattern.ChainOfResponsibility.Middleware;
+import com.eron.design.pattern.ChainOfResponsibility.ThrottlingMiddleware;
+import com.eron.design.pattern.ChainOfResponsibility.UserExistMiddleWare;
+import com.eron.design.pattern.ChainOfResponsibility.UserRoleMiddleWare;
 import com.eron.design.pattern.Composite.CompoundGraphic;
 import com.eron.design.pattern.Composite.Dot;
 import com.eron.design.pattern.Composite.Graphic;
@@ -33,11 +38,11 @@ import com.eron.design.pattern.Facade.VideoConversionFacade;
 import com.eron.design.pattern.FactoryMethod.MyDialog;
 import com.eron.design.pattern.FactoryMethod.MyDialogA;
 import com.eron.design.pattern.FactoryMethod.MyDialogB;
-import com.eron.design.pattern.FlyWeight;
 import com.eron.design.pattern.FlyWeight.Forest;
 import com.eron.design.pattern.Prototype.Circle;
 import com.eron.design.pattern.Prototype.Rectangle;
 import com.eron.design.pattern.Prototype.Shape;
+import com.eron.design.pattern.Proxy.ThirdPartLib;
 import com.eron.design.pattern.Proxy.YouTubeCacheProxy;
 import com.eron.design.pattern.Proxy.YouTubeSource;
 import com.eron.design.pattern.Singleton;
@@ -77,6 +82,7 @@ public class PatternUsage {
         patternUsage.proxy();
 
         // 行为型设计模式
+        patternUsage.chainOfResponsibility();
 
     }
 
@@ -252,11 +258,33 @@ public class PatternUsage {
 
     // 代理
     public void proxy() {
-        YouTubeSource source = new YouTubeSource();
+        ThirdPartLib source = new YouTubeSource();
         YouTubeCacheProxy cacheProxy = new YouTubeCacheProxy(source);
 
         cacheProxy.popularVideos();
         cacheProxy.getVideo("xxx");
+
+        cacheProxy.popularVideos();
+    }
+
+    // 责任链模式
+    public void chainOfResponsibility() {
+        FakeService service = new FakeService(); // 底层数据服务
+        Middleware throttlingMiddleware = new ThrottlingMiddleware(10);
+        Middleware userCheck = new UserExistMiddleWare(service);
+        Middleware roleCheck = new UserRoleMiddleWare();
+
+        // 设置检查链
+        Middleware.linkMiddleWare(throttlingMiddleware, userCheck, roleCheck);
+        service.setMiddleWare(throttlingMiddleware);
+
+        // 提前注册几个用户
+        service.register("admin@root.com", "xxx");
+        service.register("test@user.com", "sss");
+
+        service.login("admin@root.com", "xxx");
+        service.login("test@user.com", "sss");
+        service.login("", "");
     }
 
 
